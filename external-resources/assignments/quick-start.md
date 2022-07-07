@@ -100,3 +100,139 @@ server.listen(port, hostname, () => {
     >> You can use Babel to transform your code to be ES5-compatible before shipping it to the browser, but in Node.js, you won't need that
     >> Another difference is that Node.js supports both the CommonJS and ES module systems (since Node.js v12), while in the browser we are starting to see the ES Modules standard being implemented
     >> In practice, this means that you can use both require() and import in Node.js, while you are limited to import in the browser
+
+*** Node.js Event emitter ***
+
+If you worked with JavaScript in the browser, you know how much of the interaction of the user is handled through events: mouse clicks, keyboard button presses, reacting to mouse movements, and so on
+
+On the backend side, Node.js offers us the option to build a similar system using the `events` module
+
+This module, in particular, offers the `EventEmitter` class, which we'll use to handle our events
+
+You initialize that using: 
+```js
+  const EventEmitter = require('events');
+
+  const eventEmitter = new EventEmitter();
+```
+This object exposes, among many others, the on and emit methods
+* emit is used to trigger an event
+* on is used to add a callback function that's going to be executed when the event is triggered
+
+For example, let's create a start event, and as a matter of providing a sample, we react to that by just logging to the console:
+```js
+eventEmitter.on('start', () => {
+  console.log('started');
+});
+
+// When we run
+eventEmitter.emit('start');
+// event handler function is triggered, and we get the console log
+```
+You can pass arguments to the event handler by passing them as additional arguments to emit():
+```js
+eventEmitter.on('start', number => {
+  console.log(`started ${number}`);
+});
+
+eventEmitter.emit('start', 23);
+
+// multiple arguments
+eventEmitter.on('start', (start, end) => {
+  console.log(`started from ${start} to ${end}`);
+});
+
+eventEmitter.emit('start', 1, 100);
+```
+EventEmitter object also exposes several other methods to interact with events, like
+* `once()`: add a one-time listener
+* `removeListener()` / `off()`: remove an event listener from an event
+* `removeAllListeners()`: remove all listeners for an event
+
+
+*** Node.js events module ***
+
+`events` module provides us the EventEmitter class, which is key to working with events in Node.js
+
+```js
+const EventEmitter = require('events');
+
+const door = new EventEmitter();
+```
+event listener has these in-built events: 
+* `newListener` when a listener is added
+* `removeListener` when a listener is removed
+
+Here's a detailed description of the most useful methods: 
+**emitter.addListener()**
+
+Alias for emitter.on()
+
+**emitter.emit()**
+
+Emits an event. It synchronously calls every event listener in the order they were registered: `door.emit('slam'); // emitting the event "slam"`
+
+**emitter.eventNames()**
+
+Return an array of strings that represent the events registered on the current EventEmitter object: `door.eventNames();`
+
+**emitter.getMaxListeners()**
+
+Get the maximum amount of listeners one can add to an EventEmitter object, which defaults to 10 but can be increased or lowered by using setMaxListeners(): `door.getMaxListeners();`
+
+**emitter.listenerCount()**
+
+Get the count of listeners of the event passed as parameter: `door.listenerCount('open');`
+
+**emitter.listeners()**
+
+Gets an array of listeners of the event passed as parameter: `door.listeners('open');`
+
+**emitter.off()**
+
+Alias for emitter.removeListener() added in Node.js 10
+
+**emitter.on()**
+
+Adds a callback function that's called when an event is emitted
+```js
+door.on('open', () => {
+  console.log('Door was opened');
+});
+```
+**emitter.once()**
+
+Adds a callback function that's called when an event is emitted for the first time after registering this. This callback is only going to be called once, never again
+```js
+const EventEmitter = require('events');
+
+const ee = new EventEmitter();
+
+ee.once('my-event', () => {
+  // call callback function once
+});
+```
+
+**emitter.prependListener()**
+
+When you add a listener using on or addListener, it's added last in the queue of listeners, and called last. Using prependListener it's added, and called, before other listeners
+
+**emitter.prependOnceListener()**
+
+When you add a listener using `once`, it's added last in the queue of listeners, and called last. Using `prependOnceListener` it's added, and called, before other listeners
+
+**emitter.removeAllListeners()**
+
+Removes all listeners of an EventEmitter object listening to a specific event: `door.removeAllListeners('open');`
+
+**emitter.removeListener()**
+
+Remove a specific listener. You can do this by saving the callback function to a variable, when added, so you can reference it later:
+```js
+const doSomething = () => {};
+door.on('open', doSomething);
+door.removeListener('open', doSomething);
+```
+**emitter.setMaxListeners()**
+
+Sets the maximum amount of listeners one can add to an EventEmitter object, which defaults to 10 but can be increased or lowered: i.e. `door.setMaxListeners(50);`
