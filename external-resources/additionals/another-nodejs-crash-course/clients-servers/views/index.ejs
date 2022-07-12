@@ -1,0 +1,31 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home page</title>
+</head>
+
+<body>
+    <!-- using ejs dynamic value -->
+    <% let name='smbody' %>
+
+    <div class="site-title">
+        <h1>hallo allemaal</h1>
+        <h2>hoe gaat het vriend <span><%= name %></span></h2>
+    </div>
+
+    <ul>
+        <li><a href="/">Blogs</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/blogs/create">New blog</a></li>
+    </ul>
+
+    <div class="blogs content">
+        <h3>All blogs</h3>
+    </div>
+
+</body>
+
+</html>
