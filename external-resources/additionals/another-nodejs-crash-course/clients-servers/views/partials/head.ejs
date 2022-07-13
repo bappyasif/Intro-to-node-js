@@ -1,0 +1,15 @@
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- using ejs dynamic value -->
+    <title>Home page | <%= title %></title>
+    <!-- 
+        browser wont have access to this file content from fronend, 
+        for that we we'll have to use a middleware such as static from express to do so from app.js 
+    -->
+    <!-- <link rel="stylesheet" href="../../styles-not-added.css"> -->
+
+    <!-- this style file is going to be served from 'public' folder which is specified from express.statc in app.js -->
+    <link rel="stylesheet" href="./styles.css">
+</head>

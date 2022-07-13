@@ -1,18 +1,24 @@
 <html lang="en">
 
-<head>
+<!-- <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home page</title>
-</head>
+    <!- using ejs dynamic value ->
+    <title>Home page | <%= title %></title>
+</head> -->
+
+<!-- including head from partials -->
+<%- include('./partials/head.ejs') %>
 
 <body>
     <!-- using ejs dynamic value -->
-    <% let name='smbody' %>
+    <!-- defining some ejs value -->
+    <!-- <% let name='smbody' %>  -->
 
-    <div class="site-title">
+    <!-- <div class="site-title">
         <h1>hallo allemaal</h1>
+        <!- using some ejs value ->
         <h2>hoe gaat het vriend <span><%= name %></span></h2>
     </div>
 
@@ -20,11 +26,27 @@
         <li><a href="/">Blogs</a></li>
         <li><a href="/about">About</a></li>
         <li><a href="/blogs/create">New blog</a></li>
-    </ul>
+    </ul> -->
+
+    <!-- including nav from partials -->
+    <%- include('./partials/nav.ejs') %>
 
     <div class="blogs content">
         <h3>All blogs</h3>
+
+        <!-- now we will be accessing dynamic values that was sent from render method as server response -->
+        <% if(blogs.length > 0) { %>
+            <% blogs.forEach(blog => { %>
+                <h3 class="title"><%= blog.title %></h3>
+                <p class="snippet"><%= blog.snippet %></p>
+            <% }) %>
+        <% } else { %>
+            <p>There are no blogs to display</p>
+        <% } %>
     </div>
+
+    <!-- including footer from partials -->
+    <%- include('./partials/footer.ejs') %>
 
 </body>
 
