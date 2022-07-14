@@ -45,6 +45,9 @@ app.use(morgan('dev'));
 // app.use(express.static('./external-resources/additionals/another-nodejs-crash-course/clients-servers/public'))
 app.use(express.static(path.join(__dirname, 'public')))
 
+// using urlencoded middleware for handling post request data from browser
+app.use(express.urlencoded({extended: true}))
+
 // mongoose & mongodb sandbox routes
 app.get('/add-blog', (req, res) => {
     // instantiating blog
@@ -102,6 +105,46 @@ app.get('/blogs', (req, res) => {
     .catch(err => console.log(err))
 })
 
+// handling a POST request
+app.post('/blogs', (req, res) => {
+    // console.log(req.body)
+
+    // making an instance of Blog so tha we can make it db save compatible
+    let blog = new Blog(req.body)
+    blog.save()
+    .then(result => {
+        // lets redirect to home page sop that it shows added blog there
+        res.redirect('/blogs')
+    }).catch(err => console.log(err))
+})
+
+// handling single blog post
+app.get('/blogs/:id', (req, res) => {
+    // extracting parameters from url
+    let blogID = req.params.id;
+    // console.log(blogID)
+
+    // lets search that blog by id in our database collection
+    Blog.findById(blogID)
+    .then(result => {
+        // render a details page showing this blog specifically
+        // res.render('details', {blog: result, title: 'Blog details'})
+        res.render("details", {blog: result, title: 'details'})
+    }).catch(err => console.log(err))
+
+})
+
+
+// handling a delete request
+app.delete('/blogs/:id', (req, res) => {
+    let blogID = req.params.id;
+
+    // delete that from database and send back response to browser with a json when succesful
+    Blog.findByIdAndDelete(blogID)
+    .then(result => {
+        res.json({redirect: '/blogs'})
+    }).catch(err => console.log(err))
+})
 
 app.get('/about', (req, res) => {
     // res.send('<h1>about us using express!!</h1>')
