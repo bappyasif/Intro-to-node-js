@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Create a new Blog | <%= title %></title>
     </head> -->
-    <%- include('./partials/head.ejs') %>
+    <%- include('../partials/head.ejs') %>
 
 <body>
     <!-- <nav>
@@ -18,10 +18,10 @@
           <li><a href="/blogs/create">New Blog</a></li>
         </ul>
       </nav> -->
-      <%- include('./partials/nav.ejs') %>
+      <%- include('../partials/nav.ejs') %>
 
   <div class="create-blog content">
-    <form action="">
+    <form action="/blogs" method="post">
         <label for="title">Blog title:</label>
         <input type="text" id="title" name="title" required>
         <label for="snippet">Blog snippet:</label>
@@ -32,6 +32,6 @@
     </form>
   </div>
 
-  <%- include('./partials/footer.ejs') %>
+  <%- include('../partials/footer.ejs') %>
 </body>
 </html>

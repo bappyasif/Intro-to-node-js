@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Infamous Blog | <%= title %></title>
     </head> -->
-    <%- include('./partials/head.ejs') %>
+    <%- include('../partials/head.ejs') %>
 
 <body>
     <!-- <nav>
@@ -18,21 +18,23 @@
           <li><a href="/blogs/create">New Blog</a></li>
         </ul>
       </nav> -->
-    <%- include('./partials/nav.ejs') %>
+    <%- include('../partials/nav.ejs') %>
 
   <div class="blogs content">
     <h2>All Blogs</h2>
     <% if(blogs.length > 0) { %>
         <% blogs.forEach(blog => { %>
-            <h3><%= blog.title %></h3>
-            <p><%= blog.snippet %></p>
+            <a class="single" href="/blogs/<%= blog._id %>">
+              <h3><%= blog.title %></h3>
+              <p><%= blog.snippet %></p>
+            </a>
         <% }) %>
     <% } else { %>
         <h3>there are no blogs to display</h3>
     <% } %>    
   </div>
 
-  <%- include('./partials/footer.ejs') %>
+  <%- include('../partials/footer.ejs') %>
 
 </body>
 </html>

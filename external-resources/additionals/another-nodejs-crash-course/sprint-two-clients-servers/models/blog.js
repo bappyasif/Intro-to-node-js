@@ -1,6 +1,8 @@
 let mongoose = require('mongoose');
+
 let Schema = mongoose.Schema;
 
+// document structure
 let blogSchema = new Schema({
     title: {
         type: String,
@@ -14,10 +16,9 @@ let blogSchema = new Schema({
         type: String,
         required: true
     }
-}, {timestamps: true})
+}, {timestamps: true}); // timestamps will auto assign timestamp for any document creation or update process on db
 
-// storing model for this specified schema
-let Blog = mongoose.model('Blog', blogSchema);
+// creating model for schema
+let Blog = mongoose.model('Blog', blogSchema)
 
-// exporting this model for accessibility from our app.js
 module.exports = Blog;
