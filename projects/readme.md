@@ -1,0 +1,1 @@
+this folder will consists curriculam coding practice projects
