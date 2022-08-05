@@ -15,12 +15,14 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "eslint": "^8.21.0",
     "nodemon": "^2.0.19"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node crash-course.nodejs-index.js",
-    "dev": "nodemon crash-course.nodejs-index.js"
+    "dev": "nodemon crash-course.nodejs-index.js",
+    "lint": "eslint *.js"
   },
   "author": "a b",
   "license": "ISC"
