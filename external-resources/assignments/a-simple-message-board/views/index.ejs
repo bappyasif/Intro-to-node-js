@@ -9,6 +9,12 @@
     <p>African penguine - a.k.a. jackass, becuase of their distinct sound that they make</p>
     
     <p>Welcome to <%= title %></p>
-    <%= msgs %>
+    <% messages.forEach(item => { %>
+      <ul>
+        <li><%= item.user %> </li>
+        <li><%= item.text %> </li>
+        <li><%= item.added %> </li>
+      </ul>
+    <% }) %> 
   </body>
 </html>
