@@ -51,3 +51,16 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+
+/**
+ * 
+ * 
+ Routes primer
+ > A route is a section of Express code that associates an HTTP verb (GET, POST, PUT, DELETE, etc.), a URL path/pattern, and a function that is called to handle that pattern
+ > There are several ways to create routes
+ > For this tutorial we're going to use the express.Router middleware as it allows us to group the route handlers for a particular part of a site together and access them using a common route-prefix
+ > We'll keep all our library-related routes in a "catalog" module, and, if we add routes for handling user accounts or other functions, we can keep them grouped separately
+ > using Router is very similar to defining routes directly on the Express application object
+ > rest of this section provides an overview of how the Router can be used to define the routes
+ */
