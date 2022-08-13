@@ -4,9 +4,27 @@ let Genre = require("../models/genre");
 // exports.genre_list = function(req, res) {
 //     res.send('NOT IMPLEMENTED: Genre list');
 // };
-let genre_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre list');
-};
+// let genre_list = function(req, res) {
+//     res.send('NOT IMPLEMENTED: Genre list');
+// };
+
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * page should display a list of all genres in the database, 
+ * with each genre linked to its associated detail page
+ * 
+ */
+let genre_list = (req, res, next) => {
+    Genre.find()
+    .sort([['name', 'ascending']])
+    .exec((err, list_genres) => {
+        if(err) return next(err)
+        // success, so begin rendering
+        res.render("genre_list", {title: "Genre List", genre_list: list_genres})
+    })
+}
 
 // Display detail page for a specific genre
 let genre_detail = function(req, res) {

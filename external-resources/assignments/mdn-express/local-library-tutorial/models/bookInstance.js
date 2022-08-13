@@ -1,4 +1,5 @@
 // BookInstance represents a specific copy of a book that someone might borrow and includes information about whether the copy is available, on what date it is expected back, and "imprint" (or version) details
+let {DateTime} = require("luxon");
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
@@ -16,6 +17,19 @@ BookInstanceSchema.virtual("url")
     .get(function () {
         return '/catalog/bookinstance/' + this._id;
     });
+
+// Virtual for bookinstance's date format
+BookInstanceSchema.virtual("due_date_formatted")
+.get(function() {
+    return DateTime.fromJSDate(this.due_back).toLocaleString(DateTime.DATE_MED)
+})
+
+/**
+ * 
+ * 
+ * Luxon can import strings in many formats and export to both predefined and free-form formats
+ * In this case we use fromJSDate() to import a JavaScript date string and toLocaleString() to output the date in DATE_MED format in English: Oct 6th, 2020
+ */
 
 /**
  * 

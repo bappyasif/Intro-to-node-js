@@ -4,9 +4,28 @@ let BookInstance = require("../models/bookInstance");
 // exports.bookinstance_list = function(req, res) {
 //     res.send('NOT IMPLEMENTED: BookInstance list');
 // };
-let bookinstance_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: BookInstance list');
-};
+// let bookinstance_list = function(req, res) {
+//     res.send('NOT IMPLEMENTED: BookInstance list');
+// };
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * BookInstance list controller function needs to get a list of all book instances, 
+ * populate the associated book information, and then pass the list to the template for rendering
+ * method uses the model's find() function to return all BookInstance objects
+ * It then daisy-chains a call to populate() with the book field —this will replace the book id stored for each BookInstance with a full Book document
+ * On success, the callback passed to the query renders the bookinstance_list(.ejs) template, passing the title and bookinstance_list as variables
+ */
+let bookinstance_list = (req, res, next) => {
+    BookInstance.find()
+    .populate("book")
+    .exec((err, list_bookinstances) => {
+        if(err) return next(err)
+        // successfull so commencing render
+        res.render('bookinstance_list', {title: "Book Instance List", bookinstance_list: list_bookinstances})
+    })
+}
 
 // display detail page for a specific BookInstance
 let bookinstance_detail = function(req, res) {

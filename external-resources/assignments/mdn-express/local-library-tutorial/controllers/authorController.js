@@ -4,13 +4,37 @@ let Author = require("../models/author");
 // exports.author_list = (req, res) => {
 //     res.send('Not implemented: author list')
 // }
-let author_list = (req, res) => {
-    res.send('Not implemented: author list')
+// let author_list = (req, res) => {
+//     res.send('Not implemented: author list')
+// }
+
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * author list controller function needs to get a list of all Author instances, 
+ * and then pass these to the template for rendering
+ * author list page needs to display a list of all authors in the database, 
+ * with each author name linked to its associated author detail page
+ * 
+ * method uses the model's find(), sort() and exec() functions to return all Author objects sorted by family_name in alphabetic order
+ * callback passed to the exec() method is called with any errors (or null) as the first parameter, or a list of all authors on success
+ * If there is an error it calls the next middleware function with the error value, 
+ * and if not it renders the author_list(.ejs) template, passing the page title and the list of authors (author_list)
+ */
+let author_list = (req, res, next) => {
+    Author.find()
+    .sort([['family_name', 'ascending']])
+    .exec((err, list_authors) => {
+        if(err) return next(err)
+        // success thus commencing render
+        res.render('author_list', {title: "Author List", author_list: list_authors})
+    })
 }
 
 // Display detail page for a specific Author
 let author_detail = (req, res) => {
-    res.send('Not implemented: author detail'+ req.params.id)
+    res.send('Not implemented: author detail' + req.params.id)
 }
 
 // Display Author create form on GET
