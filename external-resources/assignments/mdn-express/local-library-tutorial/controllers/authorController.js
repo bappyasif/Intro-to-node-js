@@ -1,5 +1,9 @@
 let Author = require("../models/author");
 
+// imports for author detail
+let Book = require("../models/book");
+let async = require("async");
+
 // Display list of all authors
 // exports.author_list = (req, res) => {
 //     res.send('Not implemented: author list')
@@ -33,8 +37,50 @@ let author_list = (req, res, next) => {
 }
 
 // Display detail page for a specific Author
-let author_detail = (req, res) => {
-    res.send('Not implemented: author detail' + req.params.id)
+// let author_detail = (req, res) => {
+//     res.send('Not implemented: author detail' + req.params.id)
+// }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * author detail page needs to display the information about the specified Author, 
+    * identified using their (automatically generated) _id field value, 
+    * along with a list of all the Book objects associated with that Author
+ * method uses async.parallel() to query the Author and their associated Book instances in parallel
+ * with the callback rendering the page when (if) both requests complete successfully
+ * approach is exactly the same as described for the Genre detail page
+ */
+let author_detail = (req, res, next) => {
+    async.parallel(
+        {
+            author(cb) {
+                Author.findById(req.params.id).exec(cb)
+            },
+
+            authors_books(cb) {
+                Book.find({author: req.params.id}, "title summary").exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err)
+
+            // empty list of results
+            if(results.author == null) {
+                let err = new Error("Author is not found")
+                err.status = 404;
+                return next(err)
+            }
+
+            // success, so commence rendering
+            res.render("author_detail", {
+                title: "Author Detail",
+                author: results.author,
+                authors_books: results.authors_books
+            })
+        }
+    )
 }
 
 // Display Author create form on GET

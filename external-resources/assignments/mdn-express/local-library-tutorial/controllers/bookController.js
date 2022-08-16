@@ -97,8 +97,47 @@ let book_list = (req, res, next) => {
 }
 
 // Display a specefic book detail page
-let book_detail = (req, res) => {
-    res.send('NOT IMPLEMENTED: Book detail ' + req.params.id);
+// let book_detail = (req, res) => {
+//     res.send('NOT IMPLEMENTED: Book detail ' + req.params.id);
+// }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * Book detail page needs to display the information for a specific Book 
+    * (identified using its automatically generated _id field value)
+    * along with information about each associated copy in the library (BookInstance)
+ * Wherever we display an author, genre, or book instance, these should be linked to the associated detail page for that item
+ * 
+ * method uses async.parallel() to find the Book and its associated copies (BookInstances) in parallel
+ * approach is exactly the same as described for the Genre detail page
+ * Since the key 'title' is used to give name to the webpage (as defined in the header )
+    * this time we are passing results.book.title while rendering the webpage
+ */
+let book_detail = (req, res, next) => {
+    async.parallel({
+        book: function(callback) {
+
+            Book.findById(req.params.id)
+              .populate('author')
+              .populate('genre')
+              .exec(callback);
+        },
+        book_instance: function(callback) {
+
+          BookInstance.find({ 'book': req.params.id })
+          .exec(callback);
+        },
+    }, function(err, results) {
+        if (err) { return next(err); }
+        if (results.book==null) { // No results.
+            var err = new Error('Book not found');
+            err.status = 404;
+            return next(err);
+        }
+        // Successful, so render.
+        res.render('book_detail', { title: results.book.title, book: results.book, book_instances: results.book_instance } );
+    });
 }
 
 // Display book create form on GET

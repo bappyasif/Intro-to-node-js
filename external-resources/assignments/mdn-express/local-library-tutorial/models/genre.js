@@ -10,9 +10,9 @@ let BookGenreSchema = new Schema(
 
 // virtual for genre's url
 BookGenreSchema.virtual('url')
-.get(() => {
-    return "/catalogue/genere"+ this._id
+.get(function() {
+    return "/catalog/genre/"+ this._id
 })
 
 // exporting model
-module.exports = mongoose.model("BookGenre", BookGenreSchema)
+module.exports = mongoose.model("Genre", BookGenreSchema)
