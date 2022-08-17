@@ -9,6 +9,7 @@
             </div>
             <div class="col">
                 <h1>ID: <%= bookinstance._id %></h1>
+<<<<<<< HEAD
                 <p><strong>Title: </strong><a href=<%= bookinstance.book.url %>><%= bookinstance.book.title %> </a></p>
                 <p><strong>Imprint: </strong><%= bookinstance.imprint %></p>
                 <p><strong>Status: </strong>
@@ -21,6 +22,23 @@
                     <% } %>
                     <% if(bookinstance.status != "Available") { %>
                         <p><strong>Due Back: </strong><%= bookinstance.due_date_formatted %> </p>
+=======
+                <p><strong>Title: </strong>
+                    <a href=<%= bookinstance.book.url %>><%= bookinstance.book.title %> </a>
+                </p>
+                <p><strong>Imprint: </strong><%= bookinstance.imprint %></p>
+                <p><strong>Status: </strong>
+                    <% if(bookinstance.status == "Available") { %>
+                        <span class="text-success"><%= bookinstance.status %></span>
+                    <% } else if(bookinstance.status == "Maintainance") { %>
+                        <span class="text-danger"><%= bookinstance.status %></span>
+                    <% } else { %>
+                        <span class="text-warning"><%= bookinstance.status %></span>
+                    <% } %>
+                    <% if(bookinstance.status != "Available") { %>
+                        <!-- <p><strong>Due Back: </strong><\%= bookinstance.due_back %></p> -->
+                        <p><strong>Due Back: </strong><%= bookinstance.due_back_formatted %></p>
+>>>>>>> prev-mb
                     <% } %>
                 </p>
             </div>

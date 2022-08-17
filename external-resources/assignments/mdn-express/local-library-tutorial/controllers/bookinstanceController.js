@@ -35,12 +35,20 @@ let bookinstance_list = (req, res, next) => {
  * 
  * @param {*} req 
  * @param {*} res 
+<<<<<<< HEAD
  * BookInstance detail page needs to display the information for each BookInstance
  * identified using its (automatically generated) _id field value
  * This will include the Book name (as a link to the Book detail page) along with other information in the record
  * 
  * method calls BookInstance.findById() with the ID of a specific book instance extracted from the URL (using the route)
  * and accessed within the controller via the request parameters: req.params.id)
+=======
+ * @param {*} next
+ * BookInstance detail page needs to display the information for each BookInstance, identified using its (automatically generated) _id field value
+ * This will include the Book name (as a link to the Book detail page) along with other information in the record
+ * 
+ * method calls BookInstance.findById() with the ID of a specific book instance extracted from the URL (using the route), and accessed within the controller via the request parameters: req.params.id)
+>>>>>>> prev-mb
  * It then calls populate() to get the details of the associated Book
  */
 let bookinstance_detail = (req, res, next) => {
@@ -48,12 +56,23 @@ let bookinstance_detail = (req, res, next) => {
     .populate("book")
     .exec((err, bookinstance) => {
         if(err) return next(err)
+<<<<<<< HEAD
         // if empty return err
         if(bookinstance == null) {
             let err = new Error("Book copy not found")
             err.status = 404;
             return next(err)
         }
+=======
+
+        // no results, return err
+        if(bookinstance == null) {
+            let err = new Error("Book copy not found")
+            err.staus = 404;
+            return next(err)
+        }
+
+>>>>>>> prev-mb
         // success, so commence rendering
         res.render("bookinstance_detail", {
             title: `Copy: ${bookinstance.book.title}`,

@@ -1,6 +1,10 @@
 let Author = require("../models/author");
 
+<<<<<<< HEAD
 // imports for author detail
+=======
+// imports for Author detail
+>>>>>>> prev-mb
 let Book = require("../models/book");
 let async = require("async");
 
@@ -44,12 +48,19 @@ let author_list = (req, res, next) => {
  * 
  * @param {*} req 
  * @param {*} res 
+<<<<<<< HEAD
  * author detail page needs to display the information about the specified Author, 
     * identified using their (automatically generated) _id field value, 
     * along with a list of all the Book objects associated with that Author
  * method uses async.parallel() to query the Author and their associated Book instances in parallel
  * with the callback rendering the page when (if) both requests complete successfully
  * approach is exactly the same as described for the Genre detail page
+=======
+ * @param {*} next 
+ * author detail page needs to display the information about the specified Author, identified using their (automatically generated) _id field value, along with a list of all the Book objects associated with that Author
+ * 
+ * method uses async.parallel() to query the Author and their associated Book instances in parallel, with the callback rendering the page when (if) both requests complete successfully
+>>>>>>> prev-mb
  */
 let author_detail = (req, res, next) => {
     async.parallel(
@@ -59,14 +70,23 @@ let author_detail = (req, res, next) => {
             },
 
             authors_books(cb) {
+<<<<<<< HEAD
                 Book.find({author: req.params.id}, "title summary").exec(cb)
+=======
+                Book.find({author: req.params.id}, "title summary")
+                .exec(cb)
+>>>>>>> prev-mb
             }
         },
 
         (err, results) => {
             if(err) return next(err)
 
+<<<<<<< HEAD
             // empty list of results
+=======
+            // if empty retyrn error
+>>>>>>> prev-mb
             if(results.author == null) {
                 let err = new Error("Author is not found")
                 err.status = 404;
@@ -77,7 +97,11 @@ let author_detail = (req, res, next) => {
             res.render("author_detail", {
                 title: "Author Detail",
                 author: results.author,
+<<<<<<< HEAD
                 authors_books: results.authors_books
+=======
+                author_books: results.authors_books
+>>>>>>> prev-mb
             })
         }
     )

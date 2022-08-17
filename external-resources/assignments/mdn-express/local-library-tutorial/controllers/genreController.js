@@ -3,6 +3,10 @@ let Genre = require("../models/genre");
 let Book = require('../models/book');
 let async = require('async')
 
+// for genre detail page
+let Book = require("../models/book")
+let async = require("async")
+
 // Display list of all genre
 // exports.genre_list = function(req, res) {
 //     res.send('NOT IMPLEMENTED: Genre list');
@@ -37,13 +41,18 @@ let genre_list = (req, res, next) => {
  * 
  * @param {*} req 
  * @param {*} res 
+<<<<<<< HEAD
  * display the information for a particular genre instance using its automatically generated _id field value as the identifier
+=======
+ * @param {*} next
+>>>>>>> prev-mb
  * page should display the genre name and a list of all books in the genre with links to each book's details page
  * 
  * method uses async.parallel() to query the genre name and its associated books in parallel, with the callback rendering the page when (if) both requests complete successfully
  * ID of the required genre record is encoded at the end of the URL and extracted automatically based on the route definition (/genre/:id)
  * ID is accessed within the controller via the request parameters: req.params.id
  * It is used in Genre.findById() to get the current genre
+<<<<<<< HEAD
  * It is also used to get all Book objects that have the genre ID in their genre field
  * 
  * If the genre does not exist in the database (i.e. it may have been deleted) then findById() will return successfully with no results
@@ -53,10 +62,16 @@ let genre_list = (req, res, next) => {
  * 
  * rendered view is genre_detail
  * and it is passed variables for the title, genre and the list of books in this genre (genre_books)
+=======
+ * It is also used to get all Book objects that have the genre ID in their genre field: Book.find({ 'genre': req.params.id })
+ * 
+ * rendered view is genre_detail and it is passed variables for the title, genre and the list of books in this genre (genre_books)
+>>>>>>> prev-mb
  */
 let genre_detail = (req, res, next) => {
     async.parallel(
         {
+<<<<<<< HEAD
           genre(callback) {
             Genre.findById(req.params.id).exec(callback);
           },
@@ -84,6 +99,34 @@ let genre_detail = (req, res, next) => {
         }
       );
 }
+=======
+            genre(cb) {
+                Genre.findById(req.params.id).exec(cb)
+            },
+            genre_books(cb) {
+                Book.find({genre: req.params.id}).exec(cb)
+            }
+        },
+        (err, results) => {
+            if(err) return next(err);
+
+            // no results, return error
+            if(results.genre == null) {
+                let err = new Error("Genre is not found");
+                err.status = 404;
+                return next(err);
+            }
+
+            // success, so commence rendering
+            res.render("genre_detail", {
+                title: "Genre Detail",
+                genre: results.genre,
+                genre_books: results.genre_books
+            })
+        }
+    )
+};
+>>>>>>> prev-mb
 
 // Display Genre create form on GET request
 let genre_create_get = function(req, res) {
