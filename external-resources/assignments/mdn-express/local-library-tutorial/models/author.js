@@ -31,32 +31,16 @@ AuthorSchema
 // Virtual for author's lifespan
 AuthorSchema.virtual("lifespan").get(function () {
     var lifetime_string = '';
-    
     if (this.date_of_birth) {
-<<<<<<< HEAD
-        let dobStr = DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED)
-        lifetime_string = dobStr;
-        
-=======
->>>>>>> prev-mb
         // lifetime_string = this.date_of_birth.getYear().toString();
         // let date_string = this.date_of_birth.getYear().toString();
         lifetime_string = DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED)
         // lifetime_string = "what what"
     }
-
     lifetime_string += ' - ';
-    
     if (this.date_of_death) {
-<<<<<<< HEAD
-        let dodStr = DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED)
-        lifetime_string += dodStr;
-
-        // lifetime_string += this.date_of_death.getYear()
-=======
         // lifetime_string += this.date_of_death.getYear()
         lifetime_string = DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED)
->>>>>>> prev-mb
     }
     return lifetime_string;
 });
@@ -70,40 +54,17 @@ AuthorSchema.virtual("url")
 // Virtuals for authors's formatted dob and dod
 AuthorSchema.virtual("formatted_dd")
 .get(function() {
-<<<<<<< HEAD
-    if(this.date_of_birth || this.date_of_death) {
-        let dodStr = ` ---- ${this.date_of_birth ? DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED) : ''}`;
-=======
     let dodStr = ` - ${this.date_of_death ? DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED) : ''}`;
->>>>>>> prev-mb
     return `${DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED)} ${dodStr}`
-    } else {
-        return 'Date Invalid'
-    }
-    
     // return DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED)
     // return DateTime.fromJSDate(this.due_back).toLocaleString(DateTime.DATE_MED)
 })
 
-<<<<<<< HEAD
-// dob and dod formatted as per challenge requirements
-AuthorSchema.virtual("date_of_birth_yyyy_mm_dd")
-.get(function () {
-    return `${DateTime.fromJSDate(this.date_of_birth).toISODate()}`
-})
-
-AuthorSchema.virtual("date_of_death_yyyy_mm_dd")
-.get(function () {
-    return `${DateTime.fromJSDate(this.date_of_death).toISODate()}`
-})
-
-=======
 // formatting dob and dod
 AuthorSchema.virtual("due_back_formatted")
 .get(function () {
     return `${DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED)} ${dodStr}`
 })
->>>>>>> prev-mb
 // We've also declared a virtual for the AuthorSchema named "url" that returns the absolute URL required to get a particular instance of the model — we'll use the property in our templates whenever we need to get a link to a particular author
 // Declaring our URLs as a virtual in the schema is a good idea because then the URL for an item only ever needs to be changed in one place
 
