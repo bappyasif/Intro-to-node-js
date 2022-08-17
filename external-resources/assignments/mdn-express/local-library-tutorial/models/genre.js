@@ -10,8 +10,8 @@ let BookGenreSchema = new Schema(
 
 // virtual for genre's url
 BookGenreSchema.virtual('url')
-.get(() => {
-    return "/catalogue/genere"+ this._id
+.get(function () {
+    return "/catalog/genre/"+ this._id
 })
 
 // exporting model
