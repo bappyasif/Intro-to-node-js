@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("./partials/head.ejs") %>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+                <%- include("./partials/nav.ejs") %>
+            </div>
+            <div class="col">
+                <h1><%= title %></h1>
+                <form action="" method="post">
+                    <div class="form-group">
+                        <label for="name">Genre: </label>
+                        <% if(genre === undefined) { %>
+                            <input type="text" id="name" class="form-control" placeholder="Fantasy, Poetry etc." 
+                        name="name">
+                        <% } else { %>
+                            <input type="text" id="name" class="form-control" placeholder="Fantasy, Poetry etc." 
+                        name="name" value=<%= genre.name === undefined ? '' : genre.name %>>
+                        <% } %>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </form>
+                <!-- <\% if(errors) { %>
+                    <ul>
+                        <\% errors.forEach(error => { %>
+                            <li>{error.msg}</li>
+                        <\% }) %> 
+                    </ul>
+                <\% } %> -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<!-- 
+    * our HTML form that uses the POST method to send the data to the server, 
+    and because the action is an empty string, will send the data to the same URL as the page
+    * form defines a single required field of type "text" called "name"
+    * Default value of the field depends on whether the genre variable is defined
+        * If called from the GET route it will be empty as this is a new form
+    * If called from a POST route it will contain the (invalid) value originally entered by the user
+    * last part of the page is the error code
+        * This prints a list of errors, if the error variable has been defined 
+        * in other words, this section will not appear when the template is rendered on the GET route
+    * This is just one way to render the errors
+        * You can also get the names of the affected fields from the error variable, and use these to control where the error messages are rendered, whether to apply custom CSS, etc
+ -->
