@@ -103,7 +103,7 @@ let genre_detail = (req, res, next) => {
  * This renders the genre_form.ejs view, passing a title variable
  */
 let genre_create_get = (req, res, next) => {
-    res.render("genre_form", { title: "Create Genre", genre: '' });
+    res.render("genre_form", { title: "Create Genre", genre: '', errors: '' });
 };
 
 // Hnadle Genre create form on POST request
@@ -144,7 +144,7 @@ let genre_create_post = [
         let genre = new Genre({name: req.body.name})
 
         // if error, Render the form again with sanitized values/error messages
-        if(!errors.array()) {
+        if(!errors.isEmpty()) {
             res.render("genre_form", {
                 title: "Create Genre",
                 genre: genre,

@@ -34,13 +34,13 @@ AuthorSchema.virtual("lifespan").get(function () {
     if (this.date_of_birth) {
         // lifetime_string = this.date_of_birth.getYear().toString();
         // let date_string = this.date_of_birth.getYear().toString();
-        lifetime_string = DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED)
+        lifetime_string += DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED)
         // lifetime_string = "what what"
     }
     lifetime_string += ' - ';
     if (this.date_of_death) {
         // lifetime_string += this.date_of_death.getYear()
-        lifetime_string = DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED)
+        lifetime_string += DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED)
     }
     return lifetime_string;
 });
