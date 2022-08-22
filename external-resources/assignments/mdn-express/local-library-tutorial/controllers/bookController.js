@@ -4,6 +4,9 @@ const Author = require('../models/author');
 const Genre = require('../models/genre');
 const BookInstance = require('../models/bookInstance');
 
+// imports for create book
+let {body, validationResult} = require("express-validator")
+
 
 /**
  * 
@@ -148,14 +151,158 @@ let book_detail = (req, res, next) => {
 }
 
 // Display book create form on GET
-let book_create_get = (req, res) => {
-    res.send('NOT IMPLEMENTED: Book create GET');
+// let book_create_get = (req, res) => {
+//     res.send('NOT IMPLEMENTED: Book create GET');
+// }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * Display book create form on GET.
+ * This uses the async module to get all Author and Genre objects
+ * These are then passed to the view book_form.ejs as variables named authors and genres (along with the page title)
+ */
+let book_create_get = (req, res, next) => {
+    // Get all authors and genres, which we can use for adding to our book
+    async.parallel(
+        {
+            authors(cb) {
+                Author.find(cb)
+            },
+
+            genres(cb) {
+                Genre.find(cb)
+            }
+        },
+        
+        // callback function
+        (err, results) => {
+            if(err) return next(err)
+
+            // success, so render book form
+            res.render("book_form", {
+                title: "Create Book",
+                authors: results.authors,
+                genres: results.genres,
+                book: '',
+                errors: ''
+            })
+        }
+    )
 }
 
 // Handle book create form on POST
-let book_create_post = (req, res) => {
-    res.send('NOT IMPLEMENTED: Book create POST');
-}
+// let book_create_post = (req, res) => {
+//     res.send('NOT IMPLEMENTED: Book create POST');
+// }
+// Handle book create on POST
+/**
+ * structure and behavior of this code is almost exactly the same as for creating a Genre or Author object
+ * First we validate and sanitize the data
+ * If the data is invalid then we re-display the form along with the data that was originally entered by the user and a list of error messages
+ * If the data is valid, we then save the new Book record and redirect the user to the book detail page
+ * 
+ * main difference with respect to the other form handling code is how we sanitize the genre information
+ * form returns an array of Genre items (while for other fields it returns a string)
+ * In order to validate the information we first convert the request to an array (required for the next step)
+ * We then use a wildcard (*) in the sanitizer to individually validate each of the genre array entries
+ * final difference with respect to the other form handling code is that we need to pass in all existing genres and authors to the form
+ * In order to mark the genres that were checked by the user we iterate through all the genres and add the checked='true' parameter to those that were in our post data
+ */
+let book_create_post = [
+    // Convert the genre to an array
+    (req, res, next) => {
+        if(!Array.isArray(req.body.genre)) {
+            req.body.genre = typeof req.body.genre === 'undefined' ? [] : [req.body.genre]
+        }
+        next()
+    },
+
+    // validate and sanitize fields
+    body("title", "Title field must not be empty")
+    .trim()
+    .isLength({min: 2})
+    .escape(),
+    body("author", "Author field must not be empty")
+    .trim()
+    .isLength({min: 2})
+    .escape(),
+    body("summary", "Summary field must not be empty")
+    .trim()
+    .isLength({min: 2})
+    .escape(),
+    body("isbn", "ISBN field must not be empty")
+    .trim()
+    .isLength({min: 2})
+    .escape(),
+    body("genre.*").escape(), // using wildcard to sanitize every item below key genre
+
+    // Process request after validation and sanitization
+    (req, res, next) => {
+        // Extract the validation errors from a request
+        let errors = validationResult(req);
+
+        // Extract the validation errors from a request
+        let book = new Book({
+            title: req.body.title,
+            author: req.body.author,
+            summary: req.body.summary,
+            isbn: req.body.isbn,
+            genre: req.body.genre,
+
+        });
+
+        if(!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/error messages.
+            
+            // Get all authors and genres for form
+            async.parallel(
+                {
+                    authors(cb) {
+                        Author.find(cb)
+                    },
+
+                    genres(cb) {
+                        Genre.find(cb)
+                    }
+                },
+                
+                // callback handler
+                (err, results) => {
+                    if(err) return next(err)
+
+                    // Mark our selected genres as checked
+                    for(let genre of results.genres) {
+                        if(book.genre.includes(genre._id)) {
+                            // Current genre is selected. Set "checked" flag
+                            genre.checked = true
+                        }
+                    }
+
+                    // render form with previously form values
+                    res.render("book_form", {
+                        title: "Create Book",
+                        authors: results.authors,
+                        genres: results.genres,
+                        book: book,
+                        errors: errors.array()
+
+                    })
+                }
+            )
+            return;
+        }
+
+        // Data from form is valid. Save book
+        book.save(err => {
+            if(err) return next(err)
+
+            // Successful: redirect to new book record
+            res.redirect(book.url)
+        })
+    }
+]
 
 // Display book delete form on GET
 let book_delete_get = (req, res) => {

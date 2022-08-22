@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs") %>
+
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-2">
+                    <%- include("./partials/nav.ejs") %>
+                </div>
+                <div class="col">
+                    <h1>
+                        <%= title %>
+                    </h1>
+                    <form action="" method="post">
+                        <div class="form-group">
+                            <label for="title">Title: </label>
+                            <input type="text" id="title" class="form-control" placeholder="Name of book" name="title"
+                                required=true value=<%= undefined===book ? '' : book.title %>
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="author">Author: </label>
+                            <select name="author" id="author" class="form-control" placeholder="Select author"
+                                required="true">
+                                <% authors.sort((a, b)=> { %>
+                                    <script>
+                                        let textA = a.family_name.toUpperCase()
+                                        let textB = b.family_name.toUpperCase()
+                                        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+                                    </script>
+                                    <% }) %>
+
+                                        <% authors.forEach(author=> { %>
+                                            <% if(book) { %>
+                                                <option value=<%= author._id %> selected=<%= author._id.toString()===book.author._id.toString() ? 'selcted' : false %>
+                                                        ><%= author.name %>
+                                                </option>
+                                                <% } else { %>
+                                                    <option value=<%= author._id %>><%= author.name %>
+                                                    </option>
+                                                <% } %>
+                                        <% }) %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="summary">Summary: </label>
+                            <textarea name="summary" id="summary" rows="1" class="form-control"
+                                required="true">
+                                <%= undefined === book ? '' : book.summary %> 
+                            </textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="isbn">ISBN: </label>
+                            <input type="text" class="form-control" placeholder="ISBN13" name="isbn" required="true"
+                                value=<%= undefined===book ? '' : book.isbn %>>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="genre">Genre: </label>
+                            <div>
+                                <% genres.forEach(genre => { %>
+                                    <div style="display: inline; padding-right:10px;">
+                                        <input type="checkbox" name="genre" checked=<%= genre.checked %> value=<%= genre._id %> id=<%= genre._id %>>
+                                        <label for=<%= genre._id %>><%= genre.name %></label>
+                                    </div>
+                                <% }) %>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </form>
+                    <% if(errors) { %>
+                        <ul>
+                            <% errors.forEach(error => { %>
+                                <li><%= error.msg %></li>
+                            <% })%> 
+                        </ul>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>
+
+<!-- view structure and behavior is almost the same as for the genre_form.pug template
+
+* main differences are in how we implement the selection-type fields: Author and Genre
+
+* set of genres are displayed as checkboxes, using the checked value we set in the controller to determine whether or not the box should be selected
+* set of authors are displayed as a single-selection alphabetically ordered drop-down list
+* If the user has previously selected a book author (i.e. when fixing invalid field values after initial form submission, or when updating book details) the author will be re-selected when the form is displayed
+* Here we determine what author to select by comparing the id of the current author option with the value previously entered by the user (passed in via the book variable)
+
+* If there is an error in the submitted form, then, when the form is to be re-rendered, the new book author's id and the existing books's authors ids are of type Schema.Types.ObjectId
+* So to compare them we must convert them to strings first -->
