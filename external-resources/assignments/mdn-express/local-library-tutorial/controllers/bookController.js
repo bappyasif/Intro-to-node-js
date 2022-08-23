@@ -214,7 +214,7 @@ let book_create_post = [
     // Convert the genre to an array
     (req, res, next) => {
         if(!Array.isArray(req.body.genre)) {
-            req.body.genre = typeof req.body.genre === 'undefined' ? [] : [req.body.genre]
+            req.body.genre = typeof req.body.genre === undefined ? [] : [req.body.genre]
         }
         next()
     },
@@ -222,19 +222,19 @@ let book_create_post = [
     // validate and sanitize fields
     body("title", "Title field must not be empty")
     .trim()
-    .isLength({min: 2})
+    .isLength({min: 1})
     .escape(),
     body("author", "Author field must not be empty")
     .trim()
-    .isLength({min: 2})
+    .isLength({min: 1})
     .escape(),
     body("summary", "Summary field must not be empty")
     .trim()
-    .isLength({min: 2})
+    .isLength({min: 1})
     .escape(),
     body("isbn", "ISBN field must not be empty")
     .trim()
-    .isLength({min: 2})
+    .isLength({min: 1})
     .escape(),
     body("genre.*").escape(), // using wildcard to sanitize every item below key genre
 
@@ -252,6 +252,8 @@ let book_create_post = [
             genre: req.body.genre,
 
         });
+
+        console.log(req.body.genre, typeof req.body.genre, 'req.body.genre', req.body.author )
 
         if(!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
@@ -299,6 +301,7 @@ let book_create_post = [
             if(err) return next(err)
 
             // Successful: redirect to new book record
+            console.log(book.genre, "genre!!")
             res.redirect(book.url)
         })
     }
