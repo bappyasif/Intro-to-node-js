@@ -184,13 +184,104 @@ let author_create_post = [
 ]
 
 // Display Author delete form on GET
-let author_delete_get = (req, res) => {
-    res.send('Not implemented: author delete get')
+// let author_delete_get = (req, res) => {
+//     res.send('Not implemented: author delete get')
+// }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * Display Author delete form on GET
+ * controller gets the id of the Author instance to be deleted from the URL parameter (req.params.id)
+ * It uses the async.parallel() method to get the author record and all associated books in parallel
+ * When both operations have completed it renders the author_delete view, passing variables for the title, author, and author_books
+ * If findById() returns no results the author is not in the database, means to there is nothing to delete, so we immediately render the list of all authors.
+ */
+let author_delete_get = (req, res, next) => {
+    async.parallel(
+        {
+            author(cb) {
+                Author.findById(req.params.id).exec(cb)
+            },
+
+            authors_books(cb) {
+                Book.find({author: req.params.id}).exec(cb)
+            }
+        },
+
+        // callback function
+        (err, results) => {
+            if(err) return next(err)
+
+            if(results.author == null) {
+                // No results
+                res.redirect("/catalog/authors")
+            }
+
+            // success, so lets render
+            res.render("author_delete", {
+                title: "Delete Author",
+                author: results.author,
+                author_books: results.authors_books
+            })
+        }
+    )
 }
 
 // Handle author delete on post request
-let author_delete_post = (req, res) => {
-    res.send('Not implemented: author delete post')
+// let author_delete_post = (req, res) => {
+//     res.send('Not implemented: author delete post')
+// }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * First we validate that an id has been provided (this is sent via the form body parameters, rather than using the version in the URL)
+ * Then we get the author and their associated books in the same way as for the GET route
+ * If there are no books then we delete the author object and redirect to the list of all authors
+ * If there are still books then we just re-render the form, passing in the author and list of books to be deleted
+ * 
+ * We could check if the call to findById() returns any result, and if not, immediately render the list of all authors
+ * We've left the code as it is above for brevity (it will still return the list of authors if the id is not found, but this will happen after findByIdAndRemove())
+ */
+let author_delete_post = (req, res, next) => {
+    async.parallel(
+        {
+            author(cb) {
+                Author.findById(req.body.authorid).exec(cb)
+            },
+
+            authors_books(cb) {
+                Book.find({author: req.body.authorid}).exec(cb)
+            }
+        },
+        
+        // callback function
+        (err, results) => {
+            if(err) return next(err)
+
+            // when successful
+            if(results.author_books.length)  {
+                // Author has books. Render in same way as for GET route
+                res.render("author_delete", {
+                    title: "Delete Author",
+                    author: results.author,
+                    author_books: results.authors_books
+                });
+                return;
+            }
+
+            // Author has no books. Delete object and redirect to the list of authors
+            Author.findByIdAndRemove(req.body.authorid, err => {
+                if(err) return next(err);
+                console.log(req.body.authorid, 'req.body.authorid', results)
+                // Success - go to author list
+                res.redirect("/catalog/authors");
+            })
+        }
+    )
 }
 
 // Display Author update form on GET
