@@ -224,6 +224,7 @@ let author_delete_get = (req, res, next) => {
                 title: "Delete Author",
                 author: results.author,
                 author_books: results.authors_books
+                // author_books: results.authors_books ? results.authors_books : []
             })
         }
     )
@@ -247,6 +248,8 @@ let author_delete_get = (req, res, next) => {
  * We've left the code as it is above for brevity (it will still return the list of authors if the id is not found, but this will happen after findByIdAndRemove())
  */
 let author_delete_post = (req, res, next) => {
+    // console.log(req.body.authorid, 'req.body.authorid', req.body)
+    // res.send(req.body.authorid)
     async.parallel(
         {
             author(cb) {
@@ -262,13 +265,18 @@ let author_delete_post = (req, res, next) => {
         (err, results) => {
             if(err) return next(err)
 
-            // when successful
-            if(results.author_books.length)  {
+            console.log(req.body.authorid, 'req.body.authorid', req.body, results)
+            // res.send(req.body.authorid)
+
+            // when successful            
+            if(results.authors_books.length > 0)  {
+                console.log(req.body.authorid, 'req.body.authorid', req.body, results)
                 // Author has books. Render in same way as for GET route
                 res.render("author_delete", {
                     title: "Delete Author",
                     author: results.author,
                     author_books: results.authors_books
+                    // author_books: results.authors_books ? results.authors_books : []
                 });
                 return;
             }
@@ -276,7 +284,11 @@ let author_delete_post = (req, res, next) => {
             // Author has no books. Delete object and redirect to the list of authors
             Author.findByIdAndRemove(req.body.authorid, err => {
                 if(err) return next(err);
-                console.log(req.body.authorid, 'req.body.authorid', results)
+                // console.log(req.body.authorid, 'req.body.authorid', results)
+
+                // console.log(req.body.authorid, 'req.body.authorid', req.body, results)
+                // res.send(req.body.authorid)
+
                 // Success - go to author list
                 res.redirect("/catalog/authors");
             })
