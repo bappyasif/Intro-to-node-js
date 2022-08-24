@@ -27,6 +27,7 @@ let bookinstance_list = (req, res, next) => {
     .exec((err, list_bookinstances) => {
         if(err) return next(err)
         // successfull so commencing render
+        console.log(list_bookinstances, 'list_bookinstances')
         res.render('bookinstance_list', {title: "Book Instance List", bookinstance_list: list_bookinstances})
     })
 }
@@ -154,8 +155,35 @@ let bookinstance_create_post = [
 ]
 
 // display BookInstance delete form on GET
-let bookinstance_delete_get = (req, res) => {
-    res.send('NOT IMPLEMENTED: BookInstance delete GET');
+// let bookinstance_delete_get = (req, res) => {
+//     res.send('NOT IMPLEMENTED: BookInstance delete GET');
+// }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * there are no dependent objects
+ * just find the associated record and render it
+ */
+let bookinstance_delete_get = (req, res, next) => {
+    BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec((err, book_instance) => {
+        if(err) return next(err)
+
+        // if empty, throw error
+        if(book_instance === null) {
+            let err = new Error("No book instance found");
+            err.status = 404;
+            return next(err)
+        }
+
+        // success, so pass onto rendering
+        console.log(book_instance, "book_instance")
+        // res.send(book_instance)
+        res.redirect(`/catalog/bookinstance/${book_instance._id}`)
+    })
 }
 
 // Handle BookInstance delete form on POST

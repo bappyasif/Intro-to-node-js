@@ -141,7 +141,7 @@ let book_detail = (req, res, next) => {
             }
 
             // success, so commence rendering
-            console.log(results.book, "results_book")
+            // console.log(results.book, "results_book")
             res.render("book_detail", {
                 title: results.book.title,
                 book: results.book,
@@ -254,7 +254,7 @@ let book_create_post = [
 
         });
 
-        console.log(req.body.genre, typeof req.body.genre, 'req.body.genre', req.body.author )
+        // console.log(req.body.genre, typeof req.body.genre, 'req.body.genre', req.body.author )
 
         if(!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.

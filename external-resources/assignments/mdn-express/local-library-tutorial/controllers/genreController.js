@@ -35,7 +35,7 @@ let genre_list = (req, res, next) => {
         .exec((err, list_genres) => {
             if (err) return next(err)
             // success, so begin rendering
-            console.log(list_genres, "list_genres")
+            // console.log(list_genres, "list_genres")
             res.render("genre_list", { title: "Genre List", genre_list: list_genres })
         })
 }
