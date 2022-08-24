@@ -141,6 +141,7 @@ let book_detail = (req, res, next) => {
             }
 
             // success, so commence rendering
+            console.log(results.book, "results_book")
             res.render("book_detail", {
                 title: results.book.title,
                 book: results.book,
@@ -318,14 +319,161 @@ let book_delete_post = (req, res) => {
 }
 
 // Display book update form on GET
-let book_update_get = (req, res) => {
-    res.send('NOT IMPLEMENTED: Book update GET');
+// let book_update_get = (req, res) => {
+//     res.send('NOT IMPLEMENTED: Book update GET');
+// }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * Display book update form on GET
+ * Gets the id of the Book to be updated from the URL parameter (req.params.id)
+ * It uses the async.parallel() method to get the specified Book record (populating its genre and author fields) and lists of all the Author and Genre objects
+ * When the operations complete it checks for any errors in the find operation, and also whether any books were found
+ * We then mark the currently selected genres as checked and then render the book_form view, passing variables for title, book, all authors, and all genres
+ */
+let book_update_get = (req, res, next) => {
+    // Get book, authors and genres for form
+    async.parallel(
+        {
+            book(cb) {
+                Book.findById(req.params.id)
+                .populate("genre")
+                .populate("author")
+                .exec(cb)
+            },
+
+            authors(cb) {
+                Author.find(cb)
+            },
+
+            genres(cb) {
+                Genre.find(cb)
+            }
+        },
+
+        // resulting callback
+        (err, results) => {
+            if(err) return next(err);
+
+            // No results, return error
+            if(results.book === null) {
+                let err = new Error("Book is not found");
+                err.status = 404;
+                return next(err)
+            }
+
+            // success
+            // mark our selected genres as checked
+            for(let genre of results.genres) {
+                for(let bookGenre of results.book.genre) {
+                    if(genre._id.toString() === bookGenre._id.toString()) {
+                        genre.checked = true
+                    }
+                }
+            }
+
+            res.render("book_form", {
+                title: "Update Book",
+                authors: results.authors,
+                genres: results.genres,
+                book: results.book,
+                errors: ''
+            })
+        }
+    )
 }
 
 // Handle book update form on POST
-let book_update_post = (req, res) => {
-    res.send('NOT IMPLEMENTED: Book update POST');
-}
+// let book_update_post = (req, res) => {
+//     res.send('NOT IMPLEMENTED: Book update POST');
+// }
+// Handle book update on POST
+// This is very similar to the post route used when creating a Book object (setting its _id value to the id of the object to update)
+// If there are errors when we validate the data then we re-render the form, additionally displaying the data entered by the user, the errors, and lists of genres and authors.
+//  If there are no errors then we call Book.findByIdAndUpdate() to update the Book document, and then redirect to its detail page
+
+let book_update_post = [
+    // Convert the genre to an array
+    (req, res, next) => {
+        if(!Array.isArray(req.body.genre)) {
+            req.body.genre = typeof req.body.genre === undefined ? [] : [req.body.genre]
+        }
+
+        // moving onto next block of code
+        next()
+    },
+
+    // Validate and sanitize fields
+    body("title", "Title must be present").trim().isLength({min: 1}).escape(),
+    body("author", "Author must be present").trim().isLength({min: 1}).escape(),
+    body("summary", "Summary must be present").trim().isLength({min: 1}).escape(),
+    body("isbn", "ISBN must be present").trim().isLength({min: 1}).escape(),
+    body("genre.*").escape(),
+
+    // Process request after validation and sanitization
+    (req, res, next) => {
+        // Extract the validation errors from a request
+        let errors = validationResult(req)
+
+        // Create a Book object with escaped/trimmed data and old id
+        let book = new Book({
+            title: req.body.title,
+            author: req.body.author,
+            summary: req.body.summary,
+            isbn: req.body.isbn,
+            genre: typeof req.body.genre === undefined ? [] : req.body.genre,
+            _id: req.params.id //This is required, or a new ID will be assigned!
+        });
+
+        // There are errors. Render form again with sanitized values/error messages
+        if(!errors.isEmpty()) {
+            // Get all authors and genres for form
+            async.parallel(
+                {
+                    authors(cb) {
+                        Author.find(cb)
+                    },
+
+                    genres(cb) {
+                        Genre.find(cb)
+                    }
+                },
+
+                // resulting callback
+                (err, results) => {
+                    if(err) return next(err);
+
+                    // Mark our selected genres as checked
+                    for(let genre of results.genres) {
+                        if(book.genre.includes(genre._id)) {
+                            genre.checked = true;
+                        }
+                    }
+
+                    // rendering form
+                    res.render("book_form", {
+                        title: "Update Book",
+                        authors: results.authors,
+                        genres: results.genres,
+                        book: book,
+                        errors: errors.array()
+                    })
+                }
+            )
+            return
+        }
+
+        // Data from form is valid. Update the record
+        Book.findByIdAndUpdate(req.params.id, {}, (err, deBook) => {
+            if(err) return next(err);
+
+            // Successful: redirect to book detail page
+            res.redirect(deBook.url)
+        })
+    }
+]
 
 module.exports = {
     index,

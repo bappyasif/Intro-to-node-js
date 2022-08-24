@@ -25,7 +25,7 @@
                 <ul>
                     <% if(book_list) { %>
                         <% book_list.forEach(book => { %>
-                            <li><a href=<%= book.url %>><%= book.title %></a> ( <%= book.author.name %> )</li>
+                            <li><a href=<%= book.url %>><%= book.title %></a> ( <%= book.author?.name %> )</li>
                         <% }) %> 
                     <% } else { %>
                         <li>There are no books</li>

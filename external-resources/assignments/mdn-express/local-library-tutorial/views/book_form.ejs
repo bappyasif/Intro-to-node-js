@@ -40,7 +40,7 @@
                                         <% if(book) { %>
                                             <option 
                                                 value=<%= author._id %> 
-                                                selected=<%= author._id.toString()===book.author._id.toString() ? 'selcted' : false %>
+                                                selected=<%= (author._id.toString()===book.author._id.toString() || author._id.toString() === book.author) ? 'selcted' : false %>
                                             >
                                                 <%= author.name %>
                                             </option>
@@ -112,6 +112,8 @@
     </body>
 
 </html>
+
+<!-- selected=<\%= author._id.toString()===book.author._id.toString() ? 'selcted' : false %> -->
 
 <!-- view structure and behavior is almost the same as for the genre_form.pug template
 

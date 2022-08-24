@@ -9,7 +9,7 @@
             </div>
             <div class="col">
                 <h1>Title: <%= book.title %></h1>
-                <p><strong><a href=<%= book.author.url %>><%= book.author.name %></a></strong></p>
+                <p><strong><a href=<%= book.author?.url %>><%= book.author?.name %></a></strong></p>
                 <p><strong>Summary: </strong><%= book.summary %></p>
                 <p><strong>ISBN: </strong><%= book.isbn %></p>
                 <p><strong>Genre</strong>
@@ -39,6 +39,9 @@
                                 <p><strong>Due Back: </strong><%= val.due_back %></p>
                             <% } %>
                             <p><strong>ID: </strong><a href=<%= val.url %>><%= val._id %></a></p>
+                            <hr>
+                            <p><a href=<%= book.url+"/delete" %>>Delete Book</a></p>
+                            <p><a href=<%= book.url+"/delete" %>>Delete Book</a></p>
                         <% }) %>
                     <% } else { %>
                         <p>There are no copies of this book in the library</p>
