@@ -309,13 +309,73 @@ let book_create_post = [
 ]
 
 // Display book delete form on GET
-let book_delete_get = (req, res) => {
-    res.send('NOT IMPLEMENTED: Book delete GET');
+// let book_delete_get = (req, res) => {
+//     res.send('NOT IMPLEMENTED: Book delete GET');
+// }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * it will find Within Book and Bookinstances for any copies of it
+ * and then if there is any copies of it found in bookinstances then show them to be removed first
+ * otherwise prompt them for book deletion
+ */
+let book_delete_get = (req, res, next) => {
+    // console.log(req.params)
+    // res.send("ahoy!!")
+    async.parallel(
+        {
+            bookinstances(cb) {
+                // BookInstance.findById(req.params.id).exec(cb)
+                BookInstance.find({book: req.params.id}).exec(cb)
+            },
+
+            // book(cb) {
+            //     Book.find({book: req.params.id}).exec(cb)
+            // },
+
+            book(cb) {
+                Book.findById(req.params.id).exec(cb)
+            },
+        },
+
+        // resulting callback
+        (err, results) => {
+            if(err) return next(err);
+
+            // console.log(results, "RESULTS!!", req.params.id)
+            // res.send("RESULTS")
+
+            res.render("book_delete", {
+                title: "Delete Book",
+                book: results.book,
+                bookinstances: results.bookinstances
+            })
+        }
+    )
 }
 
 // Handle book delete form on POST
-let book_delete_post = (req, res) => {
-    res.send('NOT IMPLEMENTED: Book delete POST');
+// let book_delete_post = (req, res) => {
+//     res.send('NOT IMPLEMENTED: Book delete POST');
+// }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * as book is safe for delete from previous GET route
+ * we will simply find that bookid and remove it from book list
+ * when done with deletion, we'll redner book list page as well
+ */
+let book_delete_post = (req, res, next) => {
+    // console.log(req.body.bookid, "req.body.bookid", req.body)
+    // res.send('NOT IMPLEMENTED: Book delete POST');
+    Book.findByIdAndRemove(req.body.bookid)
+    .then(() => console.log("Book Deleted"))
+    .catch(err => next(err))
+    .finally(() => res.redirect("/catalog/books"))
 }
 
 // Display book update form on GET

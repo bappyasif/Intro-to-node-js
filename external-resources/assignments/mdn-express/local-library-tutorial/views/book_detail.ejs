@@ -40,12 +40,15 @@
                             <% } %>
                             <p><strong>ID: </strong><a href=<%= val.url %>><%= val._id %></a></p>
                             <hr>
-                            <p><a href=<%= book.url+"/update" %>>Update Book</a></p>
-                            <p><a href=<%= book.url+"/delete" %>>Delete Book</a></p>
                         <% }) %>
                     <% } else { %>
                         <p>There are no copies of this book in the library</p>
                     <% } %>
+                        <hr>
+                        <span><a class="btn btn-warning" href=<%= book.url+"/update" %>>Update Book</a></span>
+                        <span><a class="btn btn-danger" href=<%= book.url+"/delete" %>>Delete Book</a></span>
+                        <hr>
+                        <hr>
                 </div>
             </div>
         </div>
