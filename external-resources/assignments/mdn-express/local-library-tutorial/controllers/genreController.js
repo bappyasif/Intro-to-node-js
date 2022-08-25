@@ -80,6 +80,7 @@ let genre_detail = (req, res, next) => {
             }
 
             // success, so commence rendering
+            // console.log(results.genre, "results.genre")
             res.render("genre_detail", {
                 title: "Genre Detail",
                 genre: results.genre,
@@ -132,9 +133,9 @@ let genre_create_get = (req, res, next) => {
 let genre_create_post = [
     // Validate and sanitize the name field
     body("name", "Genre name is required")
-    .trim()
-    .isLength({min: 2})
-    .escape(),
+        .trim()
+        .isLength({ min: 2 })
+        .escape(),
 
     // Process request after validation and sanitization
     (req, res, next) => {
@@ -142,10 +143,10 @@ let genre_create_post = [
         const errors = validationResult(req);
 
         // Create a genre object with escaped and trimmed data
-        let genre = new Genre({name: req.body.name})
+        let genre = new Genre({ name: req.body.name })
 
         // if error, Render the form again with sanitized values/error messages
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             res.render("genre_form", {
                 title: "Create Genre",
                 genre: genre,
@@ -156,33 +157,114 @@ let genre_create_post = [
         } else {
             // Data from form is valid
             // Check if Genre with same name already exists
-            Genre.findOne({name:req.body.name}).exec((err, _genre_) => {
-                if(err) return next(err);
+            Genre.findOne({ name: req.body.name }).exec((err, _genre_) => {
+                if (err) return next(err);
 
                 // genre found, redirect to detail page
-                if(_genre_) {
+                if (_genre_) {
                     res.redirect(_genre_.url)
                 } else {
                     genre.save(err => {
-                        if(err) return next(err);
+                        if (err) return next(err);
 
                         // genre saved, redirect to genre detal page
                         res.redirect(genre.url);
                     })
-                }               
+                }
             })
         }
     }
 ];
 
 // Display Genre delete form on GET request
-let genre_delete_get = function (req, res) {
-    res.send('NOT IMPLEMENTED: Genre delete GET');
+// let genre_delete_get = function (req, res) {
+//     res.send('NOT IMPLEMENTED: Genre delete GET');
+// };
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+let genre_delete_get = (req, res, next) => {
+    async.parallel(
+        {
+            genre(cb) {
+                Genre.findById(req.params.id).exec(cb)
+            },
+
+            genre_books(cb) {
+                Book.find({ genre: req.params.id }).exec(cb)
+            }
+        },
+
+        // resulting callback function from those callbacks
+        (err, results) => {
+            if (err) return next(err)
+
+            // if empty throw error
+            if (results === null) {
+                let err = new Error("No genre found with that id")
+                err.status = 404;
+                return next(err)
+            }
+
+            // otherwise successfull, so render
+            console.log(results, "results")
+            // res.send("rsults")
+            res.render("genre_delete", {
+                title: "Delete Genre",
+                genre: results.genre,
+                genre_books: results.genre_books
+            })
+        }
+    )
 };
 
 // Hnadle Genre delete form on POST request
-let genre_delete_post = function (req, res) {
-    res.send('NOT IMPLEMENTED: Genre delete POST');
+// let genre_delete_post = function (req, res) {
+//     res.send('NOT IMPLEMENTED: Genre delete POST');
+// };
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * we'll check if genreid has any book related to it, if not we will remove that from genre list
+ * and redirect to genre_list page once we're done
+ */
+let genre_delete_post = (req, res, next) => {
+    async.parallel(
+        {
+            genre(cb) {
+                Genre.findById(req.body.genreid).exec(cb)
+            },
+
+            books(cb) {
+                Book.find({ genre: req.body.genreid }).exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if (err) return next(err);
+
+            // if there are books in it, render genre delete get route
+            if (results?.books.length) {
+                res.render("genre_delete", {
+                    title: "Genre Delete",
+                    genre: results.genre,
+                    genre_books: results.genre_books
+                })
+                return
+            }
+
+            // safe to delete genre from list
+            Genre.findByIdAndRemove(req.body.genreid)
+                .then(() => console.log("Delete Successful"))
+                .catch(err => next(err))
+                .finally(() => res.redirect("/catalog/genres"))
+        }
+    )
 };
 
 // Display Genre update form on GET request

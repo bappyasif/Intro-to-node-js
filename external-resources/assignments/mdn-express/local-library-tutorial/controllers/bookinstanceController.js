@@ -180,7 +180,7 @@ let bookinstance_delete_get = (req, res, next) => {
         }
 
         // success, so pass onto rendering
-        console.log(book_instance, "book_instance")
+        // console.log(book_instance, "book_instance")
         // res.send(book_instance)
         res.render("book_instance_delete_form",  {
             title: book_instance.book.title,
@@ -188,7 +188,6 @@ let bookinstance_delete_get = (req, res, next) => {
             book: book_instance.book,
             bookinstanceID: book_instance._id
         })
-        // res.redirect(`/catalog/bookinstance/${book_instance._id}`)
     })
 }
 
@@ -211,14 +210,6 @@ let bookinstance_delete_post = (req, res, next) => {
     .then((r) => console.log("deleted",r))
     .catch(err => next(err))
     .finally(() => res.redirect("/catalog/bookinstances"))
-
-    // res.send(req.body)
-    // BookInstance.findByIdAndDelete(req.body.bookid, err => {
-    //     if(err) return next(err);
-
-    //     // successful deletion, redirecting to bookinstances list
-    //     res.redirect("/catalog/bookinstances")
-    // })
 }
 
 // display BookInstance update form on GET

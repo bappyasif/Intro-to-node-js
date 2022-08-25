@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs") %>
+
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-2">
+                    <%- include("./partials/nav.ejs") %>
+                </div>
+                <div class="col">
+                    <h1>
+                        <%= title %>
+                    </h1>
+                    <hr>
+                    <hr>
+                    <h2>Genre Name: <%= genre.name %>
+                    </h2>
+                    <% if(genre_books?.length) { %>
+                        <p>Delete these Books first: </p>
+                        <ul>
+                            <% genre_books.forEach(book=> { %>
+                                <li><a href=<%= "/catalog/book/"+book._id %> ><%= book.title %></a></li>
+                            <% }) %>
+                        </ul>
+                        <% } else { %>
+                            <p>Do you really want to delete this genre?</p>
+                            <form action="" method="post">
+                                <div class="form-group">
+                                    <input type="hidden" name="genreid" id="genreid" required="true" value=<%= genre._id %>>
+                                </div>
+                                <button class="btn btn-warning">Delete</button>
+                            </form>
+                        <% } %>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>
