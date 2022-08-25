@@ -265,12 +265,12 @@ let author_delete_post = (req, res, next) => {
         (err, results) => {
             if(err) return next(err)
 
-            console.log(req.body.authorid, 'req.body.authorid', req.body, results)
+            // console.log(req.body.authorid, 'req.body.authorid', req.body, results)
             // res.send(req.body.authorid)
 
             // when successful            
             if(results.authors_books.length > 0)  {
-                console.log(req.body.authorid, 'req.body.authorid', req.body, results)
+                // console.log(req.body.authorid, 'req.body.authorid', req.body, results)
                 // Author has books. Render in same way as for GET route
                 res.render("author_delete", {
                     title: "Delete Author",

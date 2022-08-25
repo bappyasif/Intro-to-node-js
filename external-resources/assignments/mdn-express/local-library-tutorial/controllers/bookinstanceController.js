@@ -27,7 +27,7 @@ let bookinstance_list = (req, res, next) => {
     .exec((err, list_bookinstances) => {
         if(err) return next(err)
         // successfull so commencing render
-        console.log(list_bookinstances, 'list_bookinstances')
+        // console.log(list_bookinstances, 'list_bookinstances')
         res.render('bookinstance_list', {title: "Book Instance List", bookinstance_list: list_bookinstances})
     })
 }
@@ -182,13 +182,43 @@ let bookinstance_delete_get = (req, res, next) => {
         // success, so pass onto rendering
         console.log(book_instance, "book_instance")
         // res.send(book_instance)
-        res.redirect(`/catalog/bookinstance/${book_instance._id}`)
+        res.render("book_instance_delete_form",  {
+            title: book_instance.book.title,
+            author: book_instance.book.author,
+            book: book_instance.book,
+            bookinstanceID: book_instance._id
+        })
+        // res.redirect(`/catalog/bookinstance/${book_instance._id}`)
     })
 }
 
 // Handle BookInstance delete form on POST
-let bookinstance_delete_post = (req, res) => {
-    res.send('NOT IMPLEMENTED: BookInstance delete POST');
+// let bookinstance_delete_post = (req, res) => {
+//     res.send('NOT IMPLEMENTED: BookInstance delete POST');
+// }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * handling bookinstance delete POST request
+ * find and delete that book instance from list of book instances
+ * and after successful deletion we'll redirect page to bookinstance_list page
+ */
+let bookinstance_delete_post = (req, res, next) => {
+    // res.send(req.body.bookinstanceid)
+    BookInstance.findByIdAndRemove(req.body.bookinstanceid)
+    .then((r) => console.log("deleted",r))
+    .catch(err => next(err))
+    .finally(() => res.redirect("/catalog/bookinstances"))
+
+    // res.send(req.body)
+    // BookInstance.findByIdAndDelete(req.body.bookid, err => {
+    //     if(err) return next(err);
+
+    //     // successful deletion, redirecting to bookinstances list
+    //     res.redirect("/catalog/bookinstances")
+    // })
 }
 
 // display BookInstance update form on GET
