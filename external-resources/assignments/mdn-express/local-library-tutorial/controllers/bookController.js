@@ -461,6 +461,8 @@ let book_update_post = [
             req.body.genre = typeof req.body.genre === undefined ? [] : [req.body.genre]
         }
 
+        // console.log(req.body.genre, "req.body.genre", req.body)
+
         // moving onto next block of code
         next()
     },
@@ -526,10 +528,11 @@ let book_update_post = [
         }
 
         // Data from form is valid. Update the record
-        Book.findByIdAndUpdate(req.params.id, {}, (err, deBook) => {
+        Book.findByIdAndUpdate(req.params.id, book, {}, (err, deBook) => {
             if(err) return next(err);
 
             // Successful: redirect to book detail page
+            // console.log(req.params.id, "req.params.id", req.params, req.body, deBook)
             res.redirect(deBook.url)
         })
     }
