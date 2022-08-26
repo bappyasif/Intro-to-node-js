@@ -27,9 +27,6 @@ BookInstanceSchema.virtual("due_back_formatted")
 // virtual for bookinstance form
 BookInstanceSchema.virtual("date_format")
 .get(function() {
-    // console.log(DateTime.fromJSDate(this.due_back).toSQL(DateTime.DATE_SHORT))
-    // console.log(DateTime.fromISO(this.due_back, "yyyy-mm-dd"))
-    // console.log(DateTime.fromJSDate(this.due_back).toISODate())
     // date needed to be formatted as yyyy-mm-dd, which ISODate() does provide
     return DateTime.fromJSDate(this.due_back).toISODate()
 })

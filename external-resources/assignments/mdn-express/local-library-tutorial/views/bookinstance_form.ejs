@@ -52,9 +52,24 @@
                     <div class="form-group">
                         <label for="status">Status: </label>
                         <select name="status" id="status" placeholder="Select Status" required="true">
-                            <option <%= selected=bookinstance.status === "Maintainance" ? 'selected' : null %> value="Maintenance">Maintenance</option>
-                            <option <%= selected=bookinstance.status === "Available" ? 'selected' : null %> value="Available">Available</option>
-                            <option <%= selected=bookinstance.status === "Loaned" ? 'selected' : null %> value="Loaned">Loaned</option>
+                            <option 
+                                <%= selected=bookinstance.status === "Maintainance" ? 'selected' : null %> 
+                                value="Maintenance"
+                            >
+                                Maintenance
+                            </option>
+                            <option 
+                                <%= selected=bookinstance.status === "Available" ? 'selected' : null %> 
+                                value="Available"
+                            >
+                                Available
+                            </option>
+                            <option 
+                                <%= selected=bookinstance.status === "Loaned" ? 'selected' : null %> 
+                                value="Loaned"
+                            >
+                                Loaned
+                            </option>
                             <option 
                                 <%= selected = bookinstance.status === "Reserved" ? 'selected' : null %> 
                                 value="Reserved"

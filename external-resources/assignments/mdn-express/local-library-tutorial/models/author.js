@@ -68,5 +68,16 @@ AuthorSchema.virtual("due_back_formatted")
 // We've also declared a virtual for the AuthorSchema named "url" that returns the absolute URL required to get a particular instance of the model — we'll use the property in our templates whenever we need to get a link to a particular author
 // Declaring our URLs as a virtual in the schema is a good idea because then the URL for an item only ever needs to be changed in one place
 
+// formatting dob and dod for create author form
+AuthorSchema.virtual("dob_iso_form")
+.get(function() {
+    return DateTime.fromJSDate(this.date_of_birth).toISODate()
+})
+
+AuthorSchema.virtual("dod_iso_form")
+.get(function() {
+    return DateTime.fromJSDate(this.date_of_death).toISODate()
+})
+
 //Export model
 module.exports = mongoose.model('Author', AuthorSchema)

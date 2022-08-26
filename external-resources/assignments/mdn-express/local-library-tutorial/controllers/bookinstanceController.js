@@ -181,8 +181,6 @@ let bookinstance_delete_get = (req, res, next) => {
             }
 
             // success, so pass onto rendering
-            // console.log(book_instance, "book_instance")
-            // res.send(book_instance)
             res.render("book_instance_delete_form", {
                 title: book_instance.book.title,
                 author: book_instance.book.author,
@@ -253,51 +251,17 @@ let bookinstance_delete_post = (req, res, next) => {
         })
     })
 }
-// let bookinstance_update_get = (req, res, next) => {
-//     async.parallel(
-//         {
-//             bookinstance(cb) {
-//                 BookInstance.findById(req.params.id).exec(cb)
-//             },
-
-//             selected_book(cb) {
-//                 // Book.find({ book: req.params.id }).exec(cb)
-//                 Book.find({ book: req.params.id }).exec(cb)
-//             }
-//         },
-
-//         (err, results) => {
-//             if (err) return next(err);
-
-//             console.log(results, "update");
-//             res.send(results)
-//             // res.render("bookinstance_form", {
-//             //     title: "Update BookInstance",
-//             //     bookinstance: results,
-
-//             // })
-//         }
-//     )
-// }
-// let bookinstance_update_get = (req, res, next) => {
-//     BookInstance.findById(req.params.id)
-//     .exec((err, results) => {
-//         if(err) return next(err);
-
-//         console.log(results, "update");
-//         // res.send(results)
-//         res.render("bookinstance_form", {
-//             title: "Update BookInstance",
-//             bookinstance: results,
-
-//         })
-//     })
-// }
 
 // Handle BookInstance update form on POST
 // let bookinstance_update_post = (req, res) => {
 //     res.send('NOT IMPLEMENTED: BookInstance update POST');
 // }
+/**
+ * we'll sanitize and validate date before updating
+ * once validation is done, we'll process request for updating, and collect and gaher user chnages in update form
+ * if there is any error found, we will re gather all those bookinstance form require, by fetching Bokinstance and Book data
+ * once we're in clear we are safe to update user changes in bookinstance records
+ */
 let bookinstance_update_post = [
     // validating and sanitizing data
     body("book", "Book Must Be Specified").trim().isLength({min: 1}),
@@ -344,7 +308,6 @@ let bookinstance_update_post = [
             if(err) return next(err);
 
             // successfull, so redirect to bookinstance detail page
-            // console.log(bookinst, 'bookinst')
             res.redirect("/catalog/bookinstance/"+bookinst._id) // we could have used virtual method just as we have used for "book.url"
             // res.redirect("/catalog/bookinstance/"+req.params.id)
         })
