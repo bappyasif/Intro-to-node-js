@@ -33,8 +33,8 @@
                             class="form-control" 
                             name="imprint" 
                             required="true" 
-                            placeholder="Publisher and date information"
-                            value=<% bookinstance === undefined ? '' : bookinstance.imprint %>
+                            placeholder= "Publisher and date information"
+                            value=<%= bookinstance !== undefined ? bookinstance.imprint : '' %>
                         >
                     </div>
 
@@ -45,17 +45,22 @@
                             name="due_back"
                             id="due_back"
                             class="form-control"
-                            value=<% bookinstance === undefined ? '' : bookinstance.due_back %>
+                            value=<%= bookinstance === undefined ? '' : bookinstance.date_format %>
                         >
                     </div>
 
                     <div class="form-group">
                         <label for="status">Status: </label>
                         <select name="status" id="status" placeholder="Select Status" required="true">
-                            <option value="Maintenance">Maintenance</option>
-                            <option value="Available">Available</option>
-                            <option value="Loaned">Loaned</option>
-                            <option value="Reserved">Reserved</option>
+                            <option <%= selected=bookinstance.status === "Maintainance" ? 'selected' : null %> value="Maintenance">Maintenance</option>
+                            <option <%= selected=bookinstance.status === "Available" ? 'selected' : null %> value="Available">Available</option>
+                            <option <%= selected=bookinstance.status === "Loaned" ? 'selected' : null %> value="Loaned">Loaned</option>
+                            <option 
+                                <%= selected = bookinstance.status === "Reserved" ? 'selected' : null %> 
+                                value="Reserved"
+                            >
+                                Reserved
+                            </option>
                         </select>
                     </div>
 
@@ -77,6 +82,9 @@
 </html>
 
 <!-- 
+    placeholder= <\% bookinstance.imprint !== undefined ? bookinstance.imprint : "Publisher and date information" %>
+                            value=<\% bookinstance.imprint %>
+    value=<\% bookinstance === undefined ? '' : bookinstance.imprint %>
     * above template hard-codes the Status values (Maintenance, Available, etc.) and does not "remember" the user's entered values
     * view structure and behavior is almost the same as for the book_form template
  -->

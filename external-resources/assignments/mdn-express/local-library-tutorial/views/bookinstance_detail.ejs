@@ -26,9 +26,10 @@
                         <p><strong>Due Back: </strong><%= bookinstance.due_back_formatted %></p>
                     <% } %>
                 </p>
-
                 <hr>
-                <p><a href=<%= bookinstance._id+"/delete" %>>Delete Book</a></p>
+                    <span><a class="btn btn-warning" href=<%= bookinstance._id+"/update" %>>Update Book</a></span>
+                    <span><a class="btn btn-danger" href=<%= bookinstance._id+"/delete" %>>Delete Book</a></span>
+                <hr>
             </div>
         </div>
     </div>
