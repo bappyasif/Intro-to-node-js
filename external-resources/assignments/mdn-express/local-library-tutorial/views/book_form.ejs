@@ -22,7 +22,7 @@
                                 placeholder="Name of book" 
                                 name="title"
                                 required=true 
-                                value=<%= undefined===book ? '' : book.title %>
+                                value=<%= book?.title %>
                             >
                         </div>
                         <div class="form-group">
@@ -40,7 +40,7 @@
                                         <% if(book) { %>
                                             <option 
                                                 value=<%= author._id %> 
-                                                selected=<%= (author?._id.toString()===book.author?._id.toString() || author?._id.toString() === book.author) ? 'selcted' : false %>
+                                                <%= selected= (author?._id.toString()===book.author?._id.toString() || author?._id.toString() === book.author) ? 'selected' : null %>
                                             >
                                                 <%= author.name %>
                                             </option>
@@ -84,7 +84,7 @@
                                         <input 
                                             type="checkbox" 
                                             name="genre" 
-                                            checked=<%= genre.checked===undefined ? false : true %> 
+                                            <%= checked=genre.checked===undefined ? false : 'checked' %> 
                                             value=<%= genre._id %> 
                                             id=<%= genre._id %>
                                         >
