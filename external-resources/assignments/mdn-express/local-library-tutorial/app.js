@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+let compression = require("compression");
+let helmet = require("helmet");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -27,6 +29,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compression()); // compress all existing routes
+app.use(helmet()); // using hemlet to reove any threats
 app.use(express.static(path.join(__dirname, 'public')));
 
 // using mongoose
