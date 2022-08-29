@@ -5,7 +5,8 @@ let Book = require("../models/book");
 let async = require("async");
 
 // imports for create author form route
-let {body, validationResult} = require("express-validator")
+let {body, validationResult} = require("express-validator");
+const { result } = require("lodash");
 
 // Display list of all authors
 // exports.author_list = (req, res) => {
@@ -297,14 +298,116 @@ let author_delete_post = (req, res, next) => {
 }
 
 // Display Author update form on GET
-let author_update_get = (req, res) => {
-    res.send('Not implemented: author update get')
+// let author_update_get = (req, res) => {
+//     res.send('Not implemented: author update get')
+// }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * we'll look through Author and Book and see if we find any matches there or not
+ * if theres Author Found, with that bok, then we'll pass it on to author form page for any updates it may require
+ */
+let author_update_get = (req, res, next) => {
+    async.parallel(
+        {
+            author(cb) {
+                Author.findById(req.params.id).exec(cb)
+            },
+
+            author_books(cb) {
+                Book.find({author: req.params.id}, "title summary").exec(cb)
+            }
+        },
+
+        // resulting callback
+        (err, results) => {
+            if(err) return next(err);
+
+            if(results.author === null) {
+                let err = new Error("No author is found");
+                err.status = 404;
+                return next(err)
+            }
+
+            // success, render author form page
+            // console.log("author >> ", results)
+            // res.send("test test")
+            res.render("author_form", {
+                title: "Update Author",
+                author: results.author,
+                errors: []
+            })
+        }
+    )   
 }
 
 // Handle author update on post request
-let author_update_post = (req, res) => {
-    res.send('Not implemented: author update post')
-}
+// let author_update_post = (req, res) => {
+//     res.send('Not implemented: author update post')
+// }
+let author_update_post = [
+    body("first_name")
+    .trim().isLength({min: 1}).escape()
+    .withMessage("First name must be specified").isAlphanumeric()
+    .withMessage("First name had non alphanumeric characters"),
+    body("family_name")
+    .trim().isLength({min: 1}).escape()
+    .withMessage("Family name must be specified").isAlphanumeric()
+    .withMessage("Family name had non alphanumeric characters"),
+    body("date_of_birth", "invalid date of birth")
+    .optional({checkFalsy: true}).isISO8601().toDate(),
+    body("date_of_death", "invalid date of death")
+    .optional({checkFalsy: true}).isISO8601().toDate(),
+
+    // Process request after validation and sanitization
+    (req, res, next) => {
+        // Extract the validation errors from a request
+        let errors = validationResult(req)
+
+        if(!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/errors messages
+            res.render("author_form", {
+                title: "Update Author",
+                author: req.body,
+                errors: errors.array()
+            })
+            return;
+        }
+
+        // successful, so save and update record and redirect to authors list page
+        // Data from form is valid
+
+        // Create an Author object with escaped and trimmed data
+        console.log(req.params.id, "<<req.params.id>>")
+        let author = new Author({
+            first_name: req.body.first_name,
+            family_name: req.body.family_name,
+            date_of_birth: req.body.date_of_birth,
+            date_of_death: req.body.date_of_death,
+            _id: req.params.id
+        })
+
+        Author.findByIdAndUpdate(req.params.id, author, {}, (err, author) => {
+            if(err) return next(err);
+
+            // succesful so lets render it to author detail page
+            res.redirect(author.url)
+        })
+
+        // saving author or failing that throwing error
+        // author.save(err => {
+        //     if(err) return next(err)
+
+        //     // when successfull redirect page to author list
+        //     // res.redirect(author.url)
+        //     res.send("uccess")
+        // })
+
+    }
+
+]
 
 module.exports = {
     author_list,
