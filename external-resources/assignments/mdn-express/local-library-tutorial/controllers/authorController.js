@@ -380,7 +380,7 @@ let author_update_post = [
         // Data from form is valid
 
         // Create an Author object with escaped and trimmed data
-        console.log(req.params.id, "<<req.params.id>>")
+        // console.log(req.params.id, "<<req.params.id>>")
         let author = new Author({
             first_name: req.body.first_name,
             family_name: req.body.family_name,

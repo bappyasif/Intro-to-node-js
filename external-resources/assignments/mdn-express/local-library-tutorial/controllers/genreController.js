@@ -268,14 +268,70 @@ let genre_delete_post = (req, res, next) => {
 };
 
 // Display Genre update form on GET request
-let genre_update_get = function (req, res) {
-    res.send('NOT IMPLEMENTED: Genre update GET');
+// let genre_update_get = function (req, res) {
+//     res.send('NOT IMPLEMENTED: Genre update GET');
+// };
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * we'll fetch genre name from Genre and then render genre form with required variables in it
+ */
+let genre_update_get = (req, res, next) => {
+    Genre.findById(req.params.id).exec((err, results) => {
+        if (err) return next(err);
+
+        // successfull, so commence rendering genre form for updating genre name
+        // console.log(results, "<<results>>")
+        // res.send("test tesr")
+        res.render("genre_form", {
+            title: "Update Genre",
+            genre: results,
+            errors: []
+        })
+    })
 };
 
 // Hnadle Genre update form on POST request
-let genre_update_post = function (req, res) {
-    res.send('NOT IMPLEMENTED: Genre update POST');
-};
+// let genre_update_post = function (req, res) {
+//     res.send('NOT IMPLEMENTED: Genre update POST');
+// };
+let genre_update_post = [
+    body("name", "Genre name is required")
+        .trim().isLength({ min: 1 }).escape(),
+    
+    // Process request after validation and sanitization
+    (req, res, next) => {
+        // Extract the validation errors from a request
+        let errors = validationResult(req);
+
+        // Create a genre object with escaped and trimmed data
+        // let genre =  new Genre({genre: req.body.name, _id: req.params.id})
+
+        // if error, Render the form again with sanitized values/error messages
+        if(!errors.isEmpty()) {
+            res.render("genre_form", {
+                title: "Update Genre",
+                genre: req.body.name,
+                errors: errors.array()
+            })
+            return;
+        } else {
+            let genre =  new Genre({name: req.body.name, _id: req.params.id})
+            // Data from form is valid
+            // so lets update record, and then redirect to genre detail page
+            Genre.findByIdAndUpdate(req.params.id, genre, {}, (err, genre) => {
+                if(err) return next(err);
+
+                // redirect to genre detail
+                // console.log(genre, "GENRE<<>>", req.body.name)
+                res.redirect(genre.url)
+            })
+        }
+    }
+    
+]
 
 module.exports = {
     genre_list,
