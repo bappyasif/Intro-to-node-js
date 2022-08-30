@@ -1,31 +1,30 @@
 {
-  "name": "intro-nodejs",
-  "version": "1.0.0",
-  "description": "node.js introduction",
-  "main": "index.js",
-  "dependencies": {
-    "ejs": "^3.1.8",
-    "express": "^4.18.1",
-    "express-handlebars": "^6.0.6",
-    "formidable": "^2.0.1",
-    "lodash": "^4.17.21",
-    "moment": "^2.29.4",
-    "mongoose": "^6.4.4",
-    "morgan": "^1.10.0",
-    "nodemailer": "^6.7.7",
-    "upper-case": "^2.0.2",
-    "uuid": "^8.3.2"
-  },
-  "devDependencies": {
-    "eslint": "^8.21.0",
-    "nodemon": "^2.0.19"
+  "name": "local-library-tutorial",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {
+    "node": "14.20.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node crash-course.nodejs-index.js",
-    "dev": "nodemon crash-course.nodejs-index.js",
-    "lint": "eslint *.js"
+    "start": "node ./bin/www",
+    "devstart": "nodemon ./bin/www",
+    "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart"
   },
-  "author": "a b",
-  "license": "ISC"
+  "dependencies": {
+    "async": "^3.2.4",
+    "compression": "^1.7.4",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "express-validator": "^6.14.2",
+    "helmet": "^6.0.0",
+    "http-errors": "~1.6.3",
+    "luxon": "^3.0.1",
+    "mongoose": "^6.5.2",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
 }
