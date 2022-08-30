@@ -51,3 +51,92 @@ export DEBUG="author,book"
 * While Heroku is perfect for hosting this demonstration it may not be perfect for your real website
 * Heroku makes things easy to set up and scale
 * If you need more speed or uptime or add-on features, expect to pay for them
+
+**How does Heroku work**
+* Heroku runs websites within one or more "Dynos"
+* Dunos are isolated, virtualized Unix containers that provide the environment required to run an application
+* Dynos have an ephemeral file system (a short-lived file system that is cleaned and emptied each time the dyno restarts)
+* One thing dynos share by default are the application configuration variables
+* Internally, Heroku uses a load balancer to distribute web traffic to all "web" dynos
+* Since nothing is shared between them, Heroku can scale an app horizontally by adding more dynos
+* You may also need to scale your database to accept additional connections
+* Because the file system is ephemeral you can't directly install services required by your application
+* Databases, queues, caching systems, storage, email services, etc. are considered "add-ons."
+* Heroku web applications use backing services provided by Heroku or 3rd parties
+* Once attached to your web application, the add-on services are accessed in your web application via environment variables
+* For each additional service, charges may apply
+* In order to execute your application Heroku needs to be configured to set up the appropriate environment for your application's dependencies and be told how to start
+* For Node apps, all the information it needs is obtained from your package.json file
+* Developers interact with Heroku using a special client app/terminal, which is much like a Unix bash script
+* This allows you to upload code stored in a git repository, inspect the running processes, see logs, set configuration variables, and much more
+* To get our application on heroku, First we'll initialize a git repository for our Express web application
+* Next, we'll make some minor changes to the package.json
+* Once we've done that we'll set up a Heroku account, install the Heroku client on our local machine and use it to upload our application
+
+**Creating an application repository in GitHub**
+* Heroku is integrated with git, the source code version control system
+* Heroku client you install will use git to synchronize changes you upload
+* Heroku client creates a new "remote" repository named heroku
+* It connects to a repository of your code on the Heroku cloud
+* During development, you use git to store changes on your own repository
+* When you want to deploy your site, you sync your changes to the Heroku repository
+
+**Update the app for Heroku**
+* This section explains the changes you'll need to make to our LocalLibrary application to get it to work on Heroku
+
+*Set node version*
+* package.json contains everything needed to work out your application dependencies and what file should be launched to start your site
+* Heroku detects the presence of this file, and will use it to provision your app environment
+* only useful information missing in our current package.json is the version of node
+* We can find the version of node we're using for development by entering the command: `node --version`
+* add this information as an engines > node section in json `"engines": {"node": "zz.xx.yy"}`
+
+*Database configuration*
+* So far in this tutorial, we've used a single database that is hard-coded into app.js
+* Normally we'd like to be able to have a different database for production and development, so next we'll modify the LocalLibrary website to get the database URI from the OS environment (if it has been defined), and otherwise use our development database
+* Open app.js and find the line that sets the MongoDB connection variable
+* use process.env.MONGODB_URI to get the connection string from an environment variable named MONGODB_URI if has been set
+* Before we proceed, let's test the site again and make sure it wasn't affected by any of our changes
+* Get a Heroku account
+
+**Install the client**
+*Create and upload the website*
+* To create the app we run the "create" command in the root directory of our repository `heroku create`
+* This creates a git remote ("pointer to a remote repository") named heroku in our local git environment
+* You can name the remote if you like by specifying a value after "create"
+* If you don't then you'll get a random name, and will be used in the default URL
+* We can then push our app to the Heroku repository such as this `git push heroku main`
+* after that app should be now "running" on the site
+* To open your browser and run the new website `heroku open`
+
+**Setting configuration variables**
+* You will recall from a preceding section that we need to set NODE_ENV to 'production' in order to improve our performance and generate less-verbose error messages
+* We do this by entering the following command: 
+```
+heroku config:set NODE_ENV='production'
+Setting NODE_ENV and restarting limitless-tor-18923... done, v13
+NODE_ENV: production
+```
+* We should also use a separate database for production, setting its URI in the MONGODB_URI environment variable
+* You can set up a new database and database-user exactly as we did originally, and get its devlopement URI
+* You can set the URI as shown (obviously, using your own URI!)
+```
+heroku config:set MONGODB_URI=mongodb+srv://cooluser:coolpassword@cluster0-mbdj7.mongodb.net/local_library?retryWrites=true
+Setting MONGODB_URI and restarting limitless-tor-18923... done, v13
+MONGODB_URI: mongodb+srv://cooluser:coolpassword@cluster0-mbdj7.mongodb.net/local_library?retryWrites=true
+```
+* You can inspect your configuration variables at any time using the heroku config command `heroku config`
+* Heroku will restart your app when it updates the variables
+* If you check the home page now it should show zero values for your object counts, as the changes above mean that we're now using a new (empty) database
+
+**Managing addons**
+* Heroku uses independent add-ons to provide backing services to apps — for example, email or database services
+* We don't use any addons in this website, but they are an important part of working with Heroku, so you may want to check out the topic Managing Add-ons (Heroku docs)
+
+**Debugging**
+* Heroku client provides a few tools for debugging:
+```
+heroku logs  # Show current logs
+heroku logs --tail # Show current logs and keep updating with any new results
+heroku ps   #Display dyno status
+```
