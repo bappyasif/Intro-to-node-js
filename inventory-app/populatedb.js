@@ -165,19 +165,19 @@ function createAlbums(cb) {
       albumCreate("Lais Fita", "Many more awesome songs", "2002/01/01", artists[0], genres[2], 22, callback)
     },
     function (callback) {
-      albumCreate("Dangerous", "Globally renowned awesome songs", "2000/01/01", artists[1], genres[2], 22, callback)
+      albumCreate("Dangerous", "Globally renowned awesome songs", "2000/01/01", artists[1], [genres[2], ], 22, callback)
     },
     function (callback) {
-      albumCreate("Dangerous- II", "Globally renowned awesome songs", "2002/01/01", artists[2], genres[4], 22, callback)
+      albumCreate("Dangerous- II", "Globally renowned awesome songs", "2002/01/01", artists[2], [genres[4], genres[2]], 22, callback)
     },
     function (callback) {
-      albumCreate("Dangerous- III", "Globally renowned awesome songs", "2000/01/01", artists[3], genres[5], 22, callback)
+      albumCreate("Dangerous- III", "Globally renowned awesome songs", "2000/01/01", artists[3], [genres[5], genres[4]], 22, callback)
     },
     function (callback) {
       albumCreate("Dangerous-IV", "Globally renowned awesome songs", "2000/01/01", artists[4], genres[4], 22, callback)
     },
     function (callback) {
-      albumCreate("Fear Of De Dark", "Globally renowned awesome songs", "2000/01/01", artists[1], genres[6], 22, callback)
+      albumCreate("Fear Of De Dark", "Globally renowned awesome songs", "2000/01/01", artists[1], [genres[6], genres[3]], 22, callback)
     }
   ],
     // optional callback
