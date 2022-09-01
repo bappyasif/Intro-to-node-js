@@ -33,6 +33,11 @@ category model:
 * url
 * item count
 
+category view:
+* name
+* artist
+* released date
+
 views details:
    * genre:
      * name

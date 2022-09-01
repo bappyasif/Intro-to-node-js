@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs") %>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-2">
+                    <%- include("./partials/nav.ejs") %>
+                </div>
+                <div class="col">
+                    <h1>
+                        <%= title %>
+                    </h1>
+                    <ul>
+                        <li><a class="text-info" href="/catalog/albums">Number of total Albums: <sp class="text-danger"><%= results.count_albums %></sp></a></li>
+                        <li><a class="text-info" href="/catalog/artists">Number of total Artists: <span class="text-danger"><%= results.count_artists %></span></a></li>
+                        <li><a class="text-info" href="/catalog/genres">Number of total Genres: <span class="text-danger"><%= results.count_genres %></span></a></li>
+                        <li><a class="text-info" href="/catalog/tracks">Number of total Tracks: <span class="text-danger"><%= results.count_tracks %></span></a></li>
+                    </ul>
+                    <hr>
+                    <hr>
+                    <h2>Album counts from different Genres: </h2>
+                    <table class="table table-bordered">
+                        <thead class="text-center">
+                            <tr>
+                                <% for(let key in results.albums_genres) { %>
+                                    
+                                    <th scope="col"><span class="text-info"><%= key %></span></th>
+                                    
+                                <% } %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <% for(let key in results.albums_genres) { %>
+                                    
+                                    <td class="text-center"><span class="text-danger"><%= results.albums_genres[key] %></td>
+                                    
+                                <% } %>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

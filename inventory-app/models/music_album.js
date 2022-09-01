@@ -15,4 +15,17 @@ let MusicAlbumSchema = new Schema(
     }
 )
 
+MusicAlbumSchema.virtual("artistName")
+.get(function() {
+    let fullName = "";
+    fullName += this.artist.first_name + " " + this.artist.last_name
+    // console.log(fullName, "<<fullname>>")
+    return fullName;
+})
+
+MusicAlbumSchema.virtual("url")
+.get(function() {
+    return "/catalog/album/"+this._id
+})
+
 module.exports = mongoose.model("MusicAlbum", MusicAlbumSchema)
