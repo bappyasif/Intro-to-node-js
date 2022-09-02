@@ -33,7 +33,7 @@ let genres_list = (req, res, next) => {
 
 
 
-            console.log(results, "<<?>?><><>")
+            // console.log(results, "<<?>?><><>")
 
             res.render("all-genres", {
                 title: "List Of All Genres",

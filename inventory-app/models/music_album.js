@@ -1,3 +1,6 @@
+const { DateTime } = require("luxon");
+let luxon = require("luxon")
+
 let mongoose = require("mongoose");
 
 let Schema = mongoose.Schema;
@@ -21,6 +24,18 @@ MusicAlbumSchema.virtual("artistName")
     fullName += this.artist.first_name + " " + this.artist.last_name
     // console.log(fullName, "<<fullname>>")
     return fullName;
+})
+
+MusicAlbumSchema.virtual("album_genre")
+.get(function() {
+    let genreStr = '';
+    this.genre?.forEach(item => genreStr += item.name + " ")
+    return genreStr;
+})
+
+MusicAlbumSchema.virtual("released_date_format")
+.get(function() {
+    return `${DateTime.fromJSDate(this.released_date).toLocaleString(DateTime.DATE_MED)}`
 })
 
 MusicAlbumSchema.virtual("url")

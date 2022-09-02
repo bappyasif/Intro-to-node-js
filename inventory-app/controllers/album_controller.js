@@ -28,8 +28,28 @@ let albums_list = (req, res, next) => {
     )
 }
 
-let album_detail = (req, res) => {
-    res.send("To Do: album detail")
+let album_detail = (req, res, next) => {
+    async.parallel(
+        {
+            album(cb) {
+                Album.findById(req.params.id)
+                .populate("genre")
+                .populate("artist")
+                .exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err)
+
+            console.log(results, "<<results>>")
+
+            res.render("album-detail", {
+                title: "Album Detail",
+                album: results.album
+            })
+        }
+    )
 }
 
 let album_create_get = (req, res) => {
