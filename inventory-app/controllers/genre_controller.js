@@ -1,5 +1,47 @@
-let genres_list = (req, res) => {
-    res.send("To Do: genres list")
+let Genre = require("../models/music_genre");
+
+let Album = require("../models/music_album");
+
+let async = require("async");
+
+let genres_list = (req, res, next) => {
+    async.parallel(
+        {
+            genres(cb) {
+                // passing in empty object means match everything
+                Genre.find({}).exec(cb)
+            },
+
+            async genres_albums(cb) {
+                let genresPromises = Album.find({})
+                .then(albums => {
+                    let promises = albums?.flatMap(album => album?.genre.map(id => Genre.findById(id)))
+                    return Promise.all(promises)
+                }).catch(err => next(err))
+
+                return genresPromises.then(genres => {
+                    let albumsGenreCount = {"R&B": 0, "Rock": 0}
+                    genres?.forEach(genre => albumsGenreCount[genre.name] = albumsGenreCount[genre.name] != null ? albumsGenreCount[genre.name] + 1 : 1)
+                    // console.log(albumsGenreCount, "<<albums>>")
+                    return albumsGenreCount
+                })
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err)
+
+
+
+            console.log(results, "<<?>?><><>")
+
+            res.render("all-genres", {
+                title: "List Of All Genres",
+                genres: results.genres,
+                genres_albums: results.genres_albums
+            })
+        }
+    )
 }
 
 let genre_detail = (req, res) => {

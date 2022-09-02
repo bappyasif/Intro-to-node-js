@@ -8,4 +8,9 @@ let MusicGenreSchema = new Schema(
     }
 )
 
+MusicGenreSchema.virtual("url")
+.get(function() {
+    return "/catalog/genre/"+this._id;
+})
+
 module.exports = mongoose.model("MusicGenre", MusicGenreSchema)
