@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("./partials/head.ejs") %>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+                <%- include("./partials/nav.ejs") %>
+            </div>
+            <div class="col">
+                <h1 class="text-primary"><%= title %> </h1>
+                <table class="table table-borderd text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-info">Artist Full Name</th>
+                            <th scope="col" class="text-info">Date Of Birth</th>
+                            <th scope="col" class="text-info">Date Of Death</th>
+                            <th scope="col" class="text-info">Albums Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% artists?.forEach(artist => { %>
+                            <tr>
+                                <td><a class="text-danger" href=<%= artist.url %>><%= artist.full_name %></a></td>
+                                <td class="text-danger"><%= artist.dob_format %></td>
+                                <td class="text-danger"><%= artist.dod_format %></td>
+                                <% for(let key in artists_albums) { %>
+                                    <% if(key == artist.full_name) { %>
+                                        <td class="text-danger"><%= artists_albums[key] %></td>
+                                    <% } %>
+                                <% } %>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
