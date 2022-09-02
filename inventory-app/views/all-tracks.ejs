@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("./partials/head.ejs") %>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+                <%- include("./partials/nav.ejs") %>
+            </div>
+            <div class="col">
+                <h1 class="text-primary"><%= title %></h1>
+                <table class="table table-borderd text-center">
+                    <thead>
+                        <tr>
+                            <th class="text-info" scope="col">Track Name</th>
+                            <th class="text-info" scope="col">Album Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% tracks?.forEach(track => { %>
+                            <tr>
+                                <td><a class="text-danger" href=<%= track.url %>><%= track.name %></a></td>
+                                <td><a class="text-danger" href=<%= track.album_url %>><%= track.album_name %></a></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

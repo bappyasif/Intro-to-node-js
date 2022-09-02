@@ -35,7 +35,7 @@ let artists_list = (req, res, next) => {
         (err, results) => {
             if (err) return next(err);
 
-            console.log(results, "<<results>>")
+            // console.log(results, "<<results>>")
 
             res.render("all-artists", {
                 title: "List Of All Artists",

@@ -1,6 +1,39 @@
-let tracks_list = (req, res) => {
-    res.send("To Do: tracks list")
+let Track = require("../models/music_track");
+
+let async =  require("async");
+
+let tracks_list = (req, res, next) => {
+    async.parallel(
+        {
+            tracks(cb) {
+                Track.find({})
+                // when you have reference in model and yu need to acces them we'll have to use populate to generates those info as well
+                .populate("album")
+                .exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err);
+            // console.log(results, "<<results>>");
+            res.render("all-tracks", {
+                title: "List Of All Tracks",
+                tracks: results.tracks
+            })
+        }
+    )
 }
+
+// let tracks_list = (req, res, next) => {
+//     Track.find()
+//     .then(results => {
+//         console.log(results, "<<results>>");
+//         res.render("all-tracks", {
+//             title: "List Of All Tracks",
+//             tracks: results
+//         })
+//     }).catch(err => next(err))
+// }
 
 let track_detail = (req, res) => {
     res.send("To Do: track detail")
