@@ -8,12 +8,20 @@
                     <%- include("./partials/nav.ejs") %>
                 </div>
                 <div class="col-md-6">
-                    <h1 class="rounded bg-success text-white border border-primary mt-2 pt-2 pb-2 text-center"><%= title %></h1>
+                    <h1 class="rounded bg-success text-white border border-primary mt-2 pt-1 pb-1 text-center"><%= title %></h1>
                     <ul class="nav nav-pills nav-fill">
-                        <li class="text-primary nav-item border border-primary btn-lg mr-2 bg-warning"><a class="nav-link text-secondary" href="/catalog/albums">Number of total Albums: <span class="nav-link text-secondary"><%= results.count_albums %></span></a></li>
-                        <li class="text-primary nav-item border border-primary btn-lg mr-2 bg-warning"><a class="nav-link text-secondary" href="/catalog/artists">Number of total Artists: <span class="nav-link text-secondary"><%= results.count_artists %></span></a></li>
-                        <li class="text-primary nav-item border border-primary btn-lg mr-2 bg-warning"><a class="nav-link text-secondary" href="/catalog/genres">Number of total Genres: <span class="nav-link text-secondary"><%= results.count_genres %></span></a></li>
-                        <li class="text-primary nav-item border border-primary btn-lg mr-2 bg-warning"><a class="nav-link text-secondary" href="/catalog/tracks">Number of total Tracks: <span class="nav-link text-secondary"><%= results.count_tracks %></span></a></li>
+                        <li class="nav-item m-1 btn btn-lg bg-secondary list-group-item">
+                            <a class="nav-link text-white" href="/catalog/albums">Number of total Albums: <span class="text-white"><%= results.count_albums %></span></a>
+                        </li>
+                        <li class="nav-item m-1 btn btn-lg bg-secondary list-group-item">
+                            <a class="nav-link text-white" href="/catalog/artists">Number of total Artists: <span class="text-white"><%= results.count_artists %></span></a>
+                        </li>
+                        <li class="nav-item m-1 btn btn-lg bg-secondary list-group-item">
+                            <a class="nav-link text-white" href="/catalog/genres">Number of total Genres: <span class="text-white"><%= results.count_genres %></span></a>
+                        </li>
+                        <li class="nav-item m-1 btn btn-lg bg-secondary list-group-item">
+                            <a class="nav-link text-white" href="/catalog/tracks">Number of total Tracks: <span class="text-white"><%= results.count_tracks %></span></a>
+                        </li>
                     </ul>
                     <hr>
                     <hr>

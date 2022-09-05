@@ -7,8 +7,8 @@
             <div class="col-sm-2">
                 <%- include("./partials/nav.ejs") %>
             </div>
-            <div class="col-md-4">
-                <h1 class="text-primary"><%= title %> </h1>
+            <div class="col-md-6">
+                <h1 class="rounded bg-secondary text-white border border-primary mt-2 pt-2 pb-2 text-center"><%= title %> </h1>
                 <table class="table table-borderd text-center table-hover table-dark">
                     <caption>List of all artists</caption>
                     <thead>
@@ -22,7 +22,7 @@
                     <tbody>
                         <% artists?.forEach(artist => { %>
                             <tr>
-                                <td><a class="text-danger" href=<%= artist.url %>><%= artist.full_name %></a></td>
+                                <td><a class="text-white btn btn-sm" href=<%= artist.url %>><%= artist.full_name %></a></td>
                                 <td class="bg-secondary text-white"><%= artist.dob_format %></td>
                                 <td class="bg-secondary text-white"><%= artist.dod_format %></td>
                                 <% for(let key in artists_albums) { %>
