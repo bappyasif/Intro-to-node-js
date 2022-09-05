@@ -7,25 +7,23 @@
                 <div class="col-sm-2">
                     <%- include("./partials/nav.ejs") %>
                 </div>
-                <div class="col">
-                    <h1>
-                        <%= title %>
-                    </h1>
-                    <ul>
-                        <li><a class="text-info" href="/catalog/albums">Number of total Albums: <sp class="text-danger"><%= results.count_albums %></sp></a></li>
-                        <li><a class="text-info" href="/catalog/artists">Number of total Artists: <span class="text-danger"><%= results.count_artists %></span></a></li>
-                        <li><a class="text-info" href="/catalog/genres">Number of total Genres: <span class="text-danger"><%= results.count_genres %></span></a></li>
-                        <li><a class="text-info" href="/catalog/tracks">Number of total Tracks: <span class="text-danger"><%= results.count_tracks %></span></a></li>
+                <div class="col-md-6">
+                    <h1 class="rounded bg-success text-white border border-primary mt-2 pt-2 pb-2 text-center"><%= title %></h1>
+                    <ul class="nav nav-pills nav-fill">
+                        <li class="text-primary nav-item border border-primary btn-lg mr-2 bg-warning"><a class="nav-link text-secondary" href="/catalog/albums">Number of total Albums: <span class="nav-link text-secondary"><%= results.count_albums %></span></a></li>
+                        <li class="text-primary nav-item border border-primary btn-lg mr-2 bg-warning"><a class="nav-link text-secondary" href="/catalog/artists">Number of total Artists: <span class="nav-link text-secondary"><%= results.count_artists %></span></a></li>
+                        <li class="text-primary nav-item border border-primary btn-lg mr-2 bg-warning"><a class="nav-link text-secondary" href="/catalog/genres">Number of total Genres: <span class="nav-link text-secondary"><%= results.count_genres %></span></a></li>
+                        <li class="text-primary nav-item border border-primary btn-lg mr-2 bg-warning"><a class="nav-link text-secondary" href="/catalog/tracks">Number of total Tracks: <span class="nav-link text-secondary"><%= results.count_tracks %></span></a></li>
                     </ul>
                     <hr>
                     <hr>
-                    <h2>Album counts from different Genres: </h2>
+                    <h2 class="rounded bg-success text-white border border-primary mt-2 pt-2 pb-2 text-center">Album counts from different Genres: </h2>
                     <table class="table table-bordered table-primary">
                         <thead class="text-center">
                             <tr>
                                 <% for(let key in results.albums_genres) { %>
                                     
-                                    <th scope="col"><span class="text-info"><%= key %></span></th>
+                                    <th class="bg-secondary" scope="col"><span class="text-white"><%= key %></span></th>
                                     
                                 <% } %>
                             </tr>
@@ -34,7 +32,7 @@
                             <tr>
                                 <% for(let key in results.albums_genres) { %>
                                     
-                                    <td class="text-center"><span class="text-danger"><%= results.albums_genres[key] %></td>
+                                    <td class="text-center"><span class="text-secondary"><%= results.albums_genres[key] %></td>
                                     
                                 <% } %>
                             </tr>

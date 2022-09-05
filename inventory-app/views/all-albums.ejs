@@ -7,22 +7,23 @@
             <div class="col-sm-2">
                 <%- include("./partials/nav.ejs") %>
             </div>
-            <div class="col">
+            <div class="col-md-6">
                 <h1><%= title %></h1>
-                <table class="table table-borderd text-center table-hover table-primary">
+                <table class="table table-borderd text-center table-hover table-dark">
+                    <caption>List of all albums</caption>
                     <thead>
                         <tr>
-                            <th class="text-info" scope="col">Album Name</th>
-                            <th class="text-info" scope="col">Artist Name</th>
-                            <th class="text-info" scope="col">Album Price</th>
+                            <th class="bg-info text-white" scope="col">Album Name</th>
+                            <th class="bg-info text-white" scope="col">Artist Name</th>
+                            <th class="bg-info text-white" scope="col">Album Price</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% results?.forEach(item => { %>
                             <tr>
                                 <td><a href=<%= item.url %>><span class="text-danger"><%= item.name %></span></a></td>
-                                <td><span class="text-danger"><%= item.artistName %></span></td>
-                                <td><span class="text-danger"><%= item.price %></span></td>
+                                <td class="bg-secondary text-white"><span><%= item.artistName %></span></td>
+                                <td class="bg-secondary text-white"><span><%= item.price %></span></td>
                             </tr>
                         <% }) %>
                     </tbody>

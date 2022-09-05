@@ -7,13 +7,14 @@
             <div class="col-sm-2">
                 <%- include("./partials/nav.ejs") %>
             </div>
-            <div class="col">
+            <div class="col-md-6">
                 <h1 class="text-primary"><%= title %></h1>
-                <table class="table text-center table-hover table-primary">
+                <table class="table text-center table-hover table-dark">
+                    <caption>List of all genres</caption>
                     <thead>
                         <tr>
-                            <th class="text-info" scope="col">Genre Name</th>
-                            <th class="text-info" scope="col">Album Count</th>
+                            <th class="bg-info text-white" scope="col">Genre Name</th>
+                            <th class="bg-info text-white" scope="col">Album Count</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -22,7 +23,7 @@
                                 <td><a class="text-danger" href=<%= genre.url %> ><%= genre.name %></a></td>
                                 <% for(let key in genres_albums) { %>
                                     <% if(key == genre.name) { %>
-                                        <td class="text-danger"><%= genres_albums[key] %></td>
+                                        <td class="bg-secondary text-white"><%= genres_albums[key] %></td>
                                     <% } %>
                                 <% } %>
                             </tr>

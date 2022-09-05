@@ -7,26 +7,27 @@
             <div class="col-sm-2">
                 <%- include("./partials/nav.ejs") %>
             </div>
-            <div class="col-bg-2">
+            <div class="col-md-4">
                 <h1 class="text-primary"><%= title %> </h1>
-                <table class="table table-borderd text-center table-hover table-primary">
+                <table class="table table-borderd text-center table-hover table-dark">
+                    <caption>List of all artists</caption>
                     <thead>
                         <tr>
-                            <th scope="col" class="text-info">Artist Full Name</th>
-                            <th scope="col" class="text-info">Date Of Birth</th>
-                            <th scope="col" class="text-info">Date Of Death</th>
-                            <th scope="col" class="text-info">Albums Count</th>
+                            <th scope="col" class="bg-info text-white">Artist Full Name</th>
+                            <th scope="col" class="bg-info text-white">Date Of Birth</th>
+                            <th scope="col" class="bg-info text-white">Date Of Death</th>
+                            <th scope="col" class="bg-info text-white">Albums Count</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% artists?.forEach(artist => { %>
                             <tr>
                                 <td><a class="text-danger" href=<%= artist.url %>><%= artist.full_name %></a></td>
-                                <td class="text-danger"><%= artist.dob_format %></td>
-                                <td class="text-danger"><%= artist.dod_format %></td>
+                                <td class="bg-secondary text-white"><%= artist.dob_format %></td>
+                                <td class="bg-secondary text-white"><%= artist.dod_format %></td>
                                 <% for(let key in artists_albums) { %>
                                     <% if(key == artist.full_name) { %>
-                                        <td class="text-danger"><%= artists_albums[key] %></td>
+                                        <td class="bg-secondary text-white"><%= artists_albums[key] %></td>
                                     <% } %>
                                 <% } %>
                             </tr>

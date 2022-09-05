@@ -7,20 +7,21 @@
             <div class="col-sm-2">
                 <%- include("./partials/nav.ejs") %>
             </div>
-            <div class="col">
+            <div class="col-md-4">
                 <h1 class="text-primary"><%= title %></h1>
-                <table class="table table-borderd text-center table-hover table-primary">
+                <table class="table table-borderd text-center table-hover table-dark">
+                    <caption>List of all tracks</caption>
                     <thead>
                         <tr>
-                            <th class="text-info" scope="col">Track Name</th>
-                            <th class="text-info" scope="col">Album Name</th>
+                            <th class="bg-info text-white" scope="col">Track Name</th>
+                            <th class="bg-info text-white" scope="col">Album Name</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% tracks?.forEach(track => { %>
                             <tr>
-                                <td><a class="text-danger" href=<%= track.url %>><%= track.name %></a></td>
-                                <td><a class="text-danger" href=<%= track.album_url %>><%= track.album_name %></a></td>
+                                <td ><a class="text-white" href=<%= track.url %>><%= track.name %></a></td>
+                                <td class="bg-secondary"><a class="text-white" href=<%= track.album_url %>><%= track.album_name %></a></td>
                             </tr>
                         <% }) %>
                     </tbody>
