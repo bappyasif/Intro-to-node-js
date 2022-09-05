@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("./partials/head.ejs") %>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+                <%- include("./partials/nav.ejs") %>
+            </div>
+            <div class="col-sm-5">
+                <h1 class="text-info border border-primary mt-2 pt-2 pb-2 text-center">Detail About Artist: <%= artist.full_name %> </h1>
+                <hr>
+                <hr>
+                <div class="card text-center">
+                    <h2 class="text-info row"><span class="col">Artist Name: </span> <span class="col text-danger"><%= artist.full_name %></span></h2>
+                    <h2 class="text-info row"><span class="col">Artist Albums: </span> <span class="col text-danger"><%= artist_albums?.length %></span></h2>
+                    <h2 class="text-info row"><span class="col">Date Of Birth:</span> <span class="col text-danger"><%= artist.dob_format %></span></h2>
+                    <h2 class="text-info row"><span class="col">Date Of Death:</span><span class="col text-danger"><%= artist.dod_format %></span></h2>
+                </div>
+                <hr>
+                <hr>
+                <h3 class="text-info">Albums List: </h3>
+                <ul class="nav nav-pills nav-fill">
+                    <% if(artist_albums?.length) { %>
+                        <% artist_albums?.forEach(album => { %>
+                            <li class="text-primary nav-item border border-primary btn-lg mr-2 bg-warning"><a class="nav-link text-secondary" href=<%= "/catalog/album/"+album.id %> ><%= album.album %></a></li>
+                        <% }) %>
+                    <% } else { %>
+                        <li class="text-danger">There are no albums found from this artist</li>
+                    <% } %>
+                </ul>
+                <hr>
+                <hr>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -46,8 +46,38 @@ let artists_list = (req, res, next) => {
     )
 }
 
-let artist_detail = (req, res) => {
-    res.send("To Do: artist detail")
+let artist_detail = (req, res, next) => {
+    async.parallel(
+        {
+            artist(cb) {
+                Artist.findById(req.params.id).exec(cb)
+            },
+
+            async artist_albums() {
+                return Album.find().populate("artist")
+                .then(albums => {
+                    let found_albums = []
+                    albums?.forEach(album => {
+                        if(album.artist._id == req.params.id) {
+                            found_albums.push({album: album.name, id: album._id, price: album.price})
+                        }
+                    })
+
+                    return found_albums
+                })
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err);
+
+            res.render("artist_detail", {
+                title: "Artist Detail",
+                artist: results.artist,
+                artist_albums: results.artist_albums
+            })
+        }
+    )
 }
 
 let artist_create_get = (req, res) => {

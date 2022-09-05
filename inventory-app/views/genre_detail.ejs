@@ -7,13 +7,13 @@
             <div class="col-sm-2">
                 <%- include("./partials/nav.ejs") %>
             </div>
-            <div class="col-sm-4">
-                <h1 class="text-info">Detail About <%= title %> Genre</h1>
+            <div class="col-sm-5">
+                <h1 class="text-info border border-primary mt-2 pt-2 pb-2 text-center">Detail About <%= title %> Genre</h1>
                 <hr>
                 <hr>
                 <div class="card text-center border-primary">
-                    <h2 class="text-info">Genre Name: <span class="text-danger"><%= title %></span></h2>
-                    <h2 class="text-info">Album Count: <span class="text-danger"><%= genre_albums?.length %> </span></h3>
+                    <h2 class="text-info row"><span class="col">Genre Name: </span><span class="col text-danger"><%= title %></span></h2>
+                    <h2 class="text-info row"><span class="col">Album Count: </span><span class="col text-danger"><%= genre_albums?.length %> </span></h3>
                 </div>
 
                 <hr>
@@ -22,10 +22,10 @@
                 <ul class="nav nav-pills nav-fill">
                     <% if(genre_albums?.length) { %>
                         <% genre_albums?.forEach(item => { %>
-                            <li class="text-primary nav-item border border-primary btn-lg mr-2 "><a href=<%= "/catalog/album/"+item.id %> ><%= item.name %></a></li>
+                            <li class="text-primary nav-item border border-primary btn-lg mr-2 bg-warning"><a class="nav-link text-secondary" href=<%= "/catalog/album/"+item.id %> ><%= item.name %></a></li>
                         <% }) %>
                     <% } else { %>
-                        <p class="text-danger">There are no albums found with this genre</p>
+                        <li class="text-danger">There are no albums found with this genre</li>
                     <% } %>
                 </ul>
             </div>

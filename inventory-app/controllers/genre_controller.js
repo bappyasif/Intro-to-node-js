@@ -53,7 +53,6 @@ let genre_detail = (req, res, next) => {
             },
 
             async albums(cb) {
-                // Album.find({genre: req.body.id}).exec(cb)
                 // return Album.find().populate("name").populate("artist")
                 return Album.find()
                 .then((albms) => {
@@ -61,22 +60,14 @@ let genre_detail = (req, res, next) => {
                     let g_albums = []
                     
                     albms?.forEach(item => {
-                        // console.log(item, "?>?>?>")
                         item?.genre.forEach(id => {
                             count = id == req.params.id ? count + 1 : count
                             id == req.params.id ? g_albums.push({name: item.name, id: item._id, artist: item.artist._id}) : null
-                            // console.log(id == req.params.id)
                         })
-                        // console.log(count, 'albms', item?.genre)
-                        // return count
                     })
 
-                    // console.log(count, 'albms', g_albums)
-                    // albms?.genre.forEach(id => count = id === req.params.id ? count + 1 : count)
-                    // console.log(count, 'albms', albms?.genre, albms)
                     return {count, g_albums}
                 }).catch(err => next(err))
-                
             }
         },
 
