@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("./partials/head.ejs") %>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+                <%- include("./partials/nav.ejs") %>
+            </div>
+            <div class="col-sm-4">
+                <h1 class="text-info border border-primary mt-2 pt-2 pb-2 text-center"><%= title %></h1>
+                <div class="card text-center">
+                    <h2 class="text-info row"><span class="col">Track Name: </span> <span class="col text-danger"><%= track.name %></span></h2>
+                    <h2 class="text-info row"><span class="col">Album Name: </span> <span class="col text-danger"><a href=<%= "/catalog/album/"+track.album._id %>><%= track.album.name %></a></span></h2>
+                    <h2 class="text-info row"><span class="col">Genre Name: </span> <span class="col text-danger"><a href=<%= "/catalog/genre/"+track.genre._id %>><%= track.genre.name %></a></span></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

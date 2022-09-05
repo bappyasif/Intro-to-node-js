@@ -35,8 +35,27 @@ let tracks_list = (req, res, next) => {
 //     }).catch(err => next(err))
 // }
 
-let track_detail = (req, res) => {
-    res.send("To Do: track detail")
+let track_detail = (req, res, next) => {
+    async.parallel(
+        {
+            track(cb) {
+                Track.findById(req.params.id)
+                .populate("genre")
+                .populate("album").exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err);
+
+            console.log(results, "<<results>>")
+
+            res.render("track_detail", {
+                title: "Track Detail",
+                track: results.track
+            })
+        }
+    )
 }
 
 let track_create_get = (req, res) => {
