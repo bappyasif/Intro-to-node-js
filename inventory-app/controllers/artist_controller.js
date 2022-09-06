@@ -81,7 +81,7 @@ let artist_detail = (req, res, next) => {
 }
 
 let artist_create_get = (req, res) => {
-    res.send("To Do: artist create form GET")
+    res.render("form_artist_detail", {title: "Create Artist"})
 }
 
 let artist_create_post = (req, res) => {

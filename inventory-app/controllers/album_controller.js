@@ -53,7 +53,7 @@ let album_detail = (req, res, next) => {
 }
 
 let album_create_get = (req, res) => {
-    res.send("To Do: album create form GET")
+    res.render("form_album_detail", {title: "Album Form", album: null, genres: []})
 }
 
 let album_create_post = (req, res) => {

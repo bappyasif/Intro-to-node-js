@@ -59,7 +59,7 @@ let track_detail = (req, res, next) => {
 }
 
 let track_create_get = (req, res) => {
-    res.send("To Do: track create form GET")
+    res.render("form_track_detail", {title: "Create Track"})
 }
 
 let track_create_post = (req, res) => {

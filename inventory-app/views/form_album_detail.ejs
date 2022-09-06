@@ -8,12 +8,13 @@
                 <%- include("./partials/nav.ejs") %>
             </div>
             <div class="col-sm-4">
+                <h1><%= title %></h1>
                 <form action="" method="post">
                     <fieldset>
                         <label for="name">Album Name</label>
                         <input 
                             type="text" id="name" placeholder="Album Name Goes Here...." required="true"
-                            value='<%= album?.name %>'
+                            value='<%= album !== undefined ? album?.name : '' %>'
                         >
                     </fieldset>
                     <fieldset>
@@ -24,7 +25,7 @@
                             name="artist"
                             placeholder="Artist Name Goes Here...."
                             required="true"
-                            value='<%= album.artistName %>'
+                            value='<%= album?.artistName %>'
                         >
                     </fieldset>
                     <fieldset>
@@ -35,49 +36,49 @@
                                     type="checkbox" name="metal" id="metal"
                                     <%= genres.includes("Metal") ? "checked" : null %>
                                 >
-                                <label for="metal">Metal <%= album.album_genre.toLowerCase() %> <%= album.album_genre %></label>
+                                <label for="metal">Metal</label>
                             </li>
                             <li>
                                 <input 
                                     type="checkbox" name="rock" id="rock"
-                                    <%= genres.includes("Rock") ? "checked" : null %>
+                                    <%= genres?.includes("Rock") ? "checked" : null %>
                                 >
-                                <label for="rock">Rock <%= album.album_genre.toLowerCase() %> <%= album.album_genre.toLowerCase() === 'rock' %></label>
+                                <label for="rock">Rock</label>
                             </li>
                             <li>
                                 <input 
                                     type="checkbox" name="r&b" id="r&b"
                                     <%= genres.includes("R&B") ? "checked" : null %>
                                 >
-                                <label for="r&b">R&B <%= album.album_genre.toLowerCase() %> <%= album.album_genre.toLowerCase() === 'r&b' %></label>
+                                <label for="r&b">R&B</label>
                             </li>
                             <li>
                                 <input 
                                     type="checkbox" name="edm" id="edm"
                                     <%= genres.includes("EDM") ? "checked" : null %>
                                 >
-                                <label for="edm">EDM <%= album.album_genre.toLowerCase() %> <%= album.album_genre.toLowerCase() === 'edm' %></label>
+                                <label for="edm">EDM</label>
                             </li>
                             <li>
                                 <input 
                                     type="checkbox" name="progressive" id="progressive"
                                     <%= genres.includes("Progressive") ? "checked" : null %>
                                 >
-                                <label for="progressive">Progressive <%= album.album_genre %> <%= album.album_genre == 'Progressive' %> <%= "Progressive" == 'Progressive' %></label>
+                                <label for="progressive">Progressive</label>
                             </li>
                             <li>
                                 <input 
                                     type="checkbox" name="trance" id="trance"
                                     <%= genres.includes("Trance") ? "checked" : null %>
                                 >
-                                <label for="trance">Trance <%= album.album_genre.toLowerCase() %> <%= album.album_genre.toLowerCase() === 'trance' %></label>
+                                <label for="trance">Trance</label>
                             </li>
                             <li>
                                 <input 
                                     type="checkbox" name="pop" id="pop"
                                     <%= genres.includes("Pop") ? "checked" : null %>
                                 >
-                                <label for="pop">Pop <%= album.album_genre.toLowerCase() %> <%= album.album_genre.toLowerCase() === 'pop' %></label>
+                                <label for="pop">Pop</label>
                             </li>
                         </ul>
                         
@@ -86,7 +87,7 @@
                         <label for="r_date">Released Date</label>
                         <input 
                             type="date" name="r_date" id="r_date"
-                            value=<%= album.form_date %>
+                            value=<%= album?.form_date %>
                         >
                     </fieldset>
                     <fieldset>

@@ -86,7 +86,7 @@ let genre_detail = (req, res, next) => {
 }
 
 let genre_create_get = (req, res) => {
-    res.send("To Do: genre create form GET")
+    res.render("form_genre_detail", {title: "Cerate Genre"})
 }
 
 let genre_create_post = (req, res) => {
