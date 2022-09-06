@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("./partials/head.ejs") %>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+                <%- include("./partials/nav.ejs") %>
+            </div>
+            <div class="col-sm-4">
+                <form action="" method="post">
+                    <fieldset>
+                        <label for="name">Track Name</label>
+                        <input type="text" id="name" name="name">
+                    </fieldset>
+                    <fieldset>
+                        <label for="status">Track Status</label>
+                        <input type="text" id="status" name="status">
+                    </fieldset>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("./partials/head.ejs") %>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+                <%- include("./partials/nav.ejs") %>
+            </div>
+            <div class="col-sm-4">
+                <form action="" method="post">
+                    <fieldset>
+                        <label for="first_name">First Name</label>
+                        <input type="text" id="first_name" name="first_name">
+                    </fieldset>
+                    <fieldset>
+                        <label for="first_name">Last Name</label>
+                        <input type="text" id="last_name" name="last_name">
+                    </fieldset>
+                    <fieldset>
+                        <label for="d_o_b">Date Of Birth</label>
+                        <input type="date" id="d_o_b" name="d_o_b">
+                    </fieldset>
+                    <fieldset>
+                        <label for="d_o_d">Date Of Death</label>
+                        <input type="date" id="d_o_d" name="d_o_d">
+                    </fieldset>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
