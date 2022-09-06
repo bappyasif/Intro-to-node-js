@@ -42,7 +42,7 @@ let album_detail = (req, res, next) => {
         (err, results) => {
             if(err) return next(err)
 
-            console.log(results, "<<results>>")
+            // console.log(results, "<<results>>")
 
             res.render("album-detail", {
                 title: "Album Detail",
@@ -68,8 +68,36 @@ let album_delete_post = (req, res) => {
     res.send("To Do: album delete form POST")
 }
 
-let album_update_get = (req, res) => {
-    res.send("To Do: album update form GET")
+let album_update_get = (req, res, next) => {
+    console.log(req.params.id, "here here!!")
+    async.parallel(
+        {
+            album(cb) {
+                Album.findById(req.params.id)
+                .populate("genre")
+                .populate("artist")
+                .exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err);
+
+            // console.log(results, "results!!");
+
+            let genres = [];
+
+            results.album.genre?.forEach(item => genres.push(item.name))
+
+            console.log(genres, "results!!");
+
+            res.render("form_album_detail", {
+                title: "Album Detail Form",
+                album: results.album,
+                genres: genres
+            })
+        }
+    )
 }
 
 let album_update_post = (req, res) => {

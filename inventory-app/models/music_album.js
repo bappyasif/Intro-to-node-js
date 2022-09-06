@@ -14,7 +14,7 @@ let MusicAlbumSchema = new Schema(
         // genre: {type: Schema.Types.String, ref: "MusicGenre"},
         artist: {type: Schema.Types.ObjectId, ref: "MusicArtist"},
         description: {type: Schema.Types.String, required: true},
-        price: {type: Schema.Types.Number}
+        price: {type: Schema.Types.Number, required: true}
     }
 )
 
@@ -36,6 +36,11 @@ MusicAlbumSchema.virtual("album_genre")
 MusicAlbumSchema.virtual("released_date_format")
 .get(function() {
     return `${DateTime.fromJSDate(this.released_date).toLocaleString(DateTime.DATE_MED)}`
+})
+
+MusicAlbumSchema.virtual("form_date")
+.get(function() {
+    return DateTime.fromJSDate(this.released_date).toISODate()
 })
 
 MusicAlbumSchema.virtual("url")

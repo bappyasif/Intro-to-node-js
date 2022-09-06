@@ -48,7 +48,7 @@ let track_detail = (req, res, next) => {
         (err, results) => {
             if(err) return next(err);
 
-            console.log(results, "<<results>>")
+            // console.log(results, "<<results>>")
 
             res.render("track_detail", {
                 title: "Track Detail",
