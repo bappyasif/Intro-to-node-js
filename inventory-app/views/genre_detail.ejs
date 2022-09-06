@@ -36,6 +36,12 @@
                         <li class="text-danger">There are no albums found with this genre</li>
                     <% } %>
                 </ul>
+                <hr>
+                <hr>
+                <nav class="nav nav-pills row nav-fills">
+                    <a class="col nav-item btn btn-lg btn-info" href=<%= genre.url+"/update" %>>Upload</a>
+                    <a class="col nav-item btn btn-lg btn-danger" href=<%= genre.url+"/delete" %>>Delete</a>
+                </nav>
             </div>
         </div>
     </div>

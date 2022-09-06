@@ -78,6 +78,7 @@ let genre_detail = (req, res, next) => {
             // res.send("test test")
             res.render("genre_detail", {
                 title: results.genre.name,
+                genre: results.genre,
                 genre_albums: results.albums.g_albums
             })
         }
