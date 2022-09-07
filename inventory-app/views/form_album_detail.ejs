@@ -13,75 +13,40 @@
                     <fieldset>
                         <label for="name">Album Name</label>
                         <input 
-                            type="text" id="name" placeholder="Album Name Goes Here...." required="true"
+                            type="text" name="name" id="name" placeholder="Album Name Goes Here...." required="true"
                             value='<%= album !== undefined ? album?.name : '' %>'
                         >
                     </fieldset>
                     <fieldset>
                         <label for="artist">Artist Name</label>
-                        <input 
-                            type="text" 
-                            id="artist" 
-                            name="artist"
-                            placeholder="Artist Name Goes Here...."
+                        <select 
+                            name="artist" id="artist"
+                            placeholder="Select Artist"
                             required="true"
-                            value='<%= album?.artistName %>'
                         >
+                        <% artists.sort((a,b) => (a.first_name.toUpperCase() < b.first_name.toUpperCase()) ? -1 : (a.first_name.toUpperCase() > b.first_name.toUpperCase> b.first_name.toUpperCase()) ? 1 : 0) %> 
+                        <% artists?.forEach(artist => { %>
+                            <option 
+                                value=<%= artist._id %> 
+                            ><%= artist.full_name %></option>
+                        <% }) %>
+                        </select>
                     </fieldset>
                     <fieldset>
-                        <div>Album Genre</div>
-                        <ul>
-                            <li>
+                        <label for="genre">Album Genre</label>
+                        <div>
+                            <% genres?.forEach(genre => { %>
                                 <input 
-                                    type="checkbox" name="metal" id="metal"
-                                    <%= genres.includes("Metal") ? "checked" : null %>
+                                    type="checkbox" name="genre" 
+                                    id=<%= genre._id %>
+                                    value=<%= genre._id %>
+                                    <%= genre.checked !== undefined ? "checked" : false %> 
                                 >
-                                <label for="metal">Metal</label>
-                            </li>
-                            <li>
-                                <input 
-                                    type="checkbox" name="rock" id="rock"
-                                    <%= genres?.includes("Rock") ? "checked" : null %>
-                                >
-                                <label for="rock">Rock</label>
-                            </li>
-                            <li>
-                                <input 
-                                    type="checkbox" name="r&b" id="r&b"
-                                    <%= genres.includes("R&B") ? "checked" : null %>
-                                >
-                                <label for="r&b">R&B</label>
-                            </li>
-                            <li>
-                                <input 
-                                    type="checkbox" name="edm" id="edm"
-                                    <%= genres.includes("EDM") ? "checked" : null %>
-                                >
-                                <label for="edm">EDM</label>
-                            </li>
-                            <li>
-                                <input 
-                                    type="checkbox" name="progressive" id="progressive"
-                                    <%= genres.includes("Progressive") ? "checked" : null %>
-                                >
-                                <label for="progressive">Progressive</label>
-                            </li>
-                            <li>
-                                <input 
-                                    type="checkbox" name="trance" id="trance"
-                                    <%= genres.includes("Trance") ? "checked" : null %>
-                                >
-                                <label for="trance">Trance</label>
-                            </li>
-                            <li>
-                                <input 
-                                    type="checkbox" name="pop" id="pop"
-                                    <%= genres.includes("Pop") ? "checked" : null %>
-                                >
-                                <label for="pop">Pop</label>
-                            </li>
-                        </ul>
-                        
+                                <label for=<%= genre._id %>>
+                                    <%= genre.name %> <%= genre.checked %> 
+                                </label>
+                            <% }) %>
+                        </div>                        
                     </fieldset>
                     <fieldset>
                         <label for="r_date">Released Date</label>
@@ -105,25 +70,15 @@
                     </fieldset>
                     <button type="submit">Submit</button>
                 </form>
+                <hr>
+                <hr>
+                <ul>
+                    <% errors?.forEach(error => { %>
+                        <li><%= error.msg %> </li>
+                    <% }) %>
+                </ul>
             </div>
         </div>
     </div>
 </body>
 </html>
-
-<!-- 
-    <fieldset>
-                        <label for="genre">Album Genre</label>
-                        <select name="genre" id="genre">
-                            <option 
-                                value="metal"
-                            >Metal</option>
-                            <option value="r&b">R&B</option>
-                            <option value="rock">Rock</option>
-                            <option value="edm">EDM</option>
-                            <option value="progressive">Progressive</option>
-                            <option value="trance">Trance</option>
-                            <option value="pop">Pop</option>
-                        </select>
-                    </fieldset>
- -->

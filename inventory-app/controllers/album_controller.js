@@ -1,6 +1,8 @@
 let async = require("async")
 let Album = require("../models/music_album");
 let Artist = require("../models/music_artist");
+let Genre = require("../models/music_genre");
+let {body, validationResult} = require("express-validator");
 /**
  * 
  * @param {*} req 
@@ -52,13 +54,126 @@ let album_detail = (req, res, next) => {
     )
 }
 
-let album_create_get = (req, res) => {
-    res.render("form_album_detail", {title: "Album Form", album: null, genres: []})
+let album_create_get = (req, res, next) => {
+    async.parallel(
+        {
+            artists(cb) {
+                Artist.find(cb)
+            },
+
+            genres(cb) {
+                Genre.find(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) {
+                return next(err);
+            }
+
+            // console.log(results, "results!!")
+
+            res.render("form_album_detail", {
+                title: "Album Form", 
+                album: null, 
+                genres: results.genres, 
+                artists: results.artists
+            })
+        }
+    )
 }
 
-let album_create_post = (req, res) => {
-    res.send("To Do: album create form POST")
-}
+// let album_create_get = (req, res) => {
+//     res.render("form_album_detail", {title: "Album Form", album: null, genres: []})
+// }
+
+let album_create_post = [
+    // console.log(req.body, "here here!!")
+    // Convert the genre to an array
+    (req, res, next) => {
+        if(!Array.isArray(req.body.genre)) {
+            req.body.genre = typeof req.body.genre === undefined ? [] : [req.body.genre]
+        }
+        next();
+    },
+
+    // validate and sanitize fields
+    body("name", "Name field value must be present")
+    .trim().isLength({min: 1}).escape(),
+    body("artist", "Artist field value must be present")
+    .trim().isLength({min: 1}).escape(),
+    body("descr", "Decription field value must be present")
+    .trim().isLength({min: 1}).escape(),
+    body("price", "Price field value must be present")
+    .trim().isLength({min: 1}).escape(),
+    body("r_date", "Released Date field value must be present")
+    .trim().isLength({min: 1}).escape(),
+    body("genre.*").escape(), // using wildcard to sanitize every item below key genre
+
+    // Process request after validation and sanitization
+    (req, res, next) => {
+        // Extract the validation errors from a request
+        let errors = validationResult(req)
+
+        // create an album object from user submitted data
+        let album = new Album({
+            name: req.body.name,
+            artist: req.body.artist,
+            genre: req.body.genre,
+            released_date: req.body.r_date,
+            description: req.body.descr,
+            price: req.body.price
+        })
+
+        // Extract the validation errors from a request
+        if(!errors.isEmpty()) {
+            // There are errors
+            // Render form again with sanitized values/error messages.
+            // Get all artits and genres for form to render
+            async.parallel(
+                {
+                    artists(cb) {
+                        Artist.find(cb)
+                    },
+
+                    genres(cb) {
+                        Genre.find(cb)
+                    }
+                },
+
+                (err, results) => {
+                    if(err) return next(err)
+
+                    // Mark our selected genres as checked
+                    for(let genre of results.genres) {
+                        if(album.genre.includes(genre._id)) {
+                            // Current genre is selected. Set "checked" flag
+                            genre.checked = true
+                        }
+                    }
+
+                    // render form with previously form values
+                    res.render("form_album_detail", {
+                        title: "Album Form", 
+                        album: album,
+                        genres: results.genres, 
+                        artists: results.artists,
+                        errors: errors.array()
+                    })
+                }
+            )
+            return
+        }
+
+        // Data from form is valid. Save book
+        album.save( err => {
+            if(err) return next(err)
+
+            // Successful: redirect to new album record
+            res.redirect(album.url)
+        })
+    }
+]
 
 let album_delete_get = (req, res) => {
     res.send("To Do: album delete form GET")
