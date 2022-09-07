@@ -4,6 +4,8 @@ let Album = require("../models/music_album");
 
 let async = require("async");
 
+let {body, validationResult} = require("express-validator")
+
 let genres_list = (req, res, next) => {
     async.parallel(
         {
@@ -21,7 +23,7 @@ let genres_list = (req, res, next) => {
 
                 return genresPromises.then(genres => {
                     let albumsGenreCount = {"R&B": 0, "Rock": 0}
-                    genres?.forEach(genre => albumsGenreCount[genre.name] = albumsGenreCount[genre.name] != null ? albumsGenreCount[genre.name] + 1 : 1)
+                    genres?.forEach(genre => albumsGenreCount[genre.name] = albumsGenreCount[genre.name] == null ? 0 : albumsGenreCount[genre.name] != null ? albumsGenreCount[genre.name] + 1 : 1)
                     // console.log(albumsGenreCount, "<<albums>>")
                     return albumsGenreCount
                 })
@@ -31,7 +33,13 @@ let genres_list = (req, res, next) => {
         (err, results) => {
             if(err) return next(err)
 
-
+            // if there is no album found in any of thes genres then simply add a "0" to them for smoother view in ejs
+            let keys = Object.keys(results.genres_albums)
+            results.genres?.forEach(genre => {
+                if(!keys.includes(genre.name)) {
+                    results.genres_albums[genre.name] = 0;
+                }
+            })
 
             // console.log(results, "<<?>?><><>")
 
@@ -86,12 +94,37 @@ let genre_detail = (req, res, next) => {
 }
 
 let genre_create_get = (req, res) => {
-    res.render("form_genre_detail", {title: "Cerate Genre"})
+    res.render("form_genre_detail", {title: "Cerate Genre", genre: null, errors: null})
 }
 
-let genre_create_post = (req, res) => {
-    res.send("To Do: genre create form POST")
-}
+let genre_create_post = [
+    body("name", "Name field must not be empty")
+    .trim().isLength({min: 1}).escape(),
+    body("name", "Name filed value must be more than or equal to three characters")
+    .trim().isLength({min: 3}).escape(),
+
+    (req, res, next) => {
+        let errors = validationResult(req)
+
+        let genre = new Genre({name: req.body.name})
+
+        if(!errors.isEmpty()) {
+            res.render("form_genre_detail", {
+                title: "Cerate Genre", 
+                genre: genre, 
+                errors: errors.array()
+            })
+            return
+        }
+
+        // successful, so lets show genre detail for this entry
+        genre.save(err => {
+            if(err) return next(err);
+
+            res.redirect(genre.url)
+        })
+    }
+]
 
 let genre_delete_get = (req, res) => {
     res.send("To Do: genre delete form GET")

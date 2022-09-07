@@ -22,7 +22,7 @@
                             <tr>
                                 <td><a class="text-white btn btn-sm" href=<%= genre.url %> ><%= genre.name %></a></td>
                                 <% for(let key in genres_albums) { %>
-                                    <% if(key == genre.name) { %>
+                                    <% if(key == genre.name && genres_albums[key] !== undefined) { %>
                                         <td class="bg-secondary text-white"><%= genres_albums[key] %></td>
                                     <% } %>
                                 <% } %>
