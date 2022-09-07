@@ -12,7 +12,34 @@
                 <form action="" method="post">
                     <fieldset>
                         <label for="name">Track Name</label>
-                        <input type="text" id="name" name="name" placeholder="Track Name Goes Here....">
+                        <input 
+                            type="text" id="name" name="name" placeholder="Track Name Goes Here...."
+                            value=<%= track?.name %>
+                        >
+                    </fieldset>
+                    <fieldset>
+                        <label for="genre">Genre</label>
+                        <div>
+                            <% genres?.forEach(genre => { %>
+                                <input 
+                                    type="checkbox" name="genre" 
+                                    value=<%= genre._id %>
+                                    <%= genre.checked !== undefined ? "checked" : false %> 
+                                >
+                                <label for=<%= genre._id %>><%= genre.name %></label>
+                            <% }) %>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <label for="album">Album</label>
+                        <select name="album" id="album" placeholder="Select Album">
+                            <% albums?.forEach(album => { %>
+                                <option 
+                                    value=<%= album._id %>
+                                    <%= selected= album.selected !== undefined ? "selected" : false %> 
+                                ><%= album.name %></option>
+                            <% }) %>
+                        </select>
                     </fieldset>
                     <fieldset>
                         <label for="status">Track Status</label>
@@ -25,6 +52,13 @@
                     </fieldset>
                     <button type="submit">Submit</button>
                 </form>
+                <hr>
+                <hr>
+                <ul>
+                    <% errors?.forEach(error => { %>
+                        <li><%= error.msg %> </li>
+                    <% }) %>
+                </ul>
             </div>
         </div>
     </div>

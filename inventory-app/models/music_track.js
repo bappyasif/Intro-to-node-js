@@ -6,7 +6,7 @@ let MusicTrackSchema = new Schema (
     {
         name: {type: Schema.Types.String, required: true},
         // name: {type: Schema.Types.String},
-        genre: {type: Schema.Types.ObjectId, ref: "MusicGenre", required: true},
+        genre: [{type: Schema.Types.ObjectId, ref: "MusicGenre", required: true}],
         album: {type: Schema.Types.ObjectId, ref: "MusicAlbum", required: true},
         status: {type: Schema.Types.String, required: true, enum: ["Free", "Preview", "Play", "Download"]},
     }
