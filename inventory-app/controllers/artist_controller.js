@@ -4,6 +4,8 @@ let Album = require("../models/music_album");
 
 let async = require("async");
 
+let {body, validationResult} = require("express-validator");
+
 let artists_list = (req, res, next) => {
     async.parallel(
         {
@@ -34,6 +36,14 @@ let artists_list = (req, res, next) => {
         },
         (err, results) => {
             if (err) return next(err);
+
+            // makinf sure when no album is found for any artist, we're giving it a value of 0 rather than undefined
+            let albumsKeys  = Object.keys(results.artist_albums);
+            results.artists?.forEach(artist => {
+                if(!albumsKeys.includes(artist.full_name)) {
+                    results.artist_albums[artist.full_name] = 0
+                }
+            })
 
             // console.log(results, "<<results>>")
 
@@ -81,12 +91,45 @@ let artist_detail = (req, res, next) => {
 }
 
 let artist_create_get = (req, res) => {
-    res.render("form_artist_detail", {title: "Create Artist"})
+    res.render("form_artist_detail", {title: "Create Artist", artist: null, errors: null})
 }
 
-let artist_create_post = (req, res) => {
-    res.send("To Do: artist create form POST")
-}
+let artist_create_post = [
+    body("first_name", "First Name field never be left empty")
+    .trim().isLength({min: 1}).escape(),
+    body("last_name", "Last Name field never be left empty")
+    .trim().isLength({min: 1}).escape(),
+    body("d_o_b", "Date of Birth field never be left empty")
+    .trim().isLength({min: 1}).escape(),
+
+    (req, res, next) => {
+        let errors = validationResult(req);
+
+        let artist = new Artist({
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            d_o_b: req.body.d_o_b,
+            d_o_d: req.body.d_o_d
+        })
+
+        if(!errors.isEmpty()) {
+            res.render("form_artist_detail", {
+                title: "Create Artist", 
+                artist: artist, 
+                errors: errors.array()
+            })
+            return
+        }
+
+        // successful, so lets show artist detail for this entry
+        artist.save(err => {
+            if(err) return next(err)
+
+            res.redirect(artist.url)
+        })
+
+    }
+]
 
 let artist_delete_get = (req, res) => {
     res.send("To Do: artist delete form GET")

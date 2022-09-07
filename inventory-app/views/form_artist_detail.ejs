@@ -12,22 +12,41 @@
                 <form action="" method="post">
                     <fieldset>
                         <label for="first_name">First Name</label>
-                        <input type="text" id="first_name" name="first_name" placeholder="First Name">
+                        <input 
+                            type="text" id="first_name" name="first_name" placeholder="First Name"
+                            value=<%= artist?.first_name %>
+                        >
                     </fieldset>
                     <fieldset>
-                        <label for="first_name">Last Name</label>
-                        <input type="text" id="last_name" name="last_name" placeholder="Last Name">
+                        <label for="last_name">Last Name</label>
+                        <input 
+                            type="text" id="last_name" name="last_name" placeholder="Last Name"
+                            value=<%= artist?.last_name %>
+                        >
                     </fieldset>
                     <fieldset>
                         <label for="d_o_b">Date Of Birth</label>
-                        <input type="date" id="d_o_b" name="d_o_b">
+                        <input 
+                            type="date" id="d_o_b" name="d_o_b"
+                            value=<%= artist.dob_iso %>
+                        >
                     </fieldset>
                     <fieldset>
                         <label for="d_o_d">Date Of Death</label>
-                        <input type="date" id="d_o_d" name="d_o_d">
+                        <input 
+                            type="date" id="d_o_d" name="d_o_d"
+                            value=<%= artist.dod_iso %>
+                        >
                     </fieldset>
                     <button type="submit">Submit</button>
                 </form>
+                <hr>
+                <hr>
+                <ul>
+                    <% errors?.forEach(error => { %>
+                        <li><%= error.msg %></li>
+                    <% }) %>
+                </ul>
             </div>
         </div>
     </div>

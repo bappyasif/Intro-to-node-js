@@ -29,6 +29,16 @@ MusicArtistSchema.virtual("dod_format")
     return this.d_o_d ? `${DateTime.fromJSDate(this.d_o_d).toLocaleString(DateTime.DATE_MED)}` : '--'
 })
 
+MusicArtistSchema.virtual("dob_iso")
+.get(function() {
+    return DateTime.fromJSDate(this.d_o_b).toISODate()
+})
+
+MusicArtistSchema.virtual("dod_iso")
+.get(function() {
+    return DateTime.fromJSDate(this.d_o_d).toISODate()
+})
+
 MusicArtistSchema.virtual("url")
 .get(function() {
     return "/catalog/artist/"+this._id
