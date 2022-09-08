@@ -192,7 +192,6 @@ let album_delete_post = (req, res) => {
 }
 
 let album_update_get = (req, res, next) => {
-    console.log(req.params.id, "here here!!")
     async.parallel(
         {
             album(cb) {
@@ -200,6 +199,14 @@ let album_update_get = (req, res, next) => {
                 .populate("genre")
                 .populate("artist")
                 .exec(cb)
+            },
+
+            artists(cb) {
+                Artist.find(cb)
+            },
+
+            genres(cb) {
+                Genre.find(cb)
             }
         },
 
@@ -207,25 +214,123 @@ let album_update_get = (req, res, next) => {
             if(err) return next(err);
 
             // console.log(results, "results!!");
+            
+            // marking already checked genres
+            results.genres?.forEach(genre => {
+                results.album.genre.forEach(item => {
+                    if(item._id.toString() === genre._id.toString()) {
+                        genre.checked = true;
+                    }
+                })
+            })
 
-            let genres = [];
+            // marking already selected option
+            results.artists?.forEach(artist => {
+                if(results.album.artist._id.toString() === artist._id.toString()) {
+                    artist.selected = true
+                }
+            })
 
-            results.album.genre?.forEach(item => genres.push(item.name))
-
-            console.log(genres, "results!!");
+            // console.log(results, "results!!");
 
             res.render("form_album_detail", {
-                title: "Album Detail Form",
+                title: "Album Form",
                 album: results.album,
-                genres: genres
+                genres: results.genres,
+                artists: results.artists,
+                errors: null
             })
         }
     )
 }
 
-let album_update_post = (req, res) => {
-    res.send("To Do: album update form POST")
-}
+let album_update_post = [
+    // making sure genre is always into an array
+    (req, res, next) => {
+        if(!Array.isArray(req.body.genre)) {
+            req.body.genre = typeof req.body.genre === undefined ? [] : [req.body.genre]
+        }
+        next()
+    },
+
+    // sanitization and validation user submited data
+    body("name", "Name field can not be left empty")
+    .trim().isLength({min: 1}).escape(),
+    body("artist", "Artist field can not be left empty")
+    .trim().isLength({min: 1}).escape(),
+    body("r_date", "Released Date field can not be left empty")
+    .trim().isLength({min: 1}).escape(),
+    body("price", "Price field can not be left empty")
+    .trim().isLength({min: 1}).escape(),
+    body("genre.*").escape(), // using a wildcard for genre so hat it matches everything in it
+
+    // Process request after sanitization and validation
+    (req, res, next) => {
+        // extracting any errors there might be
+        let errors = validationResult(req);
+
+        // creating an album instacne to update if everything is alright or re render with these values
+        let album = new Album({
+            name: req.body.name,
+            artist: req.body.artist,
+            genre: req.body.genre,
+            released_date: req.body.r_date,
+            description: req.body.descr,
+            price: req.body.price,
+            _id: req.params.id
+        })
+
+        if(!errors.isEmpty()) {
+            // there are errors found, so we'll re render album form with user submitted value and errors list to correct them by user
+
+            // now we will call artist and genres to render along with genre instance that we just created
+            async.parallel(
+                {
+                    genres(cb) {
+                        Genre.find(cb)
+                    },
+                    
+                    artists(cb) {
+                        Artist.find(cb)
+                    }
+                },
+
+                (err, results) => {
+                    if(err) return next(err);
+
+                    results.genres?.forEach(genre => {
+                        if(genre._id.toString() === album.genre.toString()) {
+                            genre.checked = true;
+                        }
+                    })
+
+                    results.artists?.forEach(artist => {
+                        if(artist._id.toString() === album.artist.toString()) {
+                            artist.selected = true;
+                        }
+                    })
+
+                    res.render("form_album_detail", {
+                        title: "Album Form",
+                        album: album,
+                        genres: results.genres,
+                        artists: results.artists,
+                        errors: errors.array()
+                    })
+                }
+            )
+
+            return
+        }
+
+        // otherwise successfull, so lets update and redirect to its detail page view
+        Album.findByIdAndUpdate(req.params.id, album, {},  (err) => {
+            if(err) return next(err);
+
+            res.redirect(album.url)
+        })
+    }
+]
 
 module.exports = {
     albums_list,
