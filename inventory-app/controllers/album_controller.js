@@ -77,7 +77,8 @@ let album_create_get = (req, res, next) => {
                 title: "Album Form", 
                 album: null, 
                 genres: results.genres, 
-                artists: results.artists
+                artists: results.artists,
+                errors: null
             })
         }
     )
@@ -149,6 +150,13 @@ let album_create_post = [
                         if(album.genre.includes(genre._id)) {
                             // Current genre is selected. Set "checked" flag
                             genre.checked = true
+                        }
+                    }
+
+                    // Mark our selected artist as selected
+                    for(let artist of results.artists) {
+                        if(album.artist.toString() === artist._id.toString()) {
+                            artist.selected = true;
                         }
                     }
 
