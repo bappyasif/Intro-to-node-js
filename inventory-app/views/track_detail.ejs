@@ -24,7 +24,9 @@
                         </tr>
                         <tr>
                             <th scope="row">Genre Name</th>
-                            <td class="bg-info"><a class="text-white" href=<%= "/catalog/genre/"+track.genre._id %>><%= track.genre.name %></a></td>
+                            <% track.genre?.forEach(id => { %>
+                                <td class="bg-info"><a class="text-white" href=<%= "/catalog/genre/"+track.id %>><%= id %></a></td>
+                            <% }) %>
                         </tr>
                     </tbody>
                 </table>

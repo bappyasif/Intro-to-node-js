@@ -134,13 +134,53 @@ let genre_delete_post = (req, res) => {
     res.send("To Do: genre delete form POST")
 }
 
-let genre_update_get = (req, res) => {
-    res.send("To Do: genre update form GET")
+let genre_update_get = (req, res, next) => {
+    async.parallel(
+        {
+            genre(cb) {
+                Genre.findById(req.params.id).exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err);
+            
+            res.render("form_genre_detail", {
+                title: "Update Genre",
+                genre: results.genre,
+                errors: null
+            })
+        }
+    )
 }
 
-let genre_update_post = (req, res) => {
-    res.send("To Do: genre update form POST")
-}
+let genre_update_post = [
+    body("name", "Name field can not be left empty")
+    .trim().isLength({min: 1}).escape(),
+    
+    (req, res, next) => {
+        let errors = validationResult(req);
+
+        let genre = new Genre({name: req.body.name, _id: req.params.id})
+
+        if(!errors.isEmpty()) {
+            res.render("form_genre_detail", {
+                title: "Update Genre",
+                genre: genre,
+                errors: errors.array()
+            })
+
+            return
+        }
+
+        // otherwise successful, we'll update and redirect to its detail page
+        Genre.findByIdAndUpdate(req.params.id, genre, {}, err=> {
+            if(err) return next(err);
+
+            res.redirect(genre.url)
+        })
+    }
+]
 
 module.exports = {
     genres_list,

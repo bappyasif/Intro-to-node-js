@@ -139,13 +139,57 @@ let artist_delete_post = (req, res) => {
     res.send("To Do: artist delete form POST")
 }
 
-let artist_update_get = (req, res) => {
-    res.send("To Do: artist update form GET")
+let artist_update_get = (req, res, next) => {
+    async.parallel(
+        {
+            artist(cb) {
+                Artist.findById(req.params.id).exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err)
+
+            res.render("form_artist_detail", {title: "Update Artist", artist: results.artist, errors: null})
+        }
+    )
 }
 
-let artist_update_post = (req, res) => {
-    res.send("To Do: artist update form POST")
-}
+let artist_update_post = [
+    body("first_name", "First Name field can not be left empty")
+    .trim().isLength({min: 1}).escape(),
+    body("last_name", "Last Name field can not be left empty")
+    .trim().isLength({min: 1}).escape(),
+    body("d_o_b", "Date Of Birth field can not be left empty")
+    .trim().isLength({min: 1}).escape(),
+
+    (req, res, next) => {
+        let errors = validationResult(req);
+
+        let artist = new Artist({
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            d_o_b: req.body.d_o_b,
+            d_o_d: req.body.d_o_d,
+            _id: req.params.id // without specifying this every update will create a new entry
+        })
+
+        if(!errors.isEmpty()) {
+            res.render("form_artist_detail", {
+                title: "Update Artist", 
+                artist: artist, 
+                errors: errors.array()
+            })
+
+            return
+        }
+
+        // otherwise succesfull, so we'll find adn update this record on database and then render its detail page
+        Artist.findByIdAndUpdate(req.params.id, artist, {}, err => {
+            res.redirect(artist.url)
+        })
+    }
+]
 
 module.exports = {
     artists_list,

@@ -48,17 +48,27 @@ let track_detail = (req, res, next) => {
                 Track.findById(req.params.id)
                 .populate("genre")
                 .populate("album").exec(cb)
-            }
+            },
+
+            // genres(cb) {
+            //     Genre.find(cb)
+            // },
+
+            // albums(cb) {
+            //     Album.find(cb)
+            // }
         },
 
         (err, results) => {
             if(err) return next(err);
 
-            // console.log(results, "<<results>>")
+            console.log(results, "<<results>>", results.genre)
 
             res.render("track_detail", {
                 title: "Track Detail",
-                track: results.track
+                track: results.track,
+                // genres: results.genres,
+                // albums: results.albums
             })
         }
     )
@@ -147,7 +157,7 @@ let track_create_post = [
                     //     }
                     // }  
                     results.genres.forEach(genre => {
-                        if(track?.genre?.includes(genre._id)) {
+                        if(track.genre?.includes(genre._id)) {
                             genre.checked = true
                         }
                     })
@@ -190,13 +200,131 @@ let track_delete_post = (req, res) => {
     res.send("To Do: track delete form POST")
 }
 
-let track_update_get = (req, res) => {
-    res.send("To Do: track update form GET")
+let track_update_get = (req, res, next) => {
+    async.parallel(
+        {
+            albums(cb) {
+                Album.find(cb)
+            },
+
+            genres(cb) {
+                Genre.find(cb)
+            },
+            
+            track(cb) {
+                Track.findById(req.params.id).exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err);
+
+            results.genres?.forEach(genre => {
+                results.track.genre?.forEach(id => {
+                    if(genre._id.toString() === id.toString()) {
+                        genre.checked = true
+                    }
+                })
+            })
+
+            results.albums?.forEach(album => {
+                if(album._id.toString() === results.track.album.toString()) {
+                    album.selected = true;
+                }
+            })
+
+            // console.log(results, "<><><><>")
+
+            res.render("form_track_detail", {
+                title: "Create Track",
+                albums: results.albums,
+                genres: results.genres,
+                errors: null,
+                track: results.track
+            })
+        }
+    )
 }
 
-let track_update_post = (req, res) => {
-    res.send("To Do: track update form POST")
-}
+let track_update_post = [
+    // making genre an array for compatapability
+    (req, res, next) => {
+        if(!Array.isArray(req.body.genre)) {
+            req.body.genre = typeof req.body.genre === undefined ? [] : [req.body.genre]
+        }
+
+        next()
+    },
+
+    // sanitization and validation of user submited data
+    body("name", "Name field must not be empty")
+    .trim().isLength({min: 1}).escape(),
+    body("album", "Album field must not be empty")
+    .trim().isLength({min: 1}).escape(),
+    body("genre.*").escape(),
+
+    // begin process of updating
+    (req, res, next) => {
+        // extracting any potential errors
+        let errors = validationResult(req);
+
+        let track = new Track({
+            name: req.body.name,
+            genre: req.body.genre,
+            album: req.body.album,
+            status: req.body.status,
+            _id: req.params.id
+        })
+
+        if(!errors.isEmpty()) {
+            // there are errors, so we'll re render update form with user inputs
+            async(
+                {
+                    genres(cb) {
+                        Genre.find(cb)
+                    },
+
+                    albums(cb) {
+                        Album.find(cb)
+                    }
+                },
+
+                (err, results) => {
+                    if(err) return next(err);
+
+                    results.genres?.forEach(genre => {
+                        if(genre._id.toString() === track.genre) {
+                            genre.checked = true
+                        }
+                    })
+
+                    results.albums?.forEach(album => {
+                        if(album._id.toString() === track.album) {
+                            album.selected = true
+                        }
+                    })
+
+                    res.render("form_track_detail", {
+                        title: "Update Track",
+                        albums: results.albums,
+                        genres: results.genres,
+                        errors: errors.array(),
+                        track: track
+                    })
+                }
+            )
+
+            return
+        }
+
+        // otherwise successfull, so we'll find and update this record on database and then redirect to it detail page
+        Track.findByIdAndUpdate(req.params.id, track, {}, err => {
+            if(err) return next(err);
+
+            res.redirect(track.url)
+        })        
+    }
+]
 
 module.exports = {
     tracks_list,

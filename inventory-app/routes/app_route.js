@@ -56,7 +56,7 @@ router.post("/artist/:id/delete", artistController.artist_delete_post)
 router.get("/artist/:id/update", artistController.artist_update_get)
 
 // POST request for updating an artist
-router.post("/artist/:id/update", artistController.artist_update_get)
+router.post("/artist/:id/update", artistController.artist_update_post)
 
 // GET request for one artist
 router.get("/artist/:id", artistController.artist_detail)
@@ -108,7 +108,7 @@ router.post("/track/:id/delete", trackController.track_delete_get)
 router.get("/track/:id/update", trackController.track_update_get)
 
 // POST request for updating a track
-router.post("/track/:id/update", trackController.track_update_get)
+router.post("/track/:id/update", trackController.track_update_post)
 
 // GET request for one track
 router.get("/track/:id", trackController.track_detail)

@@ -28,4 +28,22 @@ MusicTrackSchema.virtual("album_url")
     return "/catalog/album/"+this.album._id
 })
 
+// MusicTrackSchema.virtual("genre_list")
+// .get(function() {
+
+// })
+
+MusicTrackSchema.virtual("track_genre")
+.get(function() {
+    let str = ''
+    this.genre?.forEach((item, idx) => {
+        if(idx === this.genre.length - 1) {
+            str += item.name
+        } else {
+            str += item.name + ", "
+        }
+    })
+    return str
+})
+
 module.exports = mongoose.model("MusicTrack", MusicTrackSchema);
