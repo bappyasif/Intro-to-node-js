@@ -7,19 +7,21 @@
             <div class="col-sm-2">
                 <%- include("./partials/nav.ejs") %>
             </div>
-            <div class="col-sm-4">
-                <h1><%= title %></h1>
+            <div class="col-auto">
+                <h1 class="rounded bg-success text-white border border-primary mt-2 pt-2 pb-2 text-center"><%= title %></h1>
                 <form action="" method="post">
-                    <fieldset>
+                    <fieldset class="form-group">
                         <label for="name">Album Name</label>
-                        <input 
+                        <input
+                            class="form-control"
                             type="text" name="name" id="name" placeholder="Album Name Goes Here...." required="true"
                             value='<%= album !== undefined ? album?.name : '' %>'
                         >
                     </fieldset>
-                    <fieldset>
+                    <fieldset class="form-group">
                         <label for="artist">Artist Name</label>
-                        <select 
+                        <select
+                            class="form-control" 
                             name="artist" id="artist"
                             placeholder="Select Artist"
                             required="true"
@@ -33,51 +35,68 @@
                         <% }) %>
                         </select>
                     </fieldset>
-                    <fieldset>
+                    <fieldset class="form-group">
                         <label for="genre">Album Genre</label>
                         <div>
                             <% genres?.forEach(genre => { %>
-                                <input 
-                                    type="checkbox" name="genre" 
-                                    id=<%= genre._id %>
-                                    value=<%= genre._id %>
-                                    <%= genre.checked !== undefined ? "checked" : false %> 
-                                >
-                                <label for=<%= genre._id %>>
-                                    <%= genre.name %> <%= genre.checked %> 
-                                </label>
+                                <div class="form-check-inline">
+                                    <input 
+                                        class="form-check-input"
+                                        type="checkbox" name="genre" 
+                                        id=<%= genre._id %>
+                                        value=<%= genre._id %>
+                                        <%= genre.checked !== undefined ? "checked" : null %> 
+                                    >
+                                    <label 
+                                        class="form-check-label"
+                                        for=<%= genre._id %>>
+                                        <%= genre.name %>
+                                    </label>
+                                </div>
                             <% }) %>
                         </div>                        
                     </fieldset>
-                    <fieldset>
+                    <fieldset class="form-group">
                         <label for="r_date">Released Date</label>
                         <input 
+                            class="form-control"
                             type="date" name="r_date" id="r_date"
                             value=<%= album?.form_date %>
                         >
                     </fieldset>
-                    <fieldset>
+                    <fieldset class="form-group">
                         <label for="descr">Album Description</label>
-                        <textarea name="descr" id="descr" rows="2" placeholder="enter description">
-                            <%= album?.description %>
-                        </textarea>
+                        <textarea 
+                            style="text-align: left;"
+                            class="form-control"
+                            name="descr" id="descr" rows="2" placeholder="enter description"><%= album?.description %></textarea>
                     </fieldset>
-                    <fieldset>
+                    <fieldset class="form-group">
                         <label for="price">Retail Price</label>
                         <input 
+                            class="form-control"
                             type="number" name="price" id="price"
                             value=<%= album?.price %> 
                         >
                     </fieldset>
-                    <button type="submit">Submit</button>
+                    <button class="btn btn -lg btn-block btn-secondary" type="submit">Submit</button>
                 </form>
                 <hr>
                 <hr>
-                <ul>
-                    <% errors?.forEach(error => { %>
-                        <li><%= error.msg %> </li>
-                    <% }) %>
+                <h2 class="rounded bg-warning text-dark border border-primary mt-2 pt-2 pb-2 text-center">List Of Errors If There's any: </h4>
+                <hr>
+                <hr>
+                <ul class="list-group list-group-flush">
+                    <% if(errors) { %>
+                        <% errors?.forEach(error => { %>
+                            <li class="alert alert-danger" role="alert"><%= error.msg %> </li>
+                        <% }) %>
+                    <% } else { %>
+                        <li class="list-group-item list-group-item-secondary">There are no Errors</li>
+                    <% } %>
                 </ul>
+                <hr>
+                <hr>
             </div>
         </div>
     </div>
