@@ -192,12 +192,30 @@ let track_create_post = [
     }
 ]
 
-let track_delete_get = (req, res) => {
-    res.send("To Do: track delete form GET")
+let track_delete_get = (req, res, next) => {
+    async.parallel(
+        {
+            track(cb) {
+                Track.findById(req.params.id).exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err);
+
+            res.render("delete_track", {
+                title: "Delete Track",
+                track: results.track
+            })
+        }
+    )
 }
 
-let track_delete_post = (req, res) => {
-    res.send("To Do: track delete form POST")
+let track_delete_post = (req, res, next) => {
+    Track.findByIdAndDelete(req.body.trackid)
+    .then(() => console.log("Track Deleted"))
+    .catch(err => next(err))
+    .finally(() => res.redirect("/catalog/tracks"))
 }
 
 let track_update_get = (req, res, next) => {

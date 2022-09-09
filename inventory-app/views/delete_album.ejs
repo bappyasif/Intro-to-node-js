@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("./partials/head.ejs") %>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+                <%- include("./partials/nav.ejs") %>
+            </div>
+            <div class="col-sm-4">
+                <h1><%= title %> </h1>
+                <% if(tracks?.length) { %>
+                    <h2>Delete these Tracks first</h2>
+                    <ul>
+                        <% tracks.forEach(track => { %>
+                            <li><a href=<%= "/catalog/track/"+track._id %>><%= track.name %></a></li>
+                        <% }) %>
+                    </ul>
+                <% } else { %>
+                    <h2>Are you sure about deleting this album?</h2>
+                    <form action="" method="post">
+                        <input type="hidden" name="albumid" id="albumid" required="true" value=<%= album._id %>>
+                        <button type="submit">Delete</button>
+                    </form>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -126,12 +126,41 @@ let genre_create_post = [
     }
 ]
 
-let genre_delete_get = (req, res) => {
-    res.send("To Do: genre delete form GET")
+let genre_delete_get = (req, res, next) => {
+    async.parallel(
+        {
+            async albums(cb) {
+                return Album.find()
+                .then(items => {
+                    let genrePromises = items?.flatMap(item => item.genre?.map(id => id.toString() === req.params.id ? item : false)).filter(id => id)
+                    return Promise.all(genrePromises)
+                })
+            },
+
+            genre(cb) {
+                Genre.findById(req.params.id).exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err);
+
+            // console.log(results, "<<results>>")
+
+            res.render("delete_genre", {
+                title: "Delete Genre",
+                genre: results.genre,
+                albums: results.albums
+            })
+        }
+    )
 }
 
-let genre_delete_post = (req, res) => {
-    res.send("To Do: genre delete form POST")
+let genre_delete_post = (req, res, next) => {
+    Genre.findByIdAndDelete(req.body.genreid)
+    .then(() => console.log("genre deleted"))
+    .catch(err => next(err))
+    .finally(() => res.redirect("/catalog/genres"))
 }
 
 let genre_update_get = (req, res, next) => {

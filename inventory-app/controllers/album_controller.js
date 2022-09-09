@@ -2,6 +2,7 @@ let async = require("async")
 let Album = require("../models/music_album");
 let Artist = require("../models/music_artist");
 let Genre = require("../models/music_genre");
+let Track = require("../models/music_track");
 let {body, validationResult} = require("express-validator");
 /**
  * 
@@ -183,12 +184,37 @@ let album_create_post = [
     }
 ]
 
-let album_delete_get = (req, res) => {
-    res.send("To Do: album delete form GET")
+let album_delete_get = (req, res, next) => {
+    async.parallel(
+        {
+            album(cb) {
+                Album.findById(req.params.id).exec(cb)
+            },
+
+            tracks(cb) {
+                Track.find({album: req.params.id}).exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err);
+
+            console.log(results, "<<results>>");
+
+            res.render("delete_album", {
+                title: "Delete Album",
+                tracks: results.tracks,
+                album: results.album
+            })
+        }
+    )
 }
 
-let album_delete_post = (req, res) => {
-    res.send("To Do: album delete form POST")
+let album_delete_post = (req, res, next) => {
+    Album.findByIdAndDelete(req.body.albumid)
+    .then(() => console.log("Album Deleted...."))
+    .catch(err => next(err))
+    .finally(() => res.redirect("/catalog/albums"))
 }
 
 let album_update_get = (req, res, next) => {

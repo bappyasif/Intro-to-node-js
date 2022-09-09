@@ -131,12 +131,37 @@ let artist_create_post = [
     }
 ]
 
-let artist_delete_get = (req, res) => {
-    res.send("To Do: artist delete form GET")
+let artist_delete_get = (req, res, next) => {
+    async.parallel(
+        {
+            artist(cb) {
+                Artist.findById(req.params.id).exec(cb)
+            },
+
+            albums(cb) {
+                Album.find({artist: req.params.id}).exec(cb)
+            }
+        },
+
+        (err, results) => {
+            if(err) return next(err);
+
+            // console.log(results, "<<results>>")
+
+            res.render("delete_artist",  {
+                title: "Delete Artist",
+                artist: results.artist,
+                albums: results.albums
+            })
+        }
+    )
 }
 
-let artist_delete_post = (req, res) => {
-    res.send("To Do: artist delete form POST")
+let artist_delete_post = (req, res, next) => {
+    Artist.findByIdAndDelete(req.body.artistid)
+    .then(() => console.log("Artist Deleted"))
+    .catch(err => next(err))
+    .finally(() => res.redirect("/catalog/artists"))
 }
 
 let artist_update_get = (req, res, next) => {

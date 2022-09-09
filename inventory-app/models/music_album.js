@@ -40,7 +40,6 @@ MusicAlbumSchema.virtual("album_genre")
 
 MusicAlbumSchema.virtual("album_genre_v2")
 .get(function() {
-    console.log(this.genre, "tetst")
     return this.genre;
 })
 

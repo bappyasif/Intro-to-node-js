@@ -102,7 +102,7 @@ router.post("/track/create", trackController.track_create_post)
 router.get("/track/:id/delete", trackController.track_delete_get)
 
 // POST request for deleting a track
-router.post("/track/:id/delete", trackController.track_delete_get)
+router.post("/track/:id/delete", trackController.track_delete_post)
 
 // GET request for updating a track
 router.get("/track/:id/update", trackController.track_update_get)

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("./partials/head.ejs") %>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+                <%- include("./partials/nav.ejs") %>
+            </div>
+            <div class="col-sm-4">
+                <h1><%= title %></h1>
+                <h3>Are you sure you want to delete this track</h3>
+                <form action="" method="post">
+                    <input type="hidden" name="trackid" id="trackid" required="true" value=<%= track._id %>>
+                    <button type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
