@@ -19,11 +19,15 @@
                         </tr>
                         <tr>
                             <th scope="row">Artist Name</th>
-                            <td class="bg-info"><%= album.artistName %></td>
+                            <td class="bg-info"><a class="text-white" href=<%= album.album_artist_url %>><%= album.artistName %></a></td>
                         </tr>
                         <tr>
                             <th scope="row">Genre Name</th>
-                            <td class="bg-info"><%= album.album_genre %></td>
+                            <td class="bg-info">
+                                <% album.album_genre_v2.forEach(genre => { %>
+                                    <span><a class="text-white" href=<%= "/catalog/genre/"+genre._id %>><%= genre.name %></a></span>
+                                <% }) %>
+                            </td>
                         </tr>
                         <tr>
                             <th scope="row">Released Date</th>

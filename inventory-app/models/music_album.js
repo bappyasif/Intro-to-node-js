@@ -26,11 +26,22 @@ MusicAlbumSchema.virtual("artistName")
     return fullName;
 })
 
+MusicAlbumSchema.virtual("album_artist_url")
+.get(function() {
+    return "/catalog/artist/"+this.artist._id
+})
+
 MusicAlbumSchema.virtual("album_genre")
 .get(function() {
     let genreStr = '';
     this.genre?.forEach(item => genreStr += item.name + " ")
     return genreStr;
+})
+
+MusicAlbumSchema.virtual("album_genre_v2")
+.get(function() {
+    console.log(this.genre, "tetst")
+    return this.genre;
 })
 
 MusicAlbumSchema.virtual("released_date_format")
