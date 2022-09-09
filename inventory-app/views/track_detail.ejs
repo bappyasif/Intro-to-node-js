@@ -20,13 +20,13 @@
                         </tr>
                         <tr>
                             <th scope="row">Album Name</th>
-                            <td class="bg-info"><a class="text-white" href=<%= "/catalog/album/"+track.album._id %>><%= track.album.name %></a></td>
+                            <td class="bg-info"><a class="text-white btn btn-sm" href=<%= "/catalog/album/"+track.album._id %>><%= track.album.name %></a></td>
                         </tr>
                         <tr>
                             <th scope="row">Genre Name</th>
                             <td class="bg-info">
                                 <% track.genre?.forEach(item => { %>
-                                    <span><a class="text-white" href=<%= "/catalog/genre/"+item.id.toString() %>><%= item.name %></a></span>
+                                    <span><a class="text-white btn btn-sm" href=<%= "/catalog/genre/"+item.id.toString() %>><%= item.name %></a></span>
                                 <% }) %>
                             </td>
                         </tr>

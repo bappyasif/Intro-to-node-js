@@ -21,7 +21,7 @@
                         <% tracks?.forEach(track => { %>
                             <tr>
                                 <td ><a class="text-white btn btn-sm" href=<%= track.url %>><%= track.name %></a></td>
-                                <td class="bg-secondary"><a class="text-white" href=<%= track.album_url %>><%= track.album_name %></a></td>
+                                <td class="bg-secondary"><a class="text-white btn btn-sm" href=<%= track.album_url %>><%= track.album_name %></a></td>
                             </tr>
                         <% }) %>
                     </tbody>

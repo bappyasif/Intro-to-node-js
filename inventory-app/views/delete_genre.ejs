@@ -8,19 +8,21 @@
                 <%- include("./partials/nav.ejs") %>
             </div>
             <div class="col-sm-4">
-                <h1><%= title %></h1>
+                <h1 class="rounded bg-success text-white border border-primary mt-2 pt-2 pb-2 text-center"><%= title %></h1>
+                <hr>
+                <hr>
                 <% if(albums.length) { %>
-                    <h2>Delete these albums first</h2>
-                    <ul>
+                    <h2 class="rounded bg-secondary text-white border border-primary mt-2 pt-2 pb-2 text-center">Delete these albums first</h2>
+                    <ul class="nav nav-pills nav-fill">
                         <% albums?.forEach(album => { %>
-                            <li><a href=<%= "/catalog/album/"+ album._id %>><%= album.name %></a></li>
+                            <li class="col nav-item m-1 bg-warning list-group-item"><a class="nav-link btn btn-lg btn-block text-dark" href=<%= "/catalog/album/"+ album._id %>><%= album.name %></a></li>
                         <% }) %>
                     </ul>
                 <% } else { %>
-                    <h3>Are you sure you want to delete this genre?</h3>
+                    <h3 class="rounded bg-secondary text-white border border-primary mt-2 pt-2 pb-2 text-center">Are you sure you want to delete this genre?</h3>
                     <form action="" method="post">
                         <input type="hidden" name="genreid" id="genreid" required="true" value=<%= genre._id %>>
-                        <button type="submit">Delete</button>
+                        <button class="btn btn-lg btn-block bg-danger text-white" type="submit">Delete</button>
                     </form>
                 <% } %>
             </div>
