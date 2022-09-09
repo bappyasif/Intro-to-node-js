@@ -24,9 +24,11 @@
                         </tr>
                         <tr>
                             <th scope="row">Genre Name</th>
-                            <% track.genre?.forEach(id => { %>
-                                <td class="bg-info"><a class="text-white" href=<%= "/catalog/genre/"+track.id %>><%= id %></a></td>
-                            <% }) %>
+                            <td class="bg-info">
+                                <% track.genre?.forEach(item => { %>
+                                    <span><a class="text-white" href=<%= "/catalog/genre/"+item.id.toString() %>><%= item.name %></a></span>
+                                <% }) %>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
