@@ -91,7 +91,7 @@ let artist_detail = (req, res, next) => {
 }
 
 let artist_create_get = (req, res) => {
-    res.render("form_artist_detail", {title: "Create Artist", artist: null, errors: null})
+    res.render("form_artist", {title: "Create Artist", artist: null, errors: null})
 }
 
 let artist_create_post = [
@@ -113,7 +113,7 @@ let artist_create_post = [
         })
 
         if(!errors.isEmpty()) {
-            res.render("form_artist_detail", {
+            res.render("form_artist", {
                 title: "Create Artist", 
                 artist: artist, 
                 errors: errors.array()
@@ -150,7 +150,7 @@ let artist_update_get = (req, res, next) => {
         (err, results) => {
             if(err) return next(err)
 
-            res.render("form_artist_detail", {title: "Update Artist", artist: results.artist, errors: null})
+            res.render("form_artist", {title: "Update Artist", artist: results.artist, errors: null})
         }
     )
 }
@@ -175,7 +175,7 @@ let artist_update_post = [
         })
 
         if(!errors.isEmpty()) {
-            res.render("form_artist_detail", {
+            res.render("form_artist", {
                 title: "Update Artist", 
                 artist: artist, 
                 errors: errors.array()

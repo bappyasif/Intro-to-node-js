@@ -73,7 +73,7 @@ let album_create_get = (req, res, next) => {
 
             // console.log(results, "results!!")
 
-            res.render("form_album_detail", {
+            res.render("form_album", {
                 title: "Album Form", 
                 album: null, 
                 genres: results.genres, 
@@ -161,7 +161,7 @@ let album_create_post = [
                     }
 
                     // render form with previously form values
-                    res.render("form_album_detail", {
+                    res.render("form_album", {
                         title: "Album Form", 
                         album: album,
                         genres: results.genres, 
@@ -233,7 +233,7 @@ let album_update_get = (req, res, next) => {
 
             // console.log(results, "results!!");
 
-            res.render("form_album_detail", {
+            res.render("form_album", {
                 title: "Album Form",
                 album: results.album,
                 genres: results.genres,
@@ -310,7 +310,7 @@ let album_update_post = [
                         }
                     })
 
-                    res.render("form_album_detail", {
+                    res.render("form_album", {
                         title: "Album Form",
                         album: album,
                         genres: results.genres,

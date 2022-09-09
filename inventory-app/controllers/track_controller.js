@@ -62,7 +62,7 @@ let track_detail = (req, res, next) => {
         (err, results) => {
             if(err) return next(err);
 
-            console.log(results, "<<results>>", results.genre)
+            // console.log(results, "<<results>>", results.genre)
 
             res.render("track_detail", {
                 title: "Track Detail",
@@ -91,7 +91,7 @@ let track_create_get = (req, res, next) => {
 
             // console.log(results, "<RESUTLS>")
 
-            res.render("form_track_detail", {
+            res.render("form_track", {
                 title: "Create Track",
                 albums: results.albums,
                 genres: results.genres,
@@ -170,7 +170,7 @@ let track_create_post = [
                     })
 
                     // render form with previously form values
-                    res.render("form_track_detail", {
+                    res.render("form_track", {
                         title: "Track Form",
                         track: track,
                         albums: results.albums,
@@ -235,7 +235,7 @@ let track_update_get = (req, res, next) => {
 
             // console.log(results, "<><><><>")
 
-            res.render("form_track_detail", {
+            res.render("form_track", {
                 title: "Create Track",
                 albums: results.albums,
                 genres: results.genres,
@@ -304,7 +304,7 @@ let track_update_post = [
                         }
                     })
 
-                    res.render("form_track_detail", {
+                    res.render("form_track", {
                         title: "Update Track",
                         albums: results.albums,
                         genres: results.genres,

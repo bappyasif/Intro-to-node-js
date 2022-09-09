@@ -94,7 +94,7 @@ let genre_detail = (req, res, next) => {
 }
 
 let genre_create_get = (req, res) => {
-    res.render("form_genre_detail", {title: "Cerate Genre", genre: null, errors: null})
+    res.render("form_genre", {title: "Cerate Genre", genre: null, errors: null})
 }
 
 let genre_create_post = [
@@ -109,7 +109,7 @@ let genre_create_post = [
         let genre = new Genre({name: req.body.name})
 
         if(!errors.isEmpty()) {
-            res.render("form_genre_detail", {
+            res.render("form_genre", {
                 title: "Cerate Genre", 
                 genre: genre, 
                 errors: errors.array()
@@ -145,7 +145,7 @@ let genre_update_get = (req, res, next) => {
         (err, results) => {
             if(err) return next(err);
             
-            res.render("form_genre_detail", {
+            res.render("form_genre", {
                 title: "Update Genre",
                 genre: results.genre,
                 errors: null
@@ -164,7 +164,7 @@ let genre_update_post = [
         let genre = new Genre({name: req.body.name, _id: req.params.id})
 
         if(!errors.isEmpty()) {
-            res.render("form_genre_detail", {
+            res.render("form_genre", {
                 title: "Update Genre",
                 genre: genre,
                 errors: errors.array()
