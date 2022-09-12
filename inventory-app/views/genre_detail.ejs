@@ -14,6 +14,12 @@
                         <h1 class="rounded bg-success text-white border border-primary mt-2 pt-2 pb-2 text-center">Detail About <%= title %> Genre</h1>
                     </thead>
                     <tbody>
+                        <% if(genre.cover_img !== undefined) { %>
+                            <tr>
+                                <th scope="row">Genre Cover</th>
+                                <td class="bg-info"><img src=<%= genre.cover_photo %>  alt="Genre Cover"></td>
+                            </tr>
+                        <% } %>
                         <tr>
                             <th scope="row">Genre Name</th>
                             <td class="bg-info"><%= title %></td>

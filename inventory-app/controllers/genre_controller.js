@@ -106,7 +106,7 @@ let genre_create_post = [
     (req, res, next) => {
         let errors = validationResult(req)
 
-        let genre = new Genre({name: req.body.name})
+        let genre = new Genre({name: req.body.name, cover_img: req.file.buffer})
 
         if(!errors.isEmpty()) {
             res.render("form_genre", {

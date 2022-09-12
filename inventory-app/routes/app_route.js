@@ -76,7 +76,7 @@ router.get("/artists", artistController.artists_list)
 router.get("/genre/create", genreController.genre_create_get)
 
 // POST request for creating a genre
-router.post("/genre/create", genreController.genre_create_post)
+router.post("/genre/create", upload.single("cover"), genreController.genre_create_post)
 
 // GET request for deleting a genre
 router.get("/genre/:id/delete", genreController.genre_delete_get)

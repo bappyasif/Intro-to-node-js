@@ -4,9 +4,6 @@ let Artist = require("../models/music_artist");
 let Genre = require("../models/music_genre");
 let Track = require("../models/music_track");
 let {body, validationResult} = require("express-validator");
-let multar = require("multer");
-let upload = multar({dest: "uploads/"})
-let storage = multar.memoryStorage();
 /**
  * 
  * @param {*} req 
