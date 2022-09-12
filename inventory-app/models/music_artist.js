@@ -7,12 +7,18 @@ let Schema = mongoose.Schema;
 
 let MusicArtistSchema = new Schema(
     {
+        cover_img: {type: Schema.Types.Buffer},
         first_name: {type: Schema.Types.String, maxLength: 99, required: true},
         last_name: {type: Schema.Types.String, maxLength: 99, required: true},
         d_o_b: {type: Schema.Types.Date, required: true},
         d_o_d: {type: Schema.Types.Date}
     }
 )
+
+MusicArtistSchema.virtual("cover_photo")
+.get(function() {
+    return "data:image/jpeg;base64,"+this.cover_img.toString("base64")
+})
 
 MusicArtistSchema.virtual("full_name")
 .get(function() {

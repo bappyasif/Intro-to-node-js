@@ -50,7 +50,7 @@ router.get("/albums", albumController.albums_list)
 router.get("/artist/create", artistController.artist_create_get)
 
 // POST request for creating an artist
-router.post("/artist/create", artistController.artist_create_post)
+router.post("/artist/create", upload.single('cover-photo'), artistController.artist_create_post)
 
 // GET request for deleting an artist
 router.get("/artist/:id/delete", artistController.artist_delete_get)

@@ -106,6 +106,7 @@ let artist_create_post = [
         let errors = validationResult(req);
 
         let artist = new Artist({
+            cover_img: req.file.buffer,
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             d_o_b: req.body.d_o_b,

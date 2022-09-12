@@ -14,6 +14,12 @@
                         <h1 class="rounded bg-success text-white border border-primary mt-2 pt-2 pb-2 text-center">Detail About Artist: <%= artist.full_name %> </h1>
                     </thead>
                     <tbody>
+                        <% if(artist.cover_img !== undefined) { %>
+                            <tr>
+                                <th scope="row">Artist Photo</th>
+                                <td class="bg-info" style="text-align: center;"><img style="height: 200px;" src=<%= artist.cover_photo %> alt="Cover Shot Of Artist"></td>
+                            </tr>
+                        <% } %>
                         <tr>
                             <th scope="row">Artist Name</th>
                             <td class="bg-info"><%= artist.full_name %></td>

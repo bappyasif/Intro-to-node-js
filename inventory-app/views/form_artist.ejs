@@ -9,7 +9,11 @@
             </div>
             <div class="col-sm-4">
                 <h1 class="rounded bg-success text-white border border-primary mt-2 pt-2 pb-2 text-center"><%= title %></h1>
-                <form action="" method="post">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <fieldset>
+                        <label for="cover-photo">Cover Photo</label>
+                        <input type="file" name="cover-photo" id="cover-photo">
+                    </fieldset>
                     <fieldset class="form-group">
                         <label for="first_name">First Name</label>
                         <input 
