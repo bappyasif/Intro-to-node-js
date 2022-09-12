@@ -36,7 +36,7 @@ router.post("/album/:id/delete", albumController.album_delete_post)
 router.get("/album/:id/update", albumController.album_update_get)
 
 // POST request for updating an album
-router.post("/album/:id/update", albumController.album_update_post)
+router.post("/album/:id/update", upload.single("avatar"), albumController.album_update_post)
 
 // GET request for one album
 router.get("/album/:id", albumController.album_detail)
@@ -50,7 +50,7 @@ router.get("/albums", albumController.albums_list)
 router.get("/artist/create", artistController.artist_create_get)
 
 // POST request for creating an artist
-router.post("/artist/create", upload.single('cover-photo'), artistController.artist_create_post)
+router.post("/artist/create", upload.single('cover_photo'), artistController.artist_create_post)
 
 // GET request for deleting an artist
 router.get("/artist/:id/delete", artistController.artist_delete_get)
@@ -62,7 +62,7 @@ router.post("/artist/:id/delete", artistController.artist_delete_post)
 router.get("/artist/:id/update", artistController.artist_update_get)
 
 // POST request for updating an artist
-router.post("/artist/:id/update", artistController.artist_update_post)
+router.post("/artist/:id/update", upload.single('cover_photo'), artistController.artist_update_post)
 
 // GET request for one artist
 router.get("/artist/:id", artistController.artist_detail)
@@ -88,7 +88,7 @@ router.post("/genre/:id/delete", genreController.genre_delete_post)
 router.get("/genre/:id/update", genreController.genre_update_get)
 
 // POST request for updating a genre
-router.post("/genre/:id/update", genreController.genre_update_post)
+router.post("/genre/:id/update", upload.single("cover"), genreController.genre_update_post)
 
 // GET request for one genre
 router.get("/genre/:id", genreController.genre_detail)

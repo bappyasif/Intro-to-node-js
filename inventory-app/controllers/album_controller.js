@@ -303,6 +303,7 @@ let album_update_post = [
 
         // creating an album instacne to update if everything is alright or re render with these values
         let album = new Album({
+            img_file: req.file?.buffer,
             name: req.body.name,
             artist: req.body.artist,
             genre: req.body.genre,
