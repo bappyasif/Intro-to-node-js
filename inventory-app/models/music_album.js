@@ -7,6 +7,7 @@ let Schema = mongoose.Schema;
 
 let MusicAlbumSchema = new Schema(
     {
+        img_file: {type: Schema.Types.Buffer},
         name: {type: Schema.Types.String, required: true},
         released_date: {type: Schema.Types.Date, required: true},
         genre: [{type: Schema.Types.ObjectId, ref: "MusicGenre"}],

@@ -9,7 +9,11 @@
             </div>
             <div class="col-auto">
                 <h1 class="rounded bg-success text-white border border-primary mt-2 pt-2 pb-2 text-center"><%= title %></h1>
-                <form action="" method="post">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <fieldset class="form-group">
+                        <label for="avatar">Album Photo</label>
+                        <input type="file" name="avatar" id="avatar">
+                    </fieldset>
                     <fieldset class="form-group">
                         <label for="name">Album Name</label>
                         <input

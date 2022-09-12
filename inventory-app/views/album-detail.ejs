@@ -13,6 +13,13 @@
                         <h1 class="rounded bg-success text-white border border-primary mt-2 pt-2 pb-2 text-center"><%= title %> Of <%= album.name %></h1>
                     </thead>
                     <tbody>
+                        <% if(cover !== undefined) { %>
+                            <tr>
+                                <th scope="row">Album Cover</th>
+                                <td class="bg-info"><img src=<%= "data:image/jpeg;base64,"+cover %>  alt="Album Cover"></td>
+                            </tr>
+                        <% } %>
+                        
                         <tr>
                             <th scope="row">Album Name</th>
                             <td class="bg-info"><%= album.name %></td>

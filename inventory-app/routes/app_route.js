@@ -1,3 +1,9 @@
+let multer = require("multer");
+let storage = multer.memoryStorage();
+let upload = multer({storage: storage})
+
+// let upload = multer({dest: "uploads/"})
+
 let express = require("express");
 
 let router = express.Router();
@@ -18,7 +24,7 @@ router.get("/", catalogController.index)
 router.get("/album/create", albumController.album_create_get)
 
 // POST request for creating an album
-router.post("/album/create", albumController.album_create_post)
+router.post("/album/create", upload.single("avatar"), albumController.album_create_post)
 
 // GET request for deleting an album
 router.get("/album/:id/delete", albumController.album_delete_get)

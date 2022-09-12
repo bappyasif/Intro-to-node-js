@@ -4,6 +4,9 @@ let Artist = require("../models/music_artist");
 let Genre = require("../models/music_genre");
 let Track = require("../models/music_track");
 let {body, validationResult} = require("express-validator");
+let multar = require("multer");
+let upload = multar({dest: "uploads/"})
+let storage = multar.memoryStorage();
 /**
  * 
  * @param {*} req 
@@ -49,7 +52,8 @@ let album_detail = (req, res, next) => {
 
             res.render("album-detail", {
                 title: "Album Detail",
-                album: results.album
+                album: results.album,
+                cover: results.album.img_file?.toString('base64')
             })
         }
     )
@@ -114,6 +118,7 @@ let album_create_post = [
 
     // Process request after validation and sanitization
     (req, res, next) => {
+        // console.log(req.file.buffer, req.file, "HERERERERE")
         // Extract the validation errors from a request
         let errors = validationResult(req)
 
@@ -124,7 +129,8 @@ let album_create_post = [
             genre: req.body.genre,
             released_date: req.body.r_date,
             description: req.body.descr,
-            price: req.body.price
+            price: req.body.price,
+            img_file: req.file.buffer
         })
 
         // Extract the validation errors from a request
@@ -145,6 +151,9 @@ let album_create_post = [
 
                 (err, results) => {
                     if(err) return next(err)
+
+                    // trying out photo upload
+                    // upload.single("avatar")
 
                     // Mark our selected genres as checked
                     for(let genre of results.genres) {
@@ -199,7 +208,7 @@ let album_delete_get = (req, res, next) => {
         (err, results) => {
             if(err) return next(err);
 
-            console.log(results, "<<results>>");
+            // console.log(results, "<<results>>");
 
             res.render("delete_album", {
                 title: "Delete Album",
