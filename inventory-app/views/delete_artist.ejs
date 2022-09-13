@@ -32,16 +32,18 @@
 
                 <br>
                 <br>
-                <h2 class="rounded bg-warning text-dark border border-primary mt-2 pt-2 pb-2 text-center">List Of Errors If There's any: </h4>
-                <ul class="list-group list-group-flush">
-                    <% if(errors) { %>
-                        <% errors?.forEach(error => { %>
-                            <li class="alert alert-danger" role="alert"><%= error.msg %> </li>
-                        <% }) %>
-                    <% } else { %>
-                        <li class="list-group-item list-group-item-secondary">There are no Errors</li>
-                    <% } %>
-                </ul>
+                <% if(errors != null) { %>
+                    <h2 class="rounded bg-warning text-dark border border-primary mt-2 pt-2 pb-2 text-center">List Of Errors If There's any: </h4>
+                    <ul class="list-group list-group-flush">
+                        <% if(errors) { %>
+                            <% errors?.forEach(error => { %>
+                                <li class="alert alert-danger" role="alert"><%= error.msg %> </li>
+                            <% }) %>
+                        <% } else { %>
+                            <li class="list-group-item list-group-item-secondary">There are no Errors</li>
+                        <% } %>
+                    </ul>
+                <% } %>
             </div>
         </div>
     </div>
