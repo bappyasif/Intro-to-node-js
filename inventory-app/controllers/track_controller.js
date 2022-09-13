@@ -164,7 +164,7 @@ let track_create_post = [
                     })
 
                     results.albums.forEach(album => {
-                        console.log(track.album, track.album.toString() === album._id.toString(), album._id)
+                        // console.log(track.album, track.album.toString() === album._id.toString(), album._id)
                         if(track.album.toString() === album._id.toString()) {
                             album.selected = true
                         }
@@ -172,7 +172,7 @@ let track_create_post = [
 
                     // render form with previously form values
                     res.render("form_track", {
-                        title: "Track Form",
+                        title: "Create Track",
                         track: track,
                         albums: results.albums,
                         genres: results.genres,
@@ -289,7 +289,7 @@ let track_update_get = (req, res, next) => {
             // console.log(results, "<><><><>")
 
             res.render("form_track", {
-                title: "Create Track",
+                title: "Update Track",
                 albums: results.albums,
                 genres: results.genres,
                 errors: null,
@@ -350,14 +350,16 @@ let track_update_post = [
                 (err, results) => {
                     if(err) return next(err);
 
+                    // console.log(results.genre, "<<results>>")
                     results.genres?.forEach(genre => {
-                        if(genre._id.toString() === track.genre) {
+                        // console.log(genre._id.toString() === track.genre, "<<results>>", genre._id.toString(), track.genre[0], track)
+                        if(genre._id.toString() === track.genre[0].toString()) {
                             genre.checked = true
                         }
                     })
 
                     results.albums?.forEach(album => {
-                        if(album._id.toString() === track.album) {
+                        if(album._id.toString() === track.album.toString()) {
                             album.selected = true
                         }
                     })
