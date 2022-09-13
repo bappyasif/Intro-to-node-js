@@ -4,10 +4,10 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-sm-3">
                 <%- include("./partials/nav.ejs") %>
             </div>
-            <div class="col-sm-4">
+            <div class="col">
                 <table class="table bordered table-hover table-dark">
                     <caption><%= title %></caption>
                     <thead>
@@ -16,27 +16,27 @@
                     <tbody>
                         <tr>
                             <th scope="row">Track Name</th>
-                            <td class="bg-info"><%= track.name %></td>
+                            <td class="bg-info text-center"><%= track.name %></td>
                         </tr>
                         <tr>
-                            <th scope="row">Album Name</th>
-                            <td class="bg-info"><a class="text-white btn btn-sm" href=<%= "/catalog/album/"+track.album._id %>><%= track.album.name %></a></td>
+                            <th scope="row" class="align-middle">Album Name</th>
+                            <td class="bg-info"><a class="text-white btn btn-lg nav-link data-item p-0" href=<%= "/catalog/album/"+track.album._id %>><%= track.album.name %></a></td>
                         </tr>
                         <tr>
-                            <th scope="row">Genre Name</th>
+                            <th scope="row" class="align-middle">Genre Name</th>
                             <td class="bg-info">
                                 <% track.genre?.forEach(item => { %>
-                                    <span><a class="text-white btn btn-sm" href=<%= "/catalog/genre/"+item.id.toString() %>><%= item.name %></a></span>
+                                    <span><a class="text-white btn btn-lg nav-link data-item p-0" href=<%= "/catalog/genre/"+item.id.toString() %>><%= item.name %></a></span>
                                 <% }) %>
                             </td>
                         </tr>
                     </tbody>
                 </table>
                 <hr>
-                <hr>
+                <br>
                 <nav class="nav nav-pills row nav-fills">
-                    <a class="col nav-item btn btn-lg btn-info" href=<%= track.url+"/update" %>>Update</a>
-                    <a class="col nav-item btn btn-lg btn-danger" href=<%= track.url+"/delete" %>>Delete</a>
+                    <a class="col nav-item btn btn-lg btn-info form-btn m-2" href=<%= track.url+"/update" %>>Update</a>
+                    <a class="col nav-item btn btn-lg btn-danger form-btn m-2" href=<%= track.url+"/delete" %>>Delete</a>
                 </nav>
             </div>
         </div>

@@ -4,10 +4,10 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-sm-3">
                 <%- include("./partials/nav.ejs") %>
             </div>
-            <div class="col-sm-4">
+            <div class="col">
                 <table class="table table-dark table-hover">
                     <thead>
                         <h1 class="rounded bg-success text-white border border-primary mt-2 pt-2 pb-2 text-center"><%= title %> Of <%= album.name %></h1>
@@ -25,14 +25,14 @@
                             <td class="bg-info"><%= album.name %></td>
                         </tr>
                         <tr>
-                            <th scope="row">Artist Name</th>
-                            <td class="bg-info"><a class="text-white" href=<%= album.album_artist_url %>><%= album.artistName %></a></td>
+                            <th scope="row" class="align-middle">Artist Name</th>
+                            <td class="bg-info"><a style="padding: 0;" class="text-white nav-link" href=<%= album.album_artist_url %>><%= album.artistName %></a></td>
                         </tr>
                         <tr>
-                            <th scope="row">Genre Name</th>
+                            <th scope="row" class="align-middle">Genre Name</th>
                             <td class="bg-info">
                                 <% album.album_genre_v2.forEach(genre => { %>
-                                    <span><a class="text-white" href=<%= "/catalog/genre/"+genre._id %>><%= genre.name %></a></span>
+                                    <span><a style="padding: 0;" class="text-white nav-link" href=<%= "/catalog/genre/"+genre._id %>><%= genre.name %></a></span>
                                 <% }) %>
                             </td>
                         </tr>
@@ -51,10 +51,10 @@
                     </tbody>
                 </table>
                 <hr>
-                <hr>
+                <br>
                 <nav class="nav nav-pills row nav-fills">
-                    <a class="col nav-item btn btn-lg btn-info" href=<%= album.url+"/update" %>>Update</a>
-                    <a class="col nav-item btn btn-lg btn-danger" href=<%= album.url+"/delete" %>>Delete</a>
+                    <a class="col nav-item btn btn-lg btn-info form-btn m-1" href=<%= album.url+"/update" %>>Update</a>
+                    <a class="col nav-item btn btn-lg btn-danger form-btn m-1" href=<%= album.url+"/delete" %>>Delete</a>
                 </nav>
             </div>
         </div>

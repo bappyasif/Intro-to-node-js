@@ -5,10 +5,10 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <%- include("./partials/nav.ejs") %>
                 </div>
-                <div class="col-md-6">
+                <div class="col">
                     <h1 class="rounded bg-secondary text-white border border-primary mt-2 pt-2 pb-2 text-center">
                         <%= title %>
                     </h1>
@@ -24,13 +24,13 @@
                         <tbody>
                             <% results?.forEach(item=> { %>
                                 <tr>
-                                    <td><a class="btn btn-sm" href=<%= item.url %>><span class="text-white">
+                                    <td><a class="btn btn-sm data-item" href=<%= item.url %>><span class="text-white">
                                                 <%= item.name %>
                                             </span></a></td>
                                     <td class="bg-secondary text-white"><span>
-                                            <a class="btn btn-sm" href=<%= item.album_artist_url %>><%= item.artistName %></a>
+                                            <a class="btn btn-sm data-item" href=<%= item.album_artist_url %>><%= item.artistName %></a>
                                         </span></td>
-                                    <td class="bg-secondary text-white"><span>
+                                    <td class="bg-secondary text-white align-middle"><span>
                                             <%= item.price %>
                                         </span></td>
                                 </tr>
@@ -40,7 +40,7 @@
                     <hr>
                     <hr>
                     <nav class="nav nav-pills row nav-fills">
-                        <a class="col nav-item btn btn-lg btn-info" href=<%= "/catalog/album/create" %>>Create Album</a>
+                        <a class="col nav-item btn btn-lg btn-info form-btn" href=<%= "/catalog/album/create" %>>Create Album</a>
                     </nav>
                 </div>
             </div>
