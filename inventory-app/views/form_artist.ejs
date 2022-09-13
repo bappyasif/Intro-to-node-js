@@ -46,6 +46,12 @@
                             value=<%= artist?.dod_iso %>
                         >
                     </fieldset>
+                    <% if(update_flag) { %>
+                        <fieldset class="form-group">
+                            <label for="admin">Admin Code</label>
+                            <input class="form-control" type="text" id="admin" name="admin_code" />
+                        </fieldset>
+                    <% } %>
                     <button class="btn btn -lg btn-block btn-secondary" type="submit">Submit</button>
                 </form>
                 <hr>

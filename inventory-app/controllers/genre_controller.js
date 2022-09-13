@@ -94,7 +94,7 @@ let genre_detail = (req, res, next) => {
 }
 
 let genre_create_get = (req, res) => {
-    res.render("form_genre", {title: "Cerate Genre", genre: null, errors: null})
+    res.render("form_genre", {title: "Cerate Genre", genre: null, errors: null, update_flag: false})
 }
 
 let genre_create_post = [
@@ -106,13 +106,14 @@ let genre_create_post = [
     (req, res, next) => {
         let errors = validationResult(req)
 
-        let genre = new Genre({name: req.body.name, cover_img: req.file.buffer})
+        let genre = new Genre({name: req.body.name, cover_img: req.file?.buffer})
 
         if(!errors.isEmpty()) {
             res.render("form_genre", {
                 title: "Cerate Genre", 
                 genre: genre, 
-                errors: errors.array()
+                errors: errors.array(),
+                update_flag: false
             })
             return
         }
@@ -177,7 +178,8 @@ let genre_update_get = (req, res, next) => {
             res.render("form_genre", {
                 title: "Update Genre",
                 genre: results.genre,
-                errors: null
+                errors: null,
+                update_flag: true
             })
         }
     )
@@ -186,6 +188,10 @@ let genre_update_get = (req, res, next) => {
 let genre_update_post = [
     body("name", "Name field can not be left empty")
     .trim().isLength({min: 1}).escape(),
+    body("admin_code", "Admin Code can not be empty")
+    .trim().isLength({min: 1}).escape(),
+    body("admin_code", "Code does not match with secret")
+    .trim().equals("1234").escape(),
     
     (req, res, next) => {
         let errors = validationResult(req);
@@ -196,7 +202,8 @@ let genre_update_post = [
             res.render("form_genre", {
                 title: "Update Genre",
                 genre: genre,
-                errors: errors.array()
+                errors: errors.array(),
+                update_flag: true
             })
 
             return

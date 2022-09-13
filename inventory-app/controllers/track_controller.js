@@ -96,7 +96,8 @@ let track_create_get = (req, res, next) => {
                 albums: results.albums,
                 genres: results.genres,
                 errors: null,
-                track: null
+                track: null,
+                update_flag: false
             })
         }
     )
@@ -175,7 +176,8 @@ let track_create_post = [
                         track: track,
                         albums: results.albums,
                         genres: results.genres,
-                        errors: errors.array()
+                        errors: errors.array(),
+                        update_flag: false
                     })
                 }
             )
@@ -258,7 +260,8 @@ let track_update_get = (req, res, next) => {
                 albums: results.albums,
                 genres: results.genres,
                 errors: null,
-                track: results.track
+                track: results.track,
+                update_flag: true
             })
         }
     )
@@ -279,6 +282,10 @@ let track_update_post = [
     .trim().isLength({min: 1}).escape(),
     body("album", "Album field must not be empty")
     .trim().isLength({min: 1}).escape(),
+    body("admin_code", "Admin Code can not be empty")
+    .trim().isLength({min: 1}).escape(),
+    body("admin_code", "Code does not match with secret")
+    .trim().equals("1234").escape(),
     body("genre.*").escape(),
 
     // begin process of updating
@@ -296,7 +303,7 @@ let track_update_post = [
 
         if(!errors.isEmpty()) {
             // there are errors, so we'll re render update form with user inputs
-            async(
+            async.parallel(
                 {
                     genres(cb) {
                         Genre.find(cb)
@@ -327,7 +334,8 @@ let track_update_post = [
                         albums: results.albums,
                         genres: results.genres,
                         errors: errors.array(),
-                        track: track
+                        track: track,
+                        update_flag: true
                     })
                 }
             )

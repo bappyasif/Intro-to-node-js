@@ -1,3 +1,5 @@
+let prompt = require("prompt")
+let prompt2 = require("prompt-sync")()
 let async = require("async")
 let Album = require("../models/music_album");
 let Artist = require("../models/music_artist");
@@ -80,7 +82,8 @@ let album_create_get = (req, res, next) => {
                 album: null, 
                 genres: results.genres, 
                 artists: results.artists,
-                errors: null
+                errors: null,
+                update_flag: null
             })
         }
     )
@@ -270,7 +273,8 @@ let album_update_get = (req, res, next) => {
                 album: results.album,
                 genres: results.genres,
                 artists: results.artists,
-                errors: null
+                errors: null,
+                update_flag: true,
             })
         }
     )
@@ -294,6 +298,10 @@ let album_update_post = [
     .trim().isLength({min: 1}).escape(),
     body("price", "Price field can not be left empty")
     .trim().isLength({min: 1}).escape(),
+    body("admin_code", "Admin Code can not be empty")
+    .trim().isLength({min: 2}).escape(),
+    body("admin_code", "Code does not match with secret")
+    .trim().equals("1234").escape(),
     body("genre.*").escape(), // using a wildcard for genre so hat it matches everything in it
 
     // Process request after sanitization and validation
@@ -348,7 +356,8 @@ let album_update_post = [
                         album: album,
                         genres: results.genres,
                         artists: results.artists,
-                        errors: errors.array()
+                        errors: errors.array(),
+                        update_flag: true
                     })
                 }
             )
@@ -357,6 +366,8 @@ let album_update_post = [
         }
 
         // otherwise successfull, so lets update and redirect to its detail page view
+        // checking admin code matches with secret code, for safety precaution
+        // if not then we're 
         Album.findByIdAndUpdate(req.params.id, album, {},  (err) => {
             if(err) return next(err);
 

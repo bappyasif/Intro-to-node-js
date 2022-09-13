@@ -91,7 +91,7 @@ let artist_detail = (req, res, next) => {
 }
 
 let artist_create_get = (req, res) => {
-    res.render("form_artist", {title: "Create Artist", artist: null, errors: null})
+    res.render("form_artist", {title: "Create Artist", artist: null, errors: null, update_flag: false})
 }
 
 let artist_create_post = [
@@ -106,7 +106,7 @@ let artist_create_post = [
         let errors = validationResult(req);
 
         let artist = new Artist({
-            cover_img: req.file.buffer,
+            cover_img: req.file?.buffer,
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             d_o_b: req.body.d_o_b,
@@ -117,7 +117,8 @@ let artist_create_post = [
             res.render("form_artist", {
                 title: "Create Artist", 
                 artist: artist, 
-                errors: errors.array()
+                errors: errors.array(),
+                update_flag: false
             })
             return
         }
@@ -176,7 +177,12 @@ let artist_update_get = (req, res, next) => {
         (err, results) => {
             if(err) return next(err)
 
-            res.render("form_artist", {title: "Update Artist", artist: results.artist, errors: null})
+            res.render("form_artist", {
+                title: "Update Artist", 
+                artist: results.artist, 
+                errors: null,
+                update_flag: true
+            })
         }
     )
 }
@@ -188,6 +194,10 @@ let artist_update_post = [
     .trim().isLength({min: 1}).escape(),
     body("d_o_b", "Date Of Birth field can not be left empty")
     .trim().isLength({min: 1}).escape(),
+    body("admin_code", "Admin Code can not be empty")
+    .trim().isLength({min: 1}).escape(),
+    body("admin_code", "Code does not match with secret")
+    .trim().equals("1234").escape(),
 
     (req, res, next) => {
         let errors = validationResult(req);
@@ -205,7 +215,8 @@ let artist_update_post = [
             res.render("form_artist", {
                 title: "Update Artist", 
                 artist: artist, 
-                errors: errors.array()
+                errors: errors.array(),
+                update_flag: true
             })
 
             return

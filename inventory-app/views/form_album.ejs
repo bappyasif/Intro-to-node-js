@@ -12,7 +12,7 @@
                 <form action="" method="post" enctype="multipart/form-data">
                     <fieldset class="form-group">
                         <label for="avatar">Album Photo</label>
-                        <input type="file" name="avatar" id="avatar" value=<%= album.img_file %>>
+                        <input type="file" name="avatar" id="avatar" value=<%= album?.img_file %>>
                     </fieldset>
                     <fieldset class="form-group">
                         <label for="name">Album Name</label>
@@ -83,6 +83,12 @@
                             value=<%= album?.price %> 
                         >
                     </fieldset>
+                    <% if(update_flag) { %>
+                        <fieldset class="form-group">
+                            <label for="admin">Admin Code</label>
+                            <input class="form-control" type="text" id="admin" name="admin_code" />
+                        </fieldset>
+                    <% } %>
                     <button class="btn btn -lg btn-block btn-secondary" type="submit">Submit</button>
                 </form>
                 <hr>
