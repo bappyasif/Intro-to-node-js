@@ -151,18 +151,62 @@ let genre_delete_get = (req, res, next) => {
             res.render("delete_genre", {
                 title: "Delete Genre",
                 genre: results.genre,
-                albums: results.albums
+                albums: results.albums,
+                errors: null
             })
         }
     )
 }
 
-let genre_delete_post = (req, res, next) => {
-    Genre.findByIdAndDelete(req.body.genreid)
-    .then(() => console.log("genre deleted"))
-    .catch(err => next(err))
-    .finally(() => res.redirect("/catalog/genres"))
-}
+let genre_delete_post = [
+    body("admin_code", "Admin Code can not be empty")
+    .trim().isLength({min: 2}).escape(),
+    body("admin_code", "Code does not match with secret")
+    .trim().equals("1234").escape(),
+
+    (req, res, next) => {
+        let errors = validationResult(req);
+
+        let genreid = req.body.genreid;
+
+        if(!errors.isEmpty()) {
+            async.parallel(
+                {
+                    async albums(cb) {
+                        return Album.find()
+                        .then(items => {
+                            let genrePromises = items?.flatMap(item => item.genre?.map(id => id.toString() === genreid ? item : false)).filter(id => id)
+                            return Promise.all(genrePromises)
+                        })
+                    },
+        
+                    genre(cb) {
+                        Genre.findById(genreid).exec(cb)
+                    }
+                },
+        
+                (err, results) => {
+                    if(err) return next(err);
+        
+                    // console.log(results, "<<results>>")
+        
+                    res.render("delete_genre", {
+                        title: "Delete Genre",
+                        genre: results.genre,
+                        albums: results.albums,
+                        errors: errors.array()
+                    })
+                }
+            )
+            return
+        }
+
+        Genre.findByIdAndDelete(genreid)
+        .then(() => console.log("genre deleted"))
+        .catch(err => next(err))
+        .finally(() => res.redirect("/catalog/genres"))
+    }
+]
 
 let genre_update_get = (req, res, next) => {
     async.parallel(

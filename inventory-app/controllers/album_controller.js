@@ -130,7 +130,7 @@ let album_create_post = [
             released_date: req.body.r_date,
             description: req.body.descr,
             price: req.body.price,
-            img_file: req.file.buffer
+            img_file: req.file?.buffer
         })
 
         // Extract the validation errors from a request
@@ -176,7 +176,8 @@ let album_create_post = [
                         album: album,
                         genres: results.genres, 
                         artists: results.artists,
-                        errors: errors.array()
+                        errors: errors.array(),
+                        update_flag: false
                     })
                 }
             )
@@ -213,18 +214,67 @@ let album_delete_get = (req, res, next) => {
             res.render("delete_album", {
                 title: "Delete Album",
                 tracks: results.tracks,
-                album: results.album
+                album: results.album,
+                errors: null
             })
         }
     )
 }
 
-let album_delete_post = (req, res, next) => {
-    Album.findByIdAndDelete(req.body.albumid)
-    .then(() => console.log("Album Deleted...."))
-    .catch(err => next(err))
-    .finally(() => res.redirect("/catalog/albums"))
-}
+// let album_delete_post = (req, res, next) => {
+//     Album.findByIdAndDelete(req.body.albumid)
+//     .then(() => console.log("Album Deleted...."))
+//     .catch(err => next(err))
+//     .finally(() => res.redirect("/catalog/albums"))
+// }
+
+let album_delete_post = [
+    
+    body("admin_code", "Admin Code can not be empty")
+    .trim().isLength({min: 2}).escape(),
+    body("admin_code", "Code does not match with secret")
+    .trim().equals("1234").escape(),
+
+    (req, res, next) => {
+        let errors = validationResult(req);
+
+        // extracting albumid from form
+        let albumid = req.body.albumid;
+        
+        if(!errors.isEmpty()) {
+            async.parallel(
+                {
+                    album(cb) {
+                        Album.findById(albumid).exec(cb)
+                    },
+        
+                    tracks(cb) {
+                        Track.find({album: albumid}).exec(cb)
+                    }
+                },
+        
+                (err, results) => {
+                    if(err) return next(err);
+        
+                    // console.log(results, "<<results>>");
+        
+                    res.render("delete_album", {
+                        title: "Delete Album",
+                        tracks: results.tracks,
+                        album: results.album,
+                        errors: errors.array()
+                    })
+                }
+            )
+            return
+        }
+
+        Album.findByIdAndDelete(albumid)
+        .then(() => console.log("Album Deleted...."))
+        .catch(err => next(err))
+        .finally(() => res.redirect("/catalog/albums"))
+    }
+]
 
 let album_update_get = (req, res, next) => {
     async.parallel(

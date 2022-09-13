@@ -153,18 +153,58 @@ let artist_delete_get = (req, res, next) => {
             res.render("delete_artist",  {
                 title: "Delete Artist",
                 artist: results.artist,
-                albums: results.albums
+                albums: results.albums,
+                errors: null
             })
         }
     )
 }
 
-let artist_delete_post = (req, res, next) => {
-    Artist.findByIdAndDelete(req.body.artistid)
-    .then(() => console.log("Artist Deleted"))
-    .catch(err => next(err))
-    .finally(() => res.redirect("/catalog/artists"))
-}
+let artist_delete_post = [
+    body("admin_code", "Admin Code can not be empty")
+    .trim().isLength({min: 2}).escape(),
+    body("admin_code", "Code does not match with secret")
+    .trim().equals("1234").escape(),
+
+    (req, res, next) => {
+        let errors = validationResult(req);
+        
+        let artistid = req.body.artistid;
+        
+        if(!errors.isEmpty()) {
+            async.parallel(
+                {
+                    artist(cb) {
+                        Artist.findById(artistid).exec(cb)
+                    },
+        
+                    albums(cb) {
+                        Album.find({artist: artistid}).exec(cb)
+                    }
+                },
+        
+                (err, results) => {
+                    if(err) return next(err);
+        
+                    // console.log(results, "<<results>>")
+        
+                    res.render("delete_artist",  {
+                        title: "Delete Artist",
+                        artist: results.artist,
+                        albums: results.albums,
+                        errors: errors.array()
+                    })
+                }
+            )
+            return     
+        }
+
+        Artist.findByIdAndDelete(artistid)
+        .then(() => console.log("Artist Deleted"))
+        .catch(err => next(err))
+        .finally(() => res.redirect("/catalog/artists"))
+    }
+]
 
 let artist_update_get = (req, res, next) => {
     async.parallel(

@@ -207,18 +207,51 @@ let track_delete_get = (req, res, next) => {
 
             res.render("delete_track", {
                 title: "Delete Track",
-                track: results.track
+                track: results.track,
+                errors: null
             })
         }
     )
 }
 
-let track_delete_post = (req, res, next) => {
-    Track.findByIdAndDelete(req.body.trackid)
-    .then(() => console.log("Track Deleted"))
-    .catch(err => next(err))
-    .finally(() => res.redirect("/catalog/tracks"))
-}
+let track_delete_post = [
+    body("admin_code", "Admin Code can not be empty")
+    .trim().isLength({min: 2}).escape(),
+    body("admin_code", "Code does not match with secret")
+    .trim().equals("1234").escape(),
+
+    (req, res, next) => {
+        let errors = validationResult(req);
+
+        let trackid = req.body.trackid;
+
+        if(!errors.isEmpty()) {
+            async.parallel(
+                {
+                    track(cb) {
+                        Track.findById(trackid).exec(cb)
+                    }
+                },
+        
+                (err, results) => {
+                    if(err) return next(err);
+        
+                    res.render("delete_track", {
+                        title: "Delete Track",
+                        track: results.track,
+                        errors: errors.array()
+                    })
+                }
+            )
+            return
+        }
+
+        Track.findByIdAndDelete(trackid)
+        .then(() => console.log("Track Deleted"))
+        .catch(err => next(err))
+        .finally(() => res.redirect("/catalog/tracks"))
+    }
+]
 
 let track_update_get = (req, res, next) => {
     async.parallel(
