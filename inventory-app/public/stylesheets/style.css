@@ -43,3 +43,7 @@ td .data-item {
 td .data-item {
   width: -webkit-fill-available;
 }
+
+.form-row {
+  justify-content: center;
+}

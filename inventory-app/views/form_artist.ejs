@@ -3,11 +3,11 @@
     <%- include("./partials/head.ejs") %>
 <body>
     <div class="container-fluid bg-light">
-        <div class="row">
-            <div class="col-sm-2">
+        <div class="row form-row">
+            <div class="col-sm-3">
                 <%- include("./partials/nav.ejs") %>
             </div>
-            <div class="col-sm-4">
+            <div class="col-md-4 bg-secondary">
                 <h1 class="rounded bg-success text-white border border-primary mt-2 pt-2 pb-2 text-center"><%= title %></h1>
                 <form action="" method="post" enctype="multipart/form-data">
                     <fieldset>
@@ -52,7 +52,7 @@
                             <input class="form-control" type="text" id="admin" name="admin_code" />
                         </fieldset>
                     <% } %>
-                    <button class="btn btn -lg btn-block btn-secondary" type="submit">Submit</button>
+                    <button class="btn btn -lg btn-block btn-success form-btn" type="submit">Submit</button>
                 </form>
                 <hr>
                 <hr>
