@@ -25,5 +25,8 @@
     "prompt": "^1.3.0",
     "prompt-sync": "^4.2.0",
     "prompt-sync-history": "^1.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
   }
 }
