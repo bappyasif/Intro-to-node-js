@@ -26,8 +26,9 @@ app.use(express.urlencoded({extended: true}));
  * 
  * DB_STRING=mongodb://<user>:<password>@localhost:27017/database_name
  */ 
-const conn = 'mongodb://devuser:123@localhost:27017/general_dev';
+// const conn = 'mongodb://devuser:123@localhost:27017/general_dev';
 //process.env.DB_STRING
+let conn = process.env.DB_STRING
 const connection = mongoose.createConnection(conn, {
     useNewUrlParser: true,
     useUnifiedTopology: true
