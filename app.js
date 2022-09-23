@@ -4,7 +4,9 @@ let passport = require("passport");
 let mongoose = require("mongoose");
 const route = require("./routes");
 
-let mongoDb = 'mongodb+srv://ab:1234@authbasiccluster.ajmdkxv.mongodb.net/auth-lb?retryWrites=true&w=majority';
+require("dotenv").config()
+// console.log(process.env.DB_STRING, "<><>")
+let mongoDb = process.env.DB_STRING;
 
 mongoose.connect(mongoDb, {useUnifiedTopology: true, useNewUrlParser: true});
 
