@@ -2,6 +2,7 @@ let router = require("express").Router();
 let passport = require("passport");
 let passwordUtils = require("../utils/password");
 let connection = require("../config/database");
+const { isAuth, isAdmin } = require("./authMIddleware");
 let User = connection.models.User;
 
 /**
@@ -23,7 +24,9 @@ router.post("/register", (req, res, next) => {
         // username: req.body.uname,
         username: req.body.username,
         salt,
-        hash
+        hash,
+        // adding a new property for schema
+        admin: true
     })
 
     newUser.save()
@@ -66,13 +69,22 @@ router.get("/register", (req, res, next) => {
  * 
  * Also, look up what behaviour express session has without a maxage set
  */
-router.get("/protected-route", (req, res, next) => {
-    // This is how you check if a user is authenticated and protect a route.  You could turn this into a custom middleware to make it less redundant
-    if(req.isAuthenticated()) {
-        res.send('<h1>You are authenticated</h1><p><a href="/logout">Logout and reload</a></p>');
-    } else {
-        res.send('<h1>You are not authenticated</h1><p><a href="/login">Login</a></p>');
-    }
+// router.get("/protected-route", (req, res, next) => {
+//     // This is how you check if a user is authenticated and protect a route.  You could turn this into a custom middleware to make it less redundant
+//     if(req.isAuthenticated()) {
+//         res.send('<h1>You are authenticated</h1><p><a href="/logout">Logout and reload</a></p>');
+//     } else {
+//         res.send('<h1>You are not authenticated</h1><p><a href="/login">Login</a></p>');
+//     }
+// });
+router.get("/protected-route", isAuth, (req, res, next) => {
+    // will be using our custom iAuth middleware for this check
+    res.send("you made it to Protected route!!")
+});
+
+router.get("/admin-route", isAuth, isAdmin, (req, res, next) => {
+    // will be using our custom iAuth middleware for this check
+    res.send("you made it to Admin route!!")
 });
 
 // Visiting this route logs the user out

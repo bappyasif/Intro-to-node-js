@@ -43,6 +43,12 @@ app.use(session({
  */
 app.use(passport.initialize());
 app.use(passport.session());
+// some more insight into passport authenticaltion
+app.use((req, res, next) => {
+    console.log(req.session);
+    console.log(req.user)
+    next();
+})
 
 /**
  * -------------- ROUTES ----------------
