@@ -17,6 +17,9 @@ require('./config/passport');
  */
 // Gives us access to variables set in the .env file via `process.env.VARIABLE_NAME` syntax
 require('dotenv').config();
+// console.log(process.env, "<<>>")
+process.env.FOO = 'bar'
+console.log(process.env.DB_STRING, "<<>>", process.env.FOO)
 
 // Create the Express application
 let app = express();
@@ -31,7 +34,8 @@ app.use(express.urlencoded({extended: true}));
 let sessionStore = new MongoStore({mongooseConnection: connection, collection: "sessions"});
 
 app.use(session({
-    secret: "some secret",
+    // secret: "some secret",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     store: sessionStore,

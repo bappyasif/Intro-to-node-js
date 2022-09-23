@@ -11,8 +11,9 @@ require("dotenv").config();
  * 
  * DB_STRING=mongodb://<user>:<password>@localhost:27017/database_name
  */
-// let conn = process.env.DB_STRING;
-let conn = "mongodb://localhost:27017/tutorial_db"
+let conn = process.env.DB_STRING;
+// console.log(process.env.DB_STRING, "<><>")
+// let conn = "mongodb://localhost:27017/tutorial_db"
 
 let connection = mongoose.createConnection(conn, {
     useNewUrlParser: true,
