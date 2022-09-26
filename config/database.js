@@ -12,14 +12,18 @@ let conn = process.env.DB_STRING;
 mongoose.connect(conn, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-});
+}, ()=> console.log("db connected...."));
 
-let db = mongoose.connection;
+// let db = mongoose.connection;
 // connection.model("User", UserSchema)
 // db.model("User", UserSchema)
 
-db.on("error", console.error.bind(console, "mongo db connection error!!"))
+// db.on("error", console.error.bind(console, "mongo db connection error!!"))
 
+let connectDB = () => {
+    let db = mongoose.connection;
+    db.on("error", console.error.bind(console, "mongo db connection error!!"))
+}
 
-
-module.exports = db
+// module.exports = db
+module.exports = connectDB
