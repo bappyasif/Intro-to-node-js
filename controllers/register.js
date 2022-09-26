@@ -52,7 +52,7 @@ let registerFormPostReq = [
 
             // updating user entry with hashed password and membership status
             user.password = hashedPassword
-            user.membership_status = true;
+            // user.membership_status = true; // now moved to join club logic
 
             let newUser = new User(user);
 
