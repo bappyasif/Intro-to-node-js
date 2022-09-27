@@ -7,7 +7,7 @@ let UserSchema = new Schema({
     lastname: {type: Schema.Types.String, required: true},
     username: {type: Schema.Types.String, required: true},
     password: {type: Schema.Types.String, required: true},
-    membership_status: {type: Schema.Types.Boolean},
+    member: {type: Schema.Types.Boolean},
     messages: {type: Schema.Types.Array}
 })
 

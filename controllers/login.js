@@ -30,7 +30,7 @@ let loginFormRePopulate = [
 
 let loginFormPostReq = passport.authenticate("local", {
     failureRedirect: "/login",
-    successRedirect: "/"
+    successRedirect: "/message-board"
 })
 
 module.exports = {

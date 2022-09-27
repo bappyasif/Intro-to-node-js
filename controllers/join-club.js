@@ -45,7 +45,8 @@ let joinClubPostReq = [
             (err, results) => {
                 if(err) return next(err);
 
-                results.user[0].membership_status = true
+                // results.user[0].membership_status = true
+                results.user[0].member = true
 
                 console.log(results, "!!")
 
