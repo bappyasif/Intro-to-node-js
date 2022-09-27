@@ -1,5 +1,7 @@
 let async = require("async");
 
+let {DateTime} = require("luxon");
+
 let User = require("../model/user");
 
 const { body } = require("express-validator");
@@ -39,12 +41,16 @@ let messageBoardCreateNewPostReq = [
 
                 let message = {
                     title: req.body["msg-title"],
-                    body: req.body["msg-body"]
+                    body: req.body["msg-body"],
+                    author: req.user.firstname + " " + req.user.lastname,
+                    // posted: DateTime.fromMillis(Date.now()).toISODate()
+                    posted: DateTime.fromMillis(Date.now()).toLocaleString(DateTime.DATE_MED)
                 }
 
                 result.user.messages.push(message)
 
-                console.log(result, "<<>>", message, result.user.messages);
+                // console.log(result, "<<>>", DateTime.fromMillis(Date.now()).toLocaleString(DateTime.DATE_MED), Date.now().toLocaleString(), message, result.user.messages);
+                console.log(result, "<<>>", DateTime.fromMillis(Date.now()).toLocaleString(DateTime.DATE_MED), Date.now().toLocaleString(), message, result.user.messages);
 
                 User.findByIdAndUpdate(result.user._id, result.user, {}, err => {
                     if(err) return next(err);

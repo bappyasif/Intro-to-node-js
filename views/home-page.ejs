@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("./partials/head.ejs") %>
+<body>
+    <h1><%= title %></h1>
+    <div class="container">
+        <% users?.forEach(user => { %>
+            <% if(user?.messages.length) { %>
+                <% user?.messages.forEach(msg => { %>
+                    <div class="msg-wrapper">
+                        <div class="top">
+                            <% if(loggedIn) { %>
+                                <span class="author"><%= msg.author %></span>
+                            <% } else { %>
+                                <span class="author">Annonymous</span>
+                            <% } %>
+                            <h2><%= msg.title %></h2>
+                        </div>
+                        <div class="bottom">
+                            <p><%= msg.body %></p>
+                            <% if(loggedIn) { %>
+                                <span class="d-posted"><%= msg.posted %></span>
+                            <% } else { %>
+                                <span class="d-posted">Annonymous</span>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        <% }) %>
+    </div>
+</body>
+</html>

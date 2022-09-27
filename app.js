@@ -8,6 +8,7 @@ let MongoStore = require("connect-mongo")(session);
 
 const {connectDB, db} = require("./config/database");
 const routes = require("./routes");
+const { homePageGetReq } = require("./controllers/home");
 
 let app = express();
 
@@ -29,6 +30,9 @@ app.set("views", path.join(__dirname, "views"));
 // view engine library setup
 app.set("view engine", "ejs");
 
+// setting up public folder
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use(passport.initialize());
 
 app.use(passport.session());
@@ -37,6 +41,7 @@ app.use(passport.session());
 app.use(express.urlencoded({extended: true}));
 app.use(routes);
 
-app.get("/", (req, res, next) => res.send("hoi hoi"))
+// app.get("/", (req, res, next) => res.send("hoi hoi"))
+app.get("/", homePageGetReq)
 
 app.listen(process.env.PORT || 3000, () => console.log("server running on port number "+ (undefined !== process.env.PORT ? process.env.PORT : 3000)))
