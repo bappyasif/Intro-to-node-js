@@ -12,7 +12,7 @@ let passport = require("../config/passport");
 
 let loginFormGetReq = (req, res) => res.render("login-form", {title: "Login Form", errors: null})
 
-let loginFormPostReq = [
+let loginFormRePopulate = [
     body("username", "login address can not be empty")
     .trim().isLength({min: 1}).escape(),
     body("password", "user password can not be empty")
@@ -21,16 +21,20 @@ let loginFormPostReq = [
     (req, res, next) => {
         let errors = validationResult(req);
         if(!errors.isEmpty()) {
-            res.render("login-form", {title: "Login Form", errors: null})
+            res.render("login-form", {title: "Login Form", errors: null, username: req.body.username})
             return;
         }
-        passport.authenticate("local", {
-            successRedirect: "/"
-        })
+        res.send("you're not supposed to be here....")
     }
 ]
 
+let loginFormPostReq = passport.authenticate("local", {
+    failureRedirect: "/login",
+    successRedirect: "/"
+})
+
 module.exports = {
     loginFormGetReq,
-    loginFormPostReq
+    loginFormPostReq,
+    loginFormRePopulate
 }

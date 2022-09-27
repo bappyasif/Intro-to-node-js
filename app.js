@@ -1,8 +1,8 @@
 let express = require("express");
 let path = require("path");
 
-// let session = require("express-session");
-// let passport = require("passport");
+let session = require("express-session");
+let passport = require("passport");
 
 const connectDB = require("./config/database");
 const routes = require("./routes");
@@ -19,15 +19,15 @@ app.set("views", path.join(__dirname, "views"));
 // view engine library setup
 app.set("view engine", "ejs");
 
+app.use(session({secret: process.env.SECRET, resave: false, saveUninitialized: true}))
+
+app.use(passport.initialize());
+
+app.use(passport.session());
+
 // using middlewares
 app.use(express.urlencoded({extended: true}));
 app.use(routes);
-
-// app.use(session({secret: process.env.SECRET, resave: false, saveUninitialized: true}))
-
-// app.use(passport.initialize());
-
-// app.use(passport.session());
 
 app.get("/", (req, res, next) => res.send("hoi hoi"))
 

@@ -17,9 +17,13 @@ let verifyCallback = (username, password, done) => {
 
             if(result) {
                 // password matched
+                // console.log("<<matched>>")
+
                 return done(null, user)
             } else{
                 // password mismatched
+                // console.log("<<didnt match>>")
+
                 return done(null, false, {message: "Password Incorrect"})
             }
         })
