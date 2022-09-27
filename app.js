@@ -4,12 +4,22 @@ let path = require("path");
 let session = require("express-session");
 let passport = require("passport");
 
-const connectDB = require("./config/database");
+let MongoStore = require("connect-mongo")(session);
+
+const {connectDB, db} = require("./config/database");
 const routes = require("./routes");
 
 let app = express();
 
 require("dotenv").config();
+
+// storing session
+let sessionStore = new MongoStore({
+    mongooseConnection: db,
+    collection: "sessions"
+})
+
+app.use(session({secret: process.env.SECRET, resave: false, saveUninitialized: true, store: sessionStore, cookie: {maxAge: 1000*60*60*24}}))
 
 // connecting DB
 connectDB()
@@ -18,8 +28,6 @@ connectDB()
 app.set("views", path.join(__dirname, "views"));
 // view engine library setup
 app.set("view engine", "ejs");
-
-app.use(session({secret: process.env.SECRET, resave: false, saveUninitialized: true}))
 
 app.use(passport.initialize());
 

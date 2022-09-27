@@ -14,16 +14,19 @@ mongoose.connect(conn, {
     useUnifiedTopology: true
 }, ()=> console.log("db connected...."));
 
-// let db = mongoose.connection;
+let db = mongoose.connection;
 // connection.model("User", UserSchema)
 // db.model("User", UserSchema)
 
 // db.on("error", console.error.bind(console, "mongo db connection error!!"))
 
 let connectDB = () => {
-    let db = mongoose.connection;
+    // let db = mongoose.connection;
     db.on("error", console.error.bind(console, "mongo db connection error!!"))
 }
 
 // module.exports = db
-module.exports = connectDB
+module.exports = {
+    connectDB,
+    db
+}
