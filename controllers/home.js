@@ -1,16 +1,17 @@
 let async = require("async");
 let User = require("../model/user");
+let Message = require("../model/message");
 
 let homePageGetReq = (req, res, next) => {
-    console.log(req.session, "req.session", req.sessionID)
+    console.log(req.session.passport.user, "req.session", req.sessionID)
     async.parallel(
         {
-            users(cb) {
-                User.find(cb)
-            },
-
             currentlyLoggedInUser(cb) {
                 User.findById(req.session.passport.user).exec(cb)
+            },
+
+            messages(cb) {
+                Message.find().populate("author").exec(cb)
             }
         },
 
@@ -19,9 +20,12 @@ let homePageGetReq = (req, res, next) => {
 
             // console.log(results.currentlyLoggedInUser, "results.currentlyLoggedInUser")
 
+            console.log(results.messages)
+
             res.render("home-page", {
                 title: "Home Page",
-                users: results.users,
+                // users: results.users,
+                messages: results.messages,
                 loggedIn: results.currentlyLoggedInUser?.member,
             })
         }
