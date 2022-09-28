@@ -23,6 +23,11 @@
                         <span class="d-posted">Annonymous</span>
                     <% } %>
                 </div>
+                <form action="" method="post">
+                    <input type="text" name="delete" value=<%= msg.delete %>  hidden>
+                    <!-- <input type="text" name="delete" value="delt"  hidden> -->
+                    <button type="submit"><i class="fa-solid fa-circle-xmark"></i></button>
+                </form>
             </div>
         <% }) %>
     </div>

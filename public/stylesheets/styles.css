@@ -7,6 +7,17 @@ body {
     background-color: honeydew;
 }
 
+.msg-wrapper {
+    position: relative;
+    width: 40vw;
+}
+
+.msg-wrapper i.fa-solid.fa-circle-xmark {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 .msg-wrapper .top,
 .msg-wrapper .bottom {
     display: flex;

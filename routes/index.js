@@ -1,4 +1,5 @@
 let express = require("express");
+const { isAdminGetReq, isAdminPostReq } = require("../controllers/is-admin");
 const { joinClubGetReq, joinClubPostReq } = require("../controllers/join-club");
 const { loginFormGetReq, loginFormPostReq } = require("../controllers/login");
 const { messageBoardGetReq, logOutGetReq, messageBoardCreateNewGetReq, messageBoardCreateNewPostReq } = require("../controllers/message-board");
@@ -14,6 +15,10 @@ routes.post("/register", registerFormPostReq);
 routes.get("/join-club", joinClubGetReq);
 
 routes.post("/join-club", joinClubPostReq);
+
+routes.get("/is-admin", isAuth, isAdminGetReq);
+
+routes.post("/is-admin", isAuth, isAdminPostReq);
 
 routes.get("/login", loginFormGetReq);
 

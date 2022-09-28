@@ -8,7 +8,7 @@ let MongoStore = require("connect-mongo")(session);
 
 const {connectDB, db} = require("./config/database");
 const routes = require("./routes");
-const { homePageGetReq } = require("./controllers/home");
+const { homePageGetReq, homePagePostReq } = require("./controllers/home");
 
 let app = express();
 
@@ -43,5 +43,6 @@ app.use(routes);
 
 // app.get("/", (req, res, next) => res.send("hoi hoi"))
 app.get("/", homePageGetReq)
+app.post("/", homePagePostReq)
 
 app.listen(process.env.PORT || 3000, () => console.log("server running on port number "+ (undefined !== process.env.PORT ? process.env.PORT : 3000)))

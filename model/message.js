@@ -11,6 +11,16 @@ let MessageSchema = new Schema({
     posted: {type: Schema.Types.Date, required: true}
 })
 
+MessageSchema.virtual("delete")
+.get(function() {
+    return this._id
+})
+
+MessageSchema.virtual("isAdmin")
+.get(function() {
+    return this.author.admin ? this.author.admin : false;
+})
+
 MessageSchema.virtual("author_name")
 .get(function() {
     return this.author.firstname + " " + this.author.lastname

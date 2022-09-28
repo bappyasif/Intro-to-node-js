@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs") %>
+
+    <body>
+        <div class="container">
+            <%- include("./partials/navs.ejs") %>
+            <%- include("./partials/errors.ejs") %>
+                <form action="" method="post">
+                    <legend>Enter secret code to be eligible for Admin
+                        <fieldset>
+                            <label for="passcode">Passcode</label>
+                            <input type="text" id="passcode" name="passcode" placeholder="enter code" required>
+                        </fieldset>
+                    </legend>
+                    <button type="submit">Become Admin</button>
+                </form>
+        </div>
+    </body>
+
+</html>
