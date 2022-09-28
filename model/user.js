@@ -8,7 +8,8 @@ let UserSchema = new Schema({
     username: {type: Schema.Types.String, required: true},
     password: {type: Schema.Types.String, required: true},
     member: {type: Schema.Types.Boolean},
-    messages: {type: Schema.Types.Array}
+    // messages: {type: Schema.Types.Array}
+    messages: [{type: Schema.Types.ObjectId, ref: "Message"}]
 })
 
 module.exports = mongoose.model("User", UserSchema);
