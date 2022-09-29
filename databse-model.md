@@ -31,3 +31,21 @@ procesflow:
     * unauthorized:
       * they can not see who actual author was
       * they can see messasge as from anonymous authors
+
+
+<div class="top">
+                    <% if(loggedIn) { %>
+                        <h2><span style="font-size: 2em; color: Tomato;"><i class="fa-solid fa-user-astronaut fa-2xl"></i></span><span class="author"><%= msg.author_name %></span></h2>
+                    <% } else { %>
+                        <h2><span><i class="fa-solid fa-user-astronaut fa-2xl"></i></span><span class="author">Annonymous</span></h2>
+                    <% } %>
+                    <h2><span><i class="fa-solid fa-message fa-2xl"></i></span><span><%= msg.title %></span></h2>
+                </div>
+                <div class="bottom">
+                    <p><span style="font-size: 3em; color: Tomato;"><i class="fa-solid fa-envelope fa-2xl"></i></span><span><%= msg.body %></span></p>
+                    <% if(loggedIn) { %>
+                        <p><span><i class="fa-solid fa-calendar-days fa-2xl"></i></span><span class="d-posted"><%= msg.posted_date %></span></p>
+                    <% } else { %>
+                        <p><span><i class="fa-solid fa-calendar-days fa-2xl"></i></span><span class="d-posted">Some Day</span></p>
+                    <% } %>
+                </div>

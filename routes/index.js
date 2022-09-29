@@ -12,7 +12,7 @@ routes.get("/register", registerFormGetReq);
 
 routes.post("/register", registerFormPostReq);
 
-routes.get("/join-club", joinClubGetReq);
+routes.get("/join-club", isAuth, joinClubGetReq);
 
 routes.post("/join-club", joinClubPostReq);
 

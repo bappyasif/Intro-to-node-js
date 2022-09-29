@@ -2,11 +2,13 @@
 <html lang="en">
     <%- include("./partials/head.ejs") %>
 <body>
-    <%- include("./partials/navs.ejs") %>
-    <h1><%= title %></h1>
-    <p>you made it to message board</p>
-    <% if(createMsg) { %>
-        <a href="/message-board/create-new">Create Message</a>
-    <% } %>
+    <div class="container">
+        <%- include("./partials/navs.ejs") %>
+        <h1><%= title %></h1>
+        <p>you made it to message board</p>
+        <% if(createMsg) { %>
+            <a href="/message-board/create-new">Create Message</a>
+        <% } %>
+    </div>
 </body>
 </html>
