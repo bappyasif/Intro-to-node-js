@@ -18,6 +18,7 @@ MessageSchema.virtual("delete")
 
 MessageSchema.virtual("isAdmin")
 .get(function() {
+    // console.log(this.author.admin ? this.author.admin : false, "<<>>", this.author)
     return this.author.admin ? this.author.admin : false;
 })
 

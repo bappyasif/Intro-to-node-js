@@ -20,14 +20,16 @@
                     <% if(loggedIn) { %>
                         <span class="d-posted"><%= msg.posted_date %></span>
                     <% } else { %>
-                        <span class="d-posted">Annonymous</span>
+                        <span class="d-posted">Some Day</span>
                     <% } %>
                 </div>
-                <form action="" method="post">
-                    <input type="text" name="delete" value=<%= msg.delete %>  hidden>
-                    <!-- <input type="text" name="delete" value="delt"  hidden> -->
-                    <button type="submit"><i class="fa-solid fa-circle-xmark"></i></button>
-                </form>
+                <% if(msg.isAdmin && loggedIn) { %>
+                    <form action="" method="post">
+                        <input type="text" name="delete" value=<%= msg.delete %>  hidden>
+                        <!-- <input type="text" name="delete" value="delt"  hidden> -->
+                        <button type="submit"><i class="fa-solid fa-circle-xmark"></i></button>
+                    </form>
+                <% } %>
             </div>
         <% }) %>
     </div>
