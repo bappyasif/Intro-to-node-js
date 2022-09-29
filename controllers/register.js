@@ -62,7 +62,7 @@ let registerFormPostReq = [
                 if (err) return next(err);
 
                 // successfull, redirect to login page
-                res.send("login page")
+                res.redirect("/login")
             })
         })
 

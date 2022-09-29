@@ -28,6 +28,7 @@ let homePageGetReq = (req, res, next) => {
                 // users: results.users,
                 messages: results.messages,
                 loggedIn: results.currentlyLoggedInUser?.member,
+                isAdmin: results.currentlyLoggedInUser?.admin
             })
         }
     )

@@ -55,7 +55,9 @@ let joinClubPostReq = [
                 User.findByIdAndUpdate(u_id, results.user[0], {}, err => {
                     if(err) return next(err);
 
-                    res.send("updated")
+                    // successful update
+                    // and now redirecting to home page
+                    res.redirect("/");
                 })
             }
         )

@@ -23,7 +23,7 @@
                         <span class="d-posted">Some Day</span>
                     <% } %>
                 </div>
-                <% if(msg.isAdmin && loggedIn) { %>
+                <% if(isAdmin && loggedIn) { %>
                     <form action="" method="post">
                         <input type="text" name="delete" value=<%= msg.delete %>  hidden>
                         <!-- <input type="text" name="delete" value="delt"  hidden> -->

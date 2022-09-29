@@ -25,12 +25,29 @@ let isAdminPostReq = [
             return
         }
 
-        User.findByIdAndUpdate(req.session.passport.user, {admin: true}, {}, (err, _) => {
-            if(err) return next(err);
-
-            // successfully updated
-            res.send("test test");
+        User.findById(req.session.passport.user)
+        .then(result => {
+            if(result.member) {
+                User.findByIdAndUpdate(req.session.passport.user, {admin: true}, {}, (err, _) => {
+                    if(err) return next(err);
+        
+                    // successfully updated
+                    // and now redirecting to home page
+                    res.redirect("/");
+                })
+            } else {
+                res.redirect("/join-club");
+            }
         })
+        .catch(err => next(err))
+        
+        // User.findByIdAndUpdate(req.session.passport.user, {admin: true}, {}, (err, _) => {
+        //     if(err) return next(err);
+
+        //     // successfully updated
+        //     // and now redirecting to home page
+        //     res.redirect("/");
+        // })
     }
 ]
 

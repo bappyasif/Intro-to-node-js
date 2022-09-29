@@ -72,7 +72,8 @@ let messageBoardCreateNewPostReq = [
                         if(err) return next(err);
     
                         // successfull update
-                        res.send("update successfull")
+                        // and now redirecting to home page
+                        res.redirect("/");
                     })
                     
                 }).catch(err => next(err))
