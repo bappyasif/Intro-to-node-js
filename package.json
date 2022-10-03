@@ -7,6 +7,8 @@
     "async": "^3.2.4",
     "bcryptjs": "^2.4.3",
     "connect-mongo": "^3.1.2",
+    "cors": "^2.8.5",
+    "curl": "^0.1.4",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
