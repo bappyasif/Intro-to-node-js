@@ -1,51 +1,81 @@
 require("dotenv").config();
-const cors = require("cors");
+
 const express = require("express");
 
-const models = require("./models")
-const routes = require("./routes");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 
-app.use(cors());
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use((req, res, next) => {
-  req.me = models.users[1];
-  next();
+app.get("/api", (req, res) => {
+    res.json({
+        message: "welcome to this api"
+    });
 });
 
-app.use((req, res, next) => {
-  // We are using the application-wide middleware to pass the models to all our routes in a context object now
-  req.context = {
-    models,
-    me: models.users[1],
-  };
-  next();
+// app.post("/api/posts", (req, res) => {
+//     res.json({
+//         message: "post created...."
+//     })
+// })
+
+app.post("/api/posts", verifyToken, (req, res) => {
+    jwt.verify(req.token, "secretkeygoeshere", (err, authData) => {
+        if(err) {
+            // res.sendStatus(403)
+            res.json({msg: req.token, 
+                check: req.token === "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMSwidXNlcm5hbWUiOiJhYiIsImVtYWlsIjoiYUBiLmNvbSJ9LCJpYXQiOjE2NjQ5ODc0NzQsImV4cCI6MTY2NDk4NzUwM30.4uz7ff6XM7_ayb1ufppy4n4EuxMdnU2olSHd1KC3R9E"
+            }).status(403)
+        } else {
+            res.json({
+                message: "post created....",
+                authData
+            })
+        }
+    })    
+})
+
+app.post("/api/login", (req, res, next) => {
+    // mock user
+    let user = {
+        id: 11,
+        username: "ab",
+        email: "a@b.com"
+    }
+
+    jwt.sign({user}, "secretkeygoeshere", {expiresIn: "30s"}, (err, token) => {
+        if(err) return next(err);
+
+        res.json({
+            token: token
+        })
+    });
 });
 
-app.use("/session", routes.session);
-app.use("/users", routes.user);
-app.use("/messages", routes.message);
+// token's fromat
+// Authorization: Bearer <access_token>
 
-app.get('/', (req, res) => {
-  return res.send('Received a GET HTTP method');
-});
+function verifyToken (req, res, next) {
+    // get auth header value
+    const bearerHeader = req.headers["authorization"]
 
-app.post('/', (req, res) => {
-  return res.send('Received a POST HTTP method');
-});
+    // check if bearer undefined
+    if(typeof bearerHeader !== "undefined") {
+        // split header
+        let bearer = bearerHeader.split(" ");
+        // extract token
+        let bearerToken = bearer[1];
+        // set token
+        req.token = bearerToken;
+        // move to next middleware
+        next();
+    } else {
+        // res.sendStatus(403);
+        res.json({
+            message: "FORBIDDEN"
+        }).status(403)
+    }
+}
 
-app.put('/', (req, res) => {
-  return res.send('Received a PUT HTTP method');
-});
+const PORT = process.env.PORT;
 
-app.delete('/', (req, res) => {
-  return res.send('Received a DELETE HTTP method');
-});
-
-app.listen(process.env.PORT, () =>
-  console.log(`Example app listening on port ${process.env.PORT}!`),
-);
+app.listen(PORT, () => console.log(`server is running on port ${PORT}`))
