@@ -144,3 +144,85 @@ app.get('/session', (req, res) => {
 });
 ```
 It's the first time you break the rules of being entirely RESTful, because you offer an API endpoint for a very specific feature. It will not be the first time you break the laws of REST, because most often REST is not fully implemented RESTful but rather RESTish
+
+**MODULAR MODELS IN EXPRESS AS DATA SOURCES**
+
+At the moment, all of our implementation sits in the app.js file. However, at some point you may want to modularize your implementation details and put them into dedicated files and folders whereas the app.js file should only care about putting everything together and starting the application. Before we dive into modularizing the routing, let's see how we can modularize our sample data in so-called models first. From your root folder type the following commands to create a folder/file structure for the models
+```
+cd src
+mkdir models
+cd models
+touch index.js
+```
+ models folder in an Express application is usually the place where you define your data sources. In our case, it's the sample data, but in other applications, for instance, it would be the interfaces to the database. In our case of refactoring this, let's move our sample data over to the new /models/index.js file: 
+ 
+ Remove the sample data afterward in the src/index.js file. Also import the models in the app.js file now and pass them in our custom application-level middleware to all routes via a dedicated context object. That's where the me user (authenticated) user can be placed as well. You don't need necessarily the context object as container, but I found it a good practice to keep everything that is passed to the routes at one place
+ ```js
+ app.use((req, res, next) => {
+  req.context = {
+    models,
+    me: models.users[1],
+  };
+  next();
+});
+```
+Then, instead of having access to the sample data in all routes from outside variables as before -- which is an unnecessary side-effect and doesn't keep the function pure --, we want to use the models (and authenticated user) from the function's arguments now:
+```js
+app.get('/session', (req, res) => {
+  return res.send(req.context.models.users[req.context.me.id]);
+});
+
+app.get('/users', (req, res) => {
+  return res.send(Object.values(req.context.models.users));
+});
+
+app.get('/users/:userId', (req, res) => {
+  return res.send(req.context.models.users[req.params.userId]);
+});
+```
+We are using the application-wide middleware to pass the models to all our routes in a context object now. models are living outside of the app.js file and can be refactored to actual database interfaces later. Next, since we made the routing independent from all side-effects and pass everything needed to them via the request object with the context object, we can move the routes to separated places too
+
+**MODULAR ROUTING WITH EXPRESS ROUTER**
+
+So far, you have mounted routes directly on the Express application instance in the app.js file. This will become verbose eventually, because this file should only care about all the important topics to start our application. It shouldn't reveal implementation details of the routes. Now the best practice would be to move the routes into their dedicated folder/file structure. That's why we want to give each REST resource their own file in a dedicated folder. From your root folder, type the following on the command line to create a folder/file structure for the modular routes:
+```
+cd src
+mkdir routes
+cd routes
+touch index.js session.js user.js message.js
+```
+Then, assumed the routes would be already defined, import the all the modular routes in the app.js file and use them to mount them as modular routes. Each modular route receives a URI which in REST is our resource:
+```js
+app.use('/session', routes.session);
+app.use('/users', routes.user);
+app.use('/messages', routes.message);
+```
+In our /routes/index.js entry file to the routes module, import all routes form their dedicated files (that are not defined yet) and export them as an object. Afterward, they are available in the app.js file as we have already used them
+```js
+import session from './session';
+import user from './user';
+import message from './message';
+
+export default {
+  session,
+  user,
+  message,
+};
+```
+Now let's implement each modular route. Start with the session route in the /routes/session.js file which only returns the pseudo authenticated user. Express offers the Express Router to create such modular routes without mounting them directly to the Express application instance. That's how we can create modular routes at other places than the Express application, but import them later to be mounted on the Express application's instance as we already have done in a previous step
+```js
+let { Router } = require 'express';
+
+const router = Router();
+
+router.get('/', (req, res) => {
+  return res.send(req.context.models.users[req.context.me.id]);
+});
+
+module.exports =  router;
+```
+Next, the user route in the src/routes/user.js file. It's quite similar to the session route:
+
+Notice how we don't need to define the /users URI (path) but only the subpaths, because we did this already in the mounting process of the route in the Express application (see app.js file). Next, implement the src/routes/message.js file to define the last of our modular routes:
+
+Every of our modular routes from Express Router is mounted to our Express application with a dedicated URI in the app.js file now. modular routes in the /routes folder only take care of their sub paths and their implementation details while the mounting in the app.js file takes care of the main path and the mounted modular route that is used there. In the end, don't forget to remove all the previously used routes that we moved over to the src/routes/ folder in the src/index.js file
