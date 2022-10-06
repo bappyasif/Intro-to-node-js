@@ -10,7 +10,7 @@ passport.use(new LocalStrategy({
 },
 
     function (email, password, cb) {
-        //this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
+        // this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
         return UserModel.findOne({ email, password })
             .then(user => {
                 if (!user) {
@@ -22,13 +22,13 @@ passport.use(new LocalStrategy({
     }
 ))
 
-passport.use(new JWTStrategy({
+passport.use(new JwtStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey: 'your_jwt_secret'
 },
     function (jwtPayload, cb) {
 
-        //find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
+        // find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
         return UserModel.findOneById(jwtPayload.id)
             .then(user => {
                 return cb(null, user);
