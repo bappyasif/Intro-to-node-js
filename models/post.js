@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const PostSchema = new Schema({
     title: {type: Schema.Types.String, required: true},
     body: {type: Schema.Types.String, required: true},
-    author: {type: Schema.Types.ObjectId, ref: "user", required: true},
+    // author: {type: Schema.Types.ObjectId, ref: "user", required: true},
+    author: {type: Schema.Types.ObjectId, ref: "user"},
     posted: {type: Schema.Types.Date, required: true},
     published: {type: Schema.Types.Boolean}
 });
