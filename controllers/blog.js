@@ -2,9 +2,15 @@ const { body } = require("express-validator");
 const { DateTime } = require("luxon");
 const PostSchema = require("../models/post");
 
-let redirectToBlogPosts = (req, res) => res.redirect("/blog/all");
+let redirectToBlogPosts = (req, res) => res.redirect("/blog/all-posts");
 
-let showAllBlogPosts = (req, res) => res.send("list of blog posts");
+let showAllBlogPosts = (req, res, next) => {
+    PostSchema.find()
+        .then(posts => {
+            // console.log("serve blogs")
+            res.status(200).json({ success: true, posts: posts });
+        }).catch(err => next(err))
+};
 
 let newBlogPostForm = (req, res) => res.send("getting inputs for a new post");
 

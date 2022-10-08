@@ -3,7 +3,7 @@ const { createNewBlogPost, newBlogPostForm, showAllBlogPosts, redirectToBlogPost
 const blogsRoutes = express();
 
 blogsRoutes.get("/", redirectToBlogPosts)
-blogsRoutes.get("/all", showAllBlogPosts)
+blogsRoutes.get("/all-posts", showAllBlogPosts)
 
 blogsRoutes.get("/create", newBlogPostForm)
 blogsRoutes.post("/create", createNewBlogPost)

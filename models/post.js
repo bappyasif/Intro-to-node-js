@@ -6,6 +6,7 @@ const PostSchema = new Schema({
     body: {type: Schema.Types.String, required: true},
     // author: {type: Schema.Types.ObjectId, ref: "user", required: true},
     author: {type: Schema.Types.ObjectId, ref: "user"},
+    authorName: {type: Schema.Types.String},
     posted: {type: Schema.Types.Date, required: true},
     published: {type: Schema.Types.Boolean}
 });
