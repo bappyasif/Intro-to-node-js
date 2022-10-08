@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, validationResult } = require("express-validator");
 const { DateTime } = require("luxon");
 const PostSchema = require("../models/post");
 
@@ -15,14 +15,42 @@ let showAllBlogPosts = (req, res, next) => {
 let newBlogPostForm = (req, res) => res.send("getting inputs for a new post");
 
 let createNewBlogPost = [
-    body(""),
+    body("title", "must be over 2 characters long")
+    .trim().isLength({min: 2}).escape(),
+    body("body", "must be over 4 characters long")
+    .trim().isLength({min: 4}).escape(),
+    body("authorName", "must be over 2 characters long")
+    .trim().isLength({min: 2}).escape(),
+    body("published", "can not be null")
+    .isBoolean().escape(),
+    body("posted", "can not be empty")
+    .trim().isDate().escape(),
+
     (req, res, next) => {
-        let newBlog = new PostSchema({
+        let errors = validationResult(req);
+        
+        let blogData = {
             title: req.body.title,
             body: req.body.body,
-            posted: Date.now(),
-            published: true
-        })
+            authorName: req.body.authorName,
+            posted: req.body.posted || Date.now(),
+            published: req.body.published || true
+        }
+        
+        if(!errors.isEmpty()) {
+            res.status(402).json({blogData: blogData, errors: errors.array()})
+            return
+        }
+        // let newBlog = new PostSchema({
+        //     title: req.body.title,
+        //     body: req.body.body,
+        //     posted: Date.now(),
+        //     published: true
+        // })
+
+        let newBlog = new PostSchema(blogData)
+
+        console.log(errors.array(), "here here!!", req.body)
 
         newBlog.save(post => {
             console.log("new post is saved", post);
