@@ -16,19 +16,19 @@ let newBlogPostForm = (req, res) => res.send("getting inputs for a new post");
 
 let createNewBlogPost = [
     body("title", "must be over 2 characters long")
-    .trim().isLength({min: 2}).escape(),
+        .trim().isLength({ min: 2 }).escape(),
     body("body", "must be over 4 characters long")
-    .trim().isLength({min: 4}).escape(),
+        .trim().isLength({ min: 4 }).escape(),
     body("authorName", "must be over 2 characters long")
-    .trim().isLength({min: 2}).escape(),
+        .trim().isLength({ min: 2 }).escape(),
     body("published", "can not be null")
-    .isBoolean().escape(),
+        .isBoolean().escape(),
     body("posted", "can not be empty")
-    .trim().isDate().escape(),
+        .trim().isDate().escape(),
 
     (req, res, next) => {
         let errors = validationResult(req);
-        
+
         let blogData = {
             title: req.body.title,
             body: req.body.body,
@@ -36,21 +36,15 @@ let createNewBlogPost = [
             posted: req.body.posted || Date.now(),
             published: req.body.published || true
         }
-        
-        if(!errors.isEmpty()) {
-            res.status(402).json({blogData: blogData, errors: errors.array()})
+
+        if (!errors.isEmpty()) {
+            res.status(402).json({ blogData: blogData, errors: errors.array() })
             return
         }
-        // let newBlog = new PostSchema({
-        //     title: req.body.title,
-        //     body: req.body.body,
-        //     posted: Date.now(),
-        //     published: true
-        // })
 
         let newBlog = new PostSchema(blogData)
 
-        console.log(errors.array(), "here here!!", req.body)
+        // console.log(errors.array(), "here here!!", req.body)
 
         newBlog.save(post => {
             console.log("new post is saved", post);
@@ -60,20 +54,16 @@ let createNewBlogPost = [
 ]
 
 let updateThisBlogPost = (req, res, next) => {
-    PostSchema.findOne({id: req.body._id})
+    PostSchema.findById({ _id: req.body._id })
         .then(result => {
             result.published = !result.published;
             PostSchema.findByIdAndUpdate(result._id, result, {}, (err, _) => {
-                if(err) return next(err)
+                if (err) return next(err)
+                // console.log("successfully updated", result)
                 console.log("successfully updated")
                 res.redirect("/")
             })
         })
-    // PostSchema.findByIdAndUpdate(req.body._id)
-    //     .then(resp => {
-    //         resp.published = !resp.published
-    //         console.log("successfull", resp.published)
-    //     })
 }
 
 module.exports = {

@@ -8,6 +8,9 @@ function App() {
 
   return (
     <div className="App">
+      <nav>
+        <a href='http://127.0.0.1:5500/client-sides/public/index.html' target={"_blank"}>Blog Site</a>
+      </nav>
       <BlogPosts />
       <ToggleForm toggle={toggle} setToggle={setToggle} />
       {

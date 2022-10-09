@@ -10,7 +10,9 @@ let renderData = (data) => {
     let postsContainer = document.querySelector(".container")
     console.log(data, "!!")
     data.forEach(postObj => {
-        postMarkup(postObj, postsContainer)
+        if(postObj.published) {
+            postMarkup(postObj, postsContainer)
+        }
     })
 }
 

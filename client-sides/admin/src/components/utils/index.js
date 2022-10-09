@@ -25,6 +25,7 @@ export let sendDataToServer = (blogPostObj, errorUpdater) => {
 }
 
 export let updateThisBlogPost = blogPostObj => {
+    // console.log(blogPostObj, "<<>>")
     fetch("http://localhost:3000/blog/update", {
         method: "put",
         headers: {
@@ -32,6 +33,6 @@ export let updateThisBlogPost = blogPostObj => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(blogPostObj)
-    }).then(() => console.log("blog post is updated"))
+    }).then(() => console.log("blog data is sent to server to update"))
     .catch(err => console.error('error occured', err))
 }
