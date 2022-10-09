@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { updateThisBlogPost } from './utils';
 
 function BlogPosts() {
     let [blogPosts, setBlogPosts] = useState([]);
@@ -35,7 +36,14 @@ let RenderAllBlogPosts = ({blogPosts}) => {
 }
 
 let RenderThisBlogPost = ({blogPost}) => {
-    let {title, body, authorName, posted, published} = {...blogPost}
+    let {_id, title, body, authorName, posted, published} = {...blogPost}
+
+    let [togglePublish, setTogglePublish] = useState(false)
+
+    let handleClick = () => {
+        updateThisBlogPost(blogPost)
+        setTogglePublish(!togglePublish);
+    }
     return (
         <li className='blog-post'>
             <h2 className='post-title'>{title}</h2>
@@ -43,7 +51,7 @@ let RenderThisBlogPost = ({blogPost}) => {
             <p className='info-wrapper'>
                 <span className='author-name'>{authorName}</span>
                 <span className='posted'>{posted}</span>
-                <button>{published ? "Unpublish" : "Publish"}</button>
+                <button onClick={handleClick}>{published || togglePublish ? "Unpublish" : "Publish"}</button>
             </p>
         </li>
     )

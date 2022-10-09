@@ -59,9 +59,27 @@ let createNewBlogPost = [
     }
 ]
 
+let updateThisBlogPost = (req, res, next) => {
+    PostSchema.findOne({id: req.body._id})
+        .then(result => {
+            result.published = !result.published;
+            PostSchema.findByIdAndUpdate(result._id, result, {}, (err, _) => {
+                if(err) return next(err)
+                console.log("successfully updated")
+                res.redirect("/")
+            })
+        })
+    // PostSchema.findByIdAndUpdate(req.body._id)
+    //     .then(resp => {
+    //         resp.published = !resp.published
+    //         console.log("successfull", resp.published)
+    //     })
+}
+
 module.exports = {
     redirectToBlogPosts,
     showAllBlogPosts,
     newBlogPostForm,
-    createNewBlogPost
+    createNewBlogPost,
+    updateThisBlogPost
 }
