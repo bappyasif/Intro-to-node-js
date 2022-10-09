@@ -1,5 +1,6 @@
 const { body, check, validationResult } = require("express-validator");
 const UserSchema = require("../models/user");
+const { genPassword, issueJWT } = require("../utils");
 
 
 let redirectToLoginForm = (req, res) => res.redirect("/user/login");
@@ -22,9 +23,12 @@ let loginFormPostRequest = [
         UserSchema.findOne({email: req.body.email})
             .then(user => {
                 if(user) {
+                    let tokenObject = issueJWT(user)
+                    res.status(200).json({success: true, user: user, token: tokenObject.token, expiresIn: tokenObject.expires})
+                    
                     // res.redirect("/");
                     // console.log(req.body.email, "check3")
-                    res.send("logged in");
+                    // res.send("logged in");
                 } else {
                     // console.log(req.body.email, "check2")
                     res.status(401).json({success: false, msg: "user is not found"})
@@ -50,10 +54,17 @@ let registerUserPostRequest = [
     (req, res, next) => {
         let errors = validationResult(req);
 
+        let saltHash = genPassword(req.body.password);
+
+        let salt = saltHash.salt;
+        let hash = saltHash.hash;
+
         let userObj = {
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            salt,
+            hash
         }
 
         if(!errors.isEmpty()) {
@@ -63,9 +74,13 @@ let registerUserPostRequest = [
         
         let newUser = new UserSchema(userObj)
 
-        newUser.save(user => {
-            console.log("user saved")
-            res.redirect("http://localhost:3001/")
+        newUser.save((err, user) => {
+            // issuing jwt token with our private key, so that out verfication with public key remains valid
+            let jwt = issueJWT(user);
+
+            console.log("user saved", user)
+            // res.redirect("http://localhost:3001/")
+            res.status(200).json({success: true, user: user, token: jwt.token, expiresIn: jwt.expires})
         })
     }
 ];

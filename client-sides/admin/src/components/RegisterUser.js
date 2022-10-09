@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { RenderErrors } from './NewBlogPostForm';
-import { sendDataToServer } from './utils';
+import { beginUserAuthenticationProcess } from './utils';
 
 function RegisterUser() {
     let [errors, setErrors] = useState([])
@@ -10,7 +10,7 @@ function RegisterUser() {
 
     let handleSubmit = event => {
         event.preventDefault();
-        sendDataToServer(userData, updateError, "http://localhost:3000/user/register")
+        beginUserAuthenticationProcess(userData, updateError, "http://localhost:3000/user/register")
     }
 
     let handleFormCopntrolChange = (event, prop) => setUserData(prev => ({...prev, [prop]: event.target.value}))
