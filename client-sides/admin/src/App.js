@@ -2,6 +2,8 @@ import { useState } from 'react';
 import './App.css';
 import BlogPosts from './components/BlogPosts';
 import NewBlogPostForm from './components/NewBlogPostForm';
+import RegisterUser from './components/RegisterUser';
+import UserLogin from './components/UserLogin';
 
 function App() {
   let [toggle, setToggle] = useState(false);
@@ -11,6 +13,8 @@ function App() {
       <nav>
         <a href='http://127.0.0.1:5500/client-sides/public/index.html' target={"_blank"}>Blog Site</a>
       </nav>
+      <UserLogin />
+      <RegisterUser />
       <BlogPosts />
       <ToggleForm toggle={toggle} setToggle={setToggle} />
       {

@@ -53,11 +53,10 @@ function NewBlogPostForm() {
   )
 }
 
-let RenderErrors = ({errors}) => {
+export let RenderErrors = ({errors}) => {
   let renderErrors = () => errors?.map((error, idx) => <RenderError key={idx} error={error} />)
   return(
     <ul className='errors-list'>
-      herere
       {renderErrors()}
     </ul>
   )

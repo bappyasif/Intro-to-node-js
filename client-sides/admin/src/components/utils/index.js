@@ -1,5 +1,5 @@
-export let sendDataToServer = (blogPostObj, errorUpdater) => {
-    fetch("http://localhost:3000/blog/create", {
+export let sendDataToServer = (blogPostObj, errorUpdater, endpoint) => {
+    fetch((endpoint || "http://localhost:3000/blog/create"), {
         method: "post",
         headers: {
             "Accept": "application/json",
