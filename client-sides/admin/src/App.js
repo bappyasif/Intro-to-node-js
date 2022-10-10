@@ -9,27 +9,11 @@ import { getExpiration, isLoggedIn } from './components/utils';
 
 function App() {
   let [toggle, setToggle] = useState(false);
-
-  return (
-    <div className="App">
-      <ShowLoginOrRegisterToUser />
-      <BlogPosts />
-      <ToggleForm toggle={toggle} setToggle={setToggle} />
-      {
-        toggle
-          ?
-          <NewBlogPostForm />
-          :
-          null
-      }
-    </div>
-  );
-}
-
-let ShowLoginOrRegisterToUser = () => {
   let [showWhichForm, setShowWhichForm] = useState(null)
 
-  // to see if already any existing token available on load
+  let handleToggle = () => setToggle(!toggle);
+
+  // to see if already any existing token available on initial load
   useEffect(() => {
     let checkTokenAlreadyExistingIsValid = getExpiration();
     if (checkTokenAlreadyExistingIsValid) {
@@ -41,15 +25,15 @@ let ShowLoginOrRegisterToUser = () => {
     }
   }, [])
 
-  // console.log("check", showWhichForm)
-
   // if on load no token has been found, then fetch and check if user exists or not
   // if no user has been found then show "Register" form
   let handleWhichForm = (val) => setShowWhichForm(val)
 
   return (
-    <div className='ae-wrapper'>
-      <ShowNavs showWhichForm={showWhichForm} handleWhichForm={handleWhichForm} />
+    <div className="App">
+
+      <ShowNavs showWhichForm={showWhichForm} handleWhichForm={handleWhichForm} handleToggle={handleToggle} toggle={toggle} />
+
       {
         showWhichForm === "login"
           ?
@@ -61,19 +45,18 @@ let ShowLoginOrRegisterToUser = () => {
             :
             null
       }
-    </div>
-  )
-}
 
-let ToggleForm = ({ toggle, setToggle }) => {
-  let clickHandler = () => setToggle(!toggle);
+      {
+        toggle
+          ?
+          <NewBlogPostForm />
+          :
+          null
+      }
 
-  return (
-    <div>
-      <h2>{toggle ? null : 'Ready to create a new blog post?'}</h2>
-      <button onClick={clickHandler}>{toggle ? "Hide" : "Show"} form</button>
+      {showWhichForm === "logout" ? <BlogPosts /> : null}
     </div>
-  )
+  );
 }
 
 export default App;

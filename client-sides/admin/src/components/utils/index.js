@@ -52,9 +52,7 @@ export let beginUserAuthenticationProcess = (blogPostObj, errorUpdater, endpoint
             
             let response = resp.json();
             response.then(data => {
-                console.log(data, "<<data>>");
-                // localStorage.setItem("token", data.token);
-                // localStorage.setItem("expires", data.expiresIn);
+                // console.log(data, "<<data>>");
                 setLocalStorageItems(data);
                 handleWhichForm("logout")
             })
@@ -65,11 +63,11 @@ export let beginUserAuthenticationProcess = (blogPostObj, errorUpdater, endpoint
             let data = resp.json();
             data
             .then(respData => {
-                console.log(respData);
+                // console.log(respData);
                 errorUpdater(respData);
-                if (respData.success === false) {
-                    handleWhichForm("register")
-                }
+                // if (respData.success === false) {
+                //     handleWhichForm("register")
+                // }
             })
             .catch(err => console.error('error occured', err))
         }

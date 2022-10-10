@@ -22,10 +22,9 @@ function UserLogin({handleWhichForm}) {
 
   return (
     <div className='ul-container'>
-        <h2>Please Login First to Access Admin Dashboard Panel</h2>
+        <h2>Please Login First To Access Admin Dashboard Panel</h2>
         {errors.errors?.length ? <RenderErrors errors={errors.errors} /> : null}
         {errors?.success === false ? errors?.msg: null}
-        {/* {errors?.success === false ? handleWhichForm("register") : null} */}
 
         <form method='post' action='' onSubmit={handleSubmit}>
             <legend>Enter your registered email and password</legend>
