@@ -1,3 +1,144 @@
+h1,
+h2,
+h3,
+h4,
+p,
+li,
+a,
+ol,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --text-clr: #404E5C;
+  --bg-clr: #B7C3F3;
+  --link-clr: #4F6272;
+  --btn-clr: #9DB17C;
+  --special-clr: #9DB17C;
+}
+
 .App {
   text-align: center;
+  padding: 20px 4px;
+  background-color: var(--bg-clr);
+}
+
+a.nav-item {
+  padding: 11px;
+  margin: 2px 11px;
+  background-color: darkgray;
+  font-size: x-large;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+button[type="submit"] {
+  border: none;
+  padding: 6px 31px;
+  font-size: xx-large;
+  border-radius: 6px;
+  margin: 11px 0;
+  background-color: darkgray;
+}
+
+.ul-container,
+.regu-container,
+.form-wrapper,
+.bp-container {
+  width: max-content;
+  margin: auto;
+}
+
+input,
+textarea {
+  width: -webkit-fill-available;
+  line-height: 26px;
+  background-color: transparent;
+  border: none;
+}
+
+label,
+input,
+legend,
+.regu-container p,
+textarea {
+  font-size: x-large;
+}
+
+fieldset {
+  margin: 6px 0;
+  border-radius: 6px;
+  text-align: justify;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+ul {
+  display: flex;
+  justify-content: center;
+}
+
+.blog-post {
+  text-align: justify;
+  color: var(--text-clr);
+}
+
+.blog-post .info-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.blog-post .info-wrapper span {
+  width: 33%;
+}
+
+.blog-post .info-wrapper button {
+  padding: 2px 11px;
+  font-size: larger;
+  border: none;
+  background: var(--btn-clr);
+  border-radius: 6px;
+}
+
+.bp-container,
+.form-wrapper,
+.abp-wrapper {
+  margin: 42px auto;
+}
+
+h2.post-title {
+  font-size: xx-large;
+}
+
+.blog-post p.post-body,
+.blog-post span.author-name {
+  font-size: larger;
+  color: var(--link-clr);
+}
+
+.blog-post span.author-name {
+  color: var(--text-clr);
+}
+
+.blog-post p.post-body,
+.blog-post .info-wrapper {
+  margin: 4px 11px 0 0;
+}
+
+.abp-wrapper {
+  width: 720px;
+}
+
+.abp-wrapper li.blog-post {
+  margin: 15px 0;
+  outline: dotted .9px var(--special-clr);
+  padding: 0px 0px 0 4px;
+  border-radius: 6px;
 }
