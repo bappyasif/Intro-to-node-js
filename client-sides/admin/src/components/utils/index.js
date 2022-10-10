@@ -38,7 +38,7 @@ export let updateThisBlogPost = blogPostObj => {
     .catch(err => console.error('error occured', err))
 }
 
-export let beginUserAuthenticationProcess = (blogPostObj, errorUpdater, endpoint, authUpdater) => {
+export let beginUserAuthenticationProcess = (blogPostObj, errorUpdater, endpoint, handleWhichForm) => {
     fetch((endpoint), {
         method: "post",
         headers: {
@@ -55,7 +55,8 @@ export let beginUserAuthenticationProcess = (blogPostObj, errorUpdater, endpoint
                 console.log(data, "<<data>>");
                 // localStorage.setItem("token", data.token);
                 // localStorage.setItem("expires", data.expiresIn);
-                setLocalStorageItems(data)
+                setLocalStorageItems(data);
+                handleWhichForm("logout")
             })
             .catch(err => console.error(err))
 
@@ -66,6 +67,9 @@ export let beginUserAuthenticationProcess = (blogPostObj, errorUpdater, endpoint
             .then(respData => {
                 console.log(respData);
                 errorUpdater(respData);
+                if (respData.success === false) {
+                    handleWhichForm("register")
+                }
             })
             .catch(err => console.error('error occured', err))
         }
@@ -74,19 +78,27 @@ export let beginUserAuthenticationProcess = (blogPostObj, errorUpdater, endpoint
 }
 
 let setLocalStorageItems = (authObject) => {
-    let expires = moment().add(authObject.expiresIn)
+    // let expires = moment().add(authObject.expiresIn)
+    let expires = moment().add(1, "days")
 
     localStorage.setItem("token", authObject.token);
     // localStorage.setItem("expires", expires);
     localStorage.setItem("expires", JSON.stringify(expires.valueOf())); // sets time in millis
 }
 
-const getExpiration = () => {
+export const getExpiration = () => {
     const expiration = localStorage.getItem("expires");
     const expiresAt = JSON.parse(expiration);
     return moment(expiresAt)
 }
 
-const isLoggedIn = () => moment().isBefore(getExpiration());
+export const isLoggedIn = () => {
+    return moment().isBefore(getExpiration());
+}
 
-const isLoggedOut = () => !isLoggedIn()
+export const isLoggedOut = () => !isLoggedIn()
+
+export const logoutUser = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("expires");
+}
