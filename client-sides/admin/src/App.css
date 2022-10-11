@@ -120,11 +120,11 @@ h2.post-title {
 .blog-post p.post-body,
 .blog-post span.author-name {
   font-size: larger;
-  color: var(--link-clr);
+  color: var(--text-clr);
 }
 
 .blog-post span.author-name {
-  color: var(--text-clr);
+  color: var(--link-clr);
 }
 
 .blog-post p.post-body,
@@ -141,4 +141,11 @@ h2.post-title {
   outline: dotted .9px var(--special-clr);
   padding: 0px 0px 0 4px;
   border-radius: 6px;
+}
+
+.abp-wrapper li.blog-post p.post-body {
+  height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
