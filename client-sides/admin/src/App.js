@@ -9,7 +9,8 @@ import { getExpiration, isLoggedIn } from './components/utils';
 
 function App() {
   let [toggle, setToggle] = useState(false);
-  let [showWhichForm, setShowWhichForm] = useState(null)
+  let [showWhichForm, setShowWhichForm] = useState(null);
+  let [newDataAvailable, setNewDataAvailable] = useState(false);
 
   let handleToggle = () => setToggle(!toggle);
 
@@ -49,12 +50,12 @@ function App() {
       {
         toggle
           ?
-          <NewBlogPostForm />
+          <NewBlogPostForm handleToggle={handleToggle} setNewDataAvailable={setNewDataAvailable} />
           :
           null
       }
 
-      {showWhichForm === "logout" ? <BlogPosts /> : null}
+      {showWhichForm === "logout" ? <BlogPosts newDataAvailable={newDataAvailable} setNewDataAvailable={setNewDataAvailable} /> : null}
     </div>
   );
 }

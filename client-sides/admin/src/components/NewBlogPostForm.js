@@ -1,11 +1,20 @@
 import React, { useState } from 'react'
 import { sendDataToServer } from './utils';
 
-function NewBlogPostForm() {
+function NewBlogPostForm({handleToggle, setNewDataAvailable}) {
   let [formData, setFormData] = useState({});
   let [errorResponse, setErrorResponse] = useState([]);
 
-  let handleErrorResponse = data => setErrorResponse(data);
+  let handleErrorResponse = data => {
+    // upon successful data submit to server we're resetting form value to null, anf closing off form
+    // and activating new data available flag state so that new data can be fetched from server
+    if(data.length === 0) {
+      setFormData({})
+      handleToggle()
+      setNewDataAvailable(true)
+    }
+    setErrorResponse(data);
+  }
 
   let handleSubmit = (event) => {
     event.preventDefault();

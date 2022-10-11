@@ -1,5 +1,13 @@
 import moment from "moment";
 
+export let fetchAllBlogPosts = (dataUpdater) => {
+    fetch("http://localhost:3000/blog/all-posts")
+        .then(resp => resp.json())
+        .catch(err => console.error("response error", err))
+            .then(data => dataUpdater(data.posts))
+            .catch(err => new Error("error caught", err))
+}
+
 export let sendDataToServer = (blogPostObj, errorUpdater, endpoint) => {
     fetch((endpoint || "http://localhost:3000/blog/create"), {
         method: "post",
@@ -9,20 +17,20 @@ export let sendDataToServer = (blogPostObj, errorUpdater, endpoint) => {
         },
         body: JSON.stringify(blogPostObj)
     }).then((resp) => {
-        if(resp.status >= 200 && resp.status <= 299) {
+        if (resp.status >= 200 && resp.status <= 299) {
             console.log("data is sent to server side", resp)
             errorUpdater([]);
         } else {
             let data = resp.json();
             data
-            .then(respData => {
-                console.log(respData);
-                errorUpdater(respData);
-            })
-            .catch(err => console.error('error occured', err))
+                .then(respData => {
+                    console.log(respData);
+                    errorUpdater(respData);
+                })
+                .catch(err => console.error('error occured', err))
         }
     })
-    .catch(err => console.error('error occured', err))
+        .catch(err => console.error('error occured', err))
 }
 
 export let updateThisBlogPost = blogPostObj => {
@@ -35,7 +43,7 @@ export let updateThisBlogPost = blogPostObj => {
         },
         body: JSON.stringify(blogPostObj)
     }).then(() => console.log("blog data is sent to server to update"))
-    .catch(err => console.error('error occured', err))
+        .catch(err => console.error('error occured', err))
 }
 
 export let beginUserAuthenticationProcess = (blogPostObj, errorUpdater, endpoint, handleWhichForm) => {
@@ -47,32 +55,32 @@ export let beginUserAuthenticationProcess = (blogPostObj, errorUpdater, endpoint
         },
         body: JSON.stringify(blogPostObj)
     }).then((resp) => {
-        if(resp.status >= 200 && resp.status <= 299) {
+        if (resp.status >= 200 && resp.status <= 299) {
             console.log("data is sent to server side", resp)
-            
+
             let response = resp.json();
             response.then(data => {
                 // console.log(data, "<<data>>");
                 setLocalStorageItems(data);
                 handleWhichForm("logout")
             })
-            .catch(err => console.error(err))
+                .catch(err => console.error(err))
 
             errorUpdater([]);
         } else {
             let data = resp.json();
             data
-            .then(respData => {
-                // console.log(respData);
-                errorUpdater(respData);
-                // if (respData.success === false) {
-                //     handleWhichForm("register")
-                // }
-            })
-            .catch(err => console.error('error occured', err))
+                .then(respData => {
+                    // console.log(respData);
+                    errorUpdater(respData);
+                    // if (respData.success === false) {
+                    //     handleWhichForm("register")
+                    // }
+                })
+                .catch(err => console.error('error occured', err))
         }
     })
-    .catch(err => console.error('error occured', err))
+        .catch(err => console.error('error occured', err))
 }
 
 let setLocalStorageItems = (authObject) => {

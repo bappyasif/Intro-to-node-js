@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { updateThisBlogPost } from './utils';
+import { fetchAllBlogPosts, updateThisBlogPost } from './utils';
 
-function BlogPosts() {
+function BlogPosts({newDataAvailable, setNewDataAvailable}) {
     let [blogPosts, setBlogPosts] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:3000/blog/all-posts")
-            .then(resp => resp.json())
-            .catch(err => console.error("response error", err))
-                .then(data => setBlogPosts(data.posts))
-                .catch(err => new Error("error caught", err))
+        fetchAllBlogPosts(setBlogPosts);
     }, [])
+
+    useEffect(() => {
+        fetchAllBlogPosts(setBlogPosts)
+        // once refetched resetting flag state value to false so that when a new data becomes available this hook gets to run
+        newDataAvailable && setNewDataAvailable(false)
+    }, [newDataAvailable])
 
     return (
         <div className='bp-container'>
