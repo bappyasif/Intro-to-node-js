@@ -103,3 +103,11 @@ nav {
     text-align: justify;
     font-size: 1.7rem;
 }
+
+.comments {
+    display: none;
+}
+
+.comments .show-comments {
+    display: block;
+}

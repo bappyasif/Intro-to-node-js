@@ -12,6 +12,12 @@ let fetchAllBlogPosts = () => {
             // filtering only published blogs
             blogsData = data.posts.filter(item => item.published);
             CURRENT = CURRENT + CHUNK;
+
+            // show comments when there is blog posts available
+            if(blogsData.length) {
+                showCommentFormView()
+                showBlogPostComments()
+            }
         })
         .catch(err => new Error("error occured", err))
 }
@@ -56,14 +62,17 @@ let renderDataByChunk = (data, limit, starting) => {
     data.forEach((postObj, idx) => {
         if (idx >= starting && idx < limit) {
             postMarkup(postObj, postsContainer)
+            // render comments if any
+            // TODO
         }
     })
 }
 
 let postMarkup = (postObj, container) => {
-    let { title, body, authorName, posted } = { ...postObj }
+    let { _id, title, body, authorName, posted } = { ...postObj }
 
     let postWrapper = document.createElement("div");
+    postWrapper.id = _id;
     postWrapper.classList.add("bp-wrapper");
     let postTitle = createMarkup(title, 'h2', "post-title");
     let postBody = createMarkup(body, "p", "post-body");
@@ -89,6 +98,17 @@ let createMarkup = (data, type, className) => {
     element.classList.add(className);
     return element
 }
+
+
+/** Comments Logic */
+// if(blogsData.length) {
+//     showCommentFormView()
+// }
+
+
+/**
+ * Event Listeners
+ */
 
 // next button event listener
 let nextBtn = document.querySelector(".next-btn");
