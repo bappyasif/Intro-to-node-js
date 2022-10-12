@@ -8,21 +8,25 @@ let fetchAllBlogPosts = () => {
         .then(resp => resp.json())
         .catch(err => console.error('Caught error: ', err))
         .then(data => {
-            renderDataByChunk(data.posts, CHUNK, CURRENT);
             // filtering only published blogs
             blogsData = data.posts.filter(item => item.published);
+            renderDataByChunk(blogsData, CHUNK, CURRENT);
+
             CURRENT = CURRENT + CHUNK;
 
+            console.log(blogsData, "<><>")
+
             // show comments when there is blog posts available
-            if(blogsData.length) {
+            if (blogsData.length) {
                 showCommentFormView()
-                showBlogPostComments()
+                // showBlogPostComments()
             }
         })
         .catch(err => new Error("error occured", err))
 }
 
 let handlePrevious = () => {
+
     if (CURRENT > 0) {
         let temp = CURRENT - CHUNK
         cleanExistingBlogPosts();
@@ -35,9 +39,12 @@ let handlePrevious = () => {
     if (CURRENT == 0) {
         CURRENT = CHUNK
     }
+
+    console.log(CURRENT, CHUNK, "prev")
 }
 
 let handleNext = () => {
+
     if (CURRENT <= blogsData.length - 1) {
         let temp = CURRENT + CHUNK
         cleanExistingBlogPosts();
@@ -45,11 +52,13 @@ let handleNext = () => {
         renderDataByChunk(blogsData, temp, CURRENT)
         CURRENT = temp;
     }
-    
+
     // keeping CURRENT at previous point so that "previous" cycle doesnt have to wait a click
     if (CURRENT == blogsData.length) {
         CURRENT = CURRENT - CHUNK
     }
+
+    console.log(CURRENT, CHUNK, "next")
 }
 
 let cleanExistingBlogPosts = () => {
@@ -62,8 +71,10 @@ let renderDataByChunk = (data, limit, starting) => {
     data.forEach((postObj, idx) => {
         if (idx >= starting && idx < limit) {
             postMarkup(postObj, postsContainer)
-            // render comments if any
-            // TODO
+            // show comment form markup
+            showCommentFormView()
+            // rendering comments if any
+            showBlogPostComments()
         }
     })
 }
@@ -89,7 +100,7 @@ let postMarkup = (postObj, container) => {
 
 let createMarkup = (data, type, className) => {
     let element = document.createElement(type);
-    if(className === "post-date") {
+    if (className === "post-date") {
         let dateNow = new Date(data).toISOString();
         element.textContent = moment(dateNow).fromNow();
     } else {
@@ -98,13 +109,6 @@ let createMarkup = (data, type, className) => {
     element.classList.add(className);
     return element
 }
-
-
-/** Comments Logic */
-// if(blogsData.length) {
-//     showCommentFormView()
-// }
-
 
 /**
  * Event Listeners

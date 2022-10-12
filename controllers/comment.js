@@ -6,7 +6,7 @@ let redirectToCommentForm = (req, res) => res.redirect("/comment/create")
 let commentFormGetRequest = (req, res) => res.send("comment form");
 
 let getCommentsForSpecificBlogPost = (req, res) => {
-    console.log("begionjs", req.params.blogId)
+    // console.log("begionjs", req.params.blogId)
     CommentSchema.find({blogPost: req.params.blogId})
     .then(result => res.status(200).json({success: true, data: result}))
     .catch(err => {

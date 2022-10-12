@@ -1,14 +1,3 @@
-// document.createRange().createContextualFragment(domString)
-
-/**
- * 
- * 
- `<div class="slide-content" id="slide-${imgObj.slideNum}" style="${imgObj.displayStatus}">
-              <img src="${imgObj.imgLoc}" alt="${imgObj.altData}"/>
-              <div class="caption">${imgObj.imgCaption}</div>
-          </div>`
- */
-
 let emailEl = document.querySelector("#email");
 let nameEl = document.querySelector("#name");
 let bodyEl = document.querySelector("#body");
@@ -17,8 +6,8 @@ let errosDiv = document.querySelector(".errors");
 
 let showCommentFormView = () => {
     let commentsDiv = document.querySelector(".comments");
-    commentsDiv.classList.remove("comments");
-    commentsDiv.classList.add("show-comments");
+    // commentsDiv.classList.remove("comments");
+    // commentsDiv.classList.add("show-comments");
 }
 
 let handleUserCommentSubmit = () => {
