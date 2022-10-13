@@ -46,7 +46,7 @@ export let updateThisBlogPost = blogPostObj => {
         .catch(err => console.error('error occured', err))
 }
 
-export let beginUserAuthenticationProcess = (blogPostObj, errorUpdater, endpoint, handleWhichForm) => {
+export let beginUserAuthenticationProcess = (blogPostObj, errorUpdater, endpoint, handleAuth) => {
     fetch((endpoint), {
         method: "post",
         headers: {
@@ -62,7 +62,8 @@ export let beginUserAuthenticationProcess = (blogPostObj, errorUpdater, endpoint
             response.then(data => {
                 // console.log(data, "<<data>>");
                 setLocalStorageItems(data);
-                handleWhichForm("logout")
+                // handleWhichForm("logout")
+                handleAuth()
             })
                 .catch(err => console.error(err))
 

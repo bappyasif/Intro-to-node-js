@@ -1,50 +1,49 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import { logoutUser } from './utils'
 
-function ShowNavs({ showWhichForm, handleWhichForm, handleToggle, toggle }) {
-  let handleClick = event => {
-    event.preventDefault();
-    handleWhichForm("register");
-  }
+function ShowNavs({ auth, setAuth }) {
+  // let handleClick = event => {
+  //   event.preventDefault();
+  //   handleWhichForm("register");
+  // }
 
-  let clickHandler = event => {
-    event.preventDefault();
-    handleWhichForm("login");
-  }
-  
+  // let clickHandler = event => {
+  //   event.preventDefault();
+  //   handleWhichForm("login");
+  // }
+
   return (
     <nav>
       <ul>
         <li>
-          <a className='nav-item' href='http://127.0.0.1:5500/client-sides/public/index.html' target={"_blank"} rel="noreferrer">Blog Site</a>
-          {showWhichForm !== "logout" ? <a className='nav-item' href='/' onClick={handleClick}>Register</a> : null}
-          {showWhichForm !== "logout" ? <a className='nav-item' href='/' onClick={clickHandler}>Login</a> : null}
+          <Link className='nav-item' to={"http://127.0.0.1:5500/client-sides/public/index.html"}>Blog Site</Link>
         </li>
-
-        {
-          showWhichForm === "logout"
-            ?
-            <li>
-              <ToggleForm toggle={toggle} handleToggle={handleToggle} />
-              <LogoutButton handleWhichForm={handleWhichForm} />
-            </li>
-            :
-            null
-        }
+        <li>
+          {auth ? null : <Link className='nav-link' to={"/login"}>Login</Link>}
+        </li>
+        <li>
+          {auth ? null : <Link className='nav-link' to={"/register"}>Register</Link>}
+        </li>
+        <li>
+          {auth ? <Link className='nav-link' to={"/create/blog"}>CreateNewBlog</Link> : null}
+        </li>
+        <li>
+          {auth ? <LogoutButton setAuth={setAuth} /> : null}
+        </li>
       </ul>
     </nav>
   )
 }
 
-let LogoutButton = ({ handleWhichForm }) => {
+let LogoutButton = ({ setAuth }) => {
   let handleClick = (event) => {
-    event.preventDefault();
     logoutUser();
-    handleWhichForm("login")
+    setAuth(false)
   }
 
   return (
-    <a className='nav-item' href='/' onClick={handleClick}>Logout</a>
+    <Link className='nav-link' to={"/login"} onClick={handleClick}>Logout</Link>
   )
 }
 

@@ -1,63 +1,62 @@
-import { useEffect, useState } from 'react';
 import './App.css';
-import BlogPosts from './components/BlogPosts';
-import NewBlogPostForm from './components/NewBlogPostForm';
-import RegisterUser from './components/RegisterUser';
+import BlogPosts from './components/routes/BlogPosts';
 import ShowNavs from './components/ShowNavs';
-import UserLogin from './components/UserLogin';
+import BlogDetails from "./components/routes/BlogDetails"
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom"
+import ErrorPage from './components/ErrorPage';
+import UserLogin from './components/routes/UserLogin';
+import RegisterUser from './components/routes/RegisterUser';
+import NewBlogPostForm from './components/routes/NewBlogPostForm';
+import { useEffect, useState } from 'react';
 import { getExpiration, isLoggedIn } from './components/utils';
 
 function App() {
-  let [toggle, setToggle] = useState(false);
-  let [showWhichForm, setShowWhichForm] = useState(null);
-  let [newDataAvailable, setNewDataAvailable] = useState(false);
+  let [auth, setAuth] = useState(false);
+  // let navigate = useNavigate()
 
-  let handleToggle = () => setToggle(!toggle);
-
-  // to see if already any existing token available on initial load
   useEffect(() => {
     let checkTokenAlreadyExistingIsValid = getExpiration();
     if (checkTokenAlreadyExistingIsValid) {
       if (isLoggedIn()) {
-        setShowWhichForm("logout")
+        setAuth(true);
+        // navigate("/blogs")
       } else {
-        setShowWhichForm("login")
+        // setShowWhichForm("login")
       }
     }
   }, [])
 
-  // if on load no token has been found, then fetch and check if user exists or not
-  // if no user has been found then show "Register" form
-  let handleWhichForm = (val) => setShowWhichForm(val)
-
   return (
-    <div className="App">
-
-      <ShowNavs showWhichForm={showWhichForm} handleWhichForm={handleWhichForm} handleToggle={handleToggle} toggle={toggle} />
-
-      {
-        showWhichForm === "login"
-          ?
-          <UserLogin handleWhichForm={handleWhichForm} />
-          :
-          showWhichForm === "register"
-            ?
-            <RegisterUser />
-            :
-            null
-      }
-
-      {
-        toggle
-          ?
-          <NewBlogPostForm handleToggle={handleToggle} setNewDataAvailable={setNewDataAvailable} />
-          :
-          null
-      }
-
-      {showWhichForm === "logout" ? <BlogPosts newDataAvailable={newDataAvailable} setNewDataAvailable={setNewDataAvailable} /> : null}
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <ShowNavs auth={auth} setAuth={setAuth} />
+        <Routes>
+          <Route path='/' element={auth ? <Navigate replace to={"/blogs"} /> : <Navigate replace to={"/login"} />} />
+          <Route path='/login' element={<UserLogin auth={auth} setAuth={setAuth} />} />
+          <Route path='/register' element={<RegisterUser />} />
+          <Route path='/blogs' element={auth ? <BlogPosts /> : <Navigate replace to={"/login"} />} />
+          <Route path='/create/blog' element={auth ? <NewBlogPostForm /> : <Navigate replace to={"/login"} />} />
+          <Route path='blogs/:blogId' element={auth ? <BlogDetails /> : <Navigate replace to={"/login"} />} />
+          {/* <Route path="*" element={<ErrorPage />} /> */}
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
 export default App;
+
+/**
+ * 
+ * 
+ <Routes>
+          <Route path='/' element={auth ? <Navigate replace to={"/blogs"} /> : <Navigate replace to={"/login"} />} />
+          <Route path='/login' element={auth ? <Navigate replace to={"/blogs"} /> : <UserLogin />} />
+          <Route path='/register' element={auth ? <Navigate replace to={"/blogs"} /> : <RegisterUser />} />
+          <Route path='/register' element={<RegisterUser />} />
+          <Route path='/blogs' element={ auth ? <BlogPosts /> : <Navigate replace to={"/login"} />} />
+          <Route path='/create/blog' element={auth ? <NewBlogPostForm /> : <Navigate replace to={"/login"} />} />
+          <Route path='blogs/:blogId' element={auth ? <BlogDetails /> : <Navigate replace to={"/login"} />} />
+          {/* <Route path="*" element={<ErrorPage />} /> /}
+          </Routes>
+ */
