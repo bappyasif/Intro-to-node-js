@@ -4,6 +4,13 @@ const PostSchema = require("../models/post");
 
 let redirectToBlogPosts = (req, res) => res.redirect("/blog/all-posts");
 
+let getSpecificBlogData = (req, res, next) => {
+    PostSchema.find({_id: req.params.postId})
+        .then(data => {
+            res.status(200).json({ success: true, blogData: data });
+        }).catch(err => next(err))
+}
+
 let showAllBlogPosts = (req, res, next) => {
     PostSchema.find()
         .then(posts => {
@@ -71,5 +78,6 @@ module.exports = {
     showAllBlogPosts,
     newBlogPostForm,
     createNewBlogPost,
-    updateThisBlogPost
+    updateThisBlogPost,
+    getSpecificBlogData
 }

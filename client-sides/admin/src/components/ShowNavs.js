@@ -3,16 +3,6 @@ import { Link } from 'react-router-dom';
 import { logoutUser } from './utils'
 
 function ShowNavs({ auth, setAuth }) {
-  // let handleClick = event => {
-  //   event.preventDefault();
-  //   handleWhichForm("register");
-  // }
-
-  // let clickHandler = event => {
-  //   event.preventDefault();
-  //   handleWhichForm("login");
-  // }
-
   return (
     <nav>
       <ul>
@@ -44,17 +34,6 @@ let LogoutButton = ({ setAuth }) => {
 
   return (
     <Link className='nav-link' to={"/login"} onClick={handleClick}>Logout</Link>
-  )
-}
-
-let ToggleForm = ({ toggle, handleToggle }) => {
-  let handleClick = event => {
-    event.preventDefault();
-    handleToggle()
-  }
-
-  return (
-    <a className='nav-item' href='/' onClick={handleClick}>Create Blog Form {toggle ? "Hide" : "Show"}</a>
   )
 }
 

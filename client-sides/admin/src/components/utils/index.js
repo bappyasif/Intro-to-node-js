@@ -1,12 +1,20 @@
 import moment from "moment";
 
-export let fetchAllBlogPosts = (dataUpdater) => {
-    fetch("http://localhost:3000/blog/all-posts")
+export let fetchData = (endpoint, dataUpdater) => {
+    fetch(endpoint)
         .then(resp => resp.json())
         .catch(err => console.error("response error", err))
-            .then(data => dataUpdater(data.posts))
+            .then(data => dataUpdater(data))
             .catch(err => new Error("error caught", err))
 }
+
+// export let fetchAllBlogPosts = (dataUpdater) => {
+//     fetch("http://localhost:3000/blog/all-posts")
+//         .then(resp => resp.json())
+//         .catch(err => console.error("response error", err))
+//             .then(data => dataUpdater(data.posts))
+//             .catch(err => new Error("error caught", err))
+// }
 
 export let sendDataToServer = (blogPostObj, errorUpdater, endpoint) => {
     fetch((endpoint || "http://localhost:3000/blog/create"), {

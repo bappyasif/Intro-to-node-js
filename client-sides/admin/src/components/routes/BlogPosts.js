@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { fetchAllBlogPosts, updateThisBlogPost } from '../utils';
+import { Link } from 'react-router-dom';
+import { fetchData, updateThisBlogPost } from '../utils';
 
-function BlogPosts({newDataAvailable, setNewDataAvailable}) {
+function BlogPosts() {
     let [blogPosts, setBlogPosts] = useState([]);
 
-    useEffect(() => {
-        fetchAllBlogPosts(setBlogPosts);
-    }, [])
+    let handleBlogPosts = data => setBlogPosts(data.posts)
 
     useEffect(() => {
-        fetchAllBlogPosts(setBlogPosts)
-        // once refetched resetting flag state value to false so that when a new data becomes available this hook gets to run
-        newDataAvailable && setNewDataAvailable(false)
-    }, [newDataAvailable])
+        fetchData("http://localhost:3000/blog/all-posts", handleBlogPosts)
+    }, [])
 
     return (
         <div className='bp-container'>
@@ -38,7 +35,7 @@ let RenderAllBlogPosts = ({blogPosts}) => {
 }
 
 let RenderThisBlogPost = ({blogPost}) => {
-    let {title, body, authorName, posted, published} = {...blogPost}
+    let {_id, title, body, authorName, posted, published} = {...blogPost}
 
     let [togglePublish, setTogglePublish] = useState()
 
@@ -51,7 +48,7 @@ let RenderThisBlogPost = ({blogPost}) => {
 
     return (
         <li className='blog-post'>
-            <h2 className='post-title'>{title}</h2>
+            <Link to={`/blogs/${_id}`}><h2 className='post-title'>{title}</h2></Link>
             <p className='post-body'>{body}</p>
             <p className='info-wrapper'>
                 <span className='author-name'>{authorName}</span>

@@ -5,8 +5,16 @@ let redirectToCommentForm = (req, res) => res.redirect("/comment/create")
 
 let commentFormGetRequest = (req, res) => res.send("comment form");
 
+let deleteComment = (req, res, next) => {
+    res.status(200).json({success: true, msg: "comment is deleted successfully"})
+}
+
+let updateComemnt = (req, res, next) => {
+    res.status(200).json({success: true, msg: "comment is updtaed successfully"})
+}
+
 let getCommentsForSpecificBlogPost = (req, res) => {
-    // console.log("begionjs", req.params.blogId)
+    console.log("begionjs", req.params.blogId)
     CommentSchema.find({blogPost: req.params.blogId})
     .then(result => res.status(200).json({success: true, data: result}))
     .catch(err => {
@@ -49,5 +57,7 @@ module.exports = {
     redirectToCommentForm,
     commentFormGetRequest,
     postCommentToBlog,
-    getCommentsForSpecificBlogPost
+    getCommentsForSpecificBlogPost,
+    updateComemnt,
+    deleteComment
 }

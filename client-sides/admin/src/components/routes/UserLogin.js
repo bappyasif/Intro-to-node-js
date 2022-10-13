@@ -4,7 +4,6 @@ import { beginUserAuthenticationProcess, getExpiration, isLoggedIn } from '../ut
 import { Navigate } from 'react-router';
 
 function UserLogin({auth, setAuth}) {
-    // let [auth, setAuth] = useState(false);
     let [errors, setErrors] = useState([]);
     let [userData, setUserData] = useState({});
 
@@ -22,21 +21,11 @@ function UserLogin({auth, setAuth}) {
         if (checkTokenAlreadyExistingIsValid) {
           if (isLoggedIn()) {
             setAuth(true);
-            // console.log("twixc")
-            // navigate("/blogs")
-          } else {
-            // setShowWhichForm("login")
           }
         }
       }, [])
 
-    // useEffect(() => {
-    //     if(auth) {
-    //         navigate("/blogs")
-    //     }
-    // }, [auth])
-
-    let handleFormCopntrolChange = (event, prop) => setUserData(prev => ({...prev, [prop]: event.target.value}))
+    let handleFormControlChange = (event, prop) => setUserData(prev => ({...prev, [prop]: event.target.value}))
 
     // checking on every errors response if there is no such user, 
     // so that we can allow user to consider registering
@@ -54,11 +43,11 @@ function UserLogin({auth, setAuth}) {
             <legend>Enter your registered email and password</legend>
             <fieldset>
                 <label>Email: </label>
-                <input type={"email"} autoComplete="email" onChange={(event) => handleFormCopntrolChange(event, "email")} placeholder="your email goes here" autoFocus required />
+                <input type={"email"} autoComplete="email" onChange={(event) => handleFormControlChange(event, "email")} placeholder="your email goes here" autoFocus required />
             </fieldset>
             <fieldset>
                 <label>Password: </label>
-                <input type={"password"} autoComplete={"password"} onChange={(event) => handleFormCopntrolChange(event, "password")} placeholder="your email goes here" required />
+                <input type={"password"} autoComplete={"password"} onChange={(event) => handleFormControlChange(event, "password")} placeholder="your email goes here" required />
             </fieldset>
             <button type='submit'>Login</button>
         </form>

@@ -9,12 +9,10 @@ function NewBlogPostForm({ }) {
   let [donePosting, setDonePosting] = useState(false);
 
   let handleErrorResponse = data => {
-    // upon successful data submit to server we're resetting form value to null, anf closing off form
-    // and activating new data available flag state so that new data can be fetched from server
+    // upon successful data submit to server we're resetting form value to null, 
+    //  and setting donePosting state to true for navigating bac to blogs route
     if (data.length === 0) {
       setFormData({})
-      // handleToggle()
-      // setNewDataAvailable(true)
       setDonePosting(true)
     }
     setErrorResponse(data);

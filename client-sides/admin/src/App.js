@@ -12,16 +12,12 @@ import { getExpiration, isLoggedIn } from './components/utils';
 
 function App() {
   let [auth, setAuth] = useState(false);
-  // let navigate = useNavigate()
 
   useEffect(() => {
     let checkTokenAlreadyExistingIsValid = getExpiration();
     if (checkTokenAlreadyExistingIsValid) {
       if (isLoggedIn()) {
         setAuth(true);
-        // navigate("/blogs")
-      } else {
-        // setShowWhichForm("login")
       }
     }
   }, [])
@@ -37,7 +33,7 @@ function App() {
           <Route path='/blogs' element={auth ? <BlogPosts /> : <Navigate replace to={"/login"} />} />
           <Route path='/create/blog' element={auth ? <NewBlogPostForm /> : <Navigate replace to={"/login"} />} />
           <Route path='blogs/:blogId' element={auth ? <BlogDetails /> : <Navigate replace to={"/login"} />} />
-          {/* <Route path="*" element={<ErrorPage />} /> */}
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </div>
     </BrowserRouter>
@@ -45,18 +41,3 @@ function App() {
 }
 
 export default App;
-
-/**
- * 
- * 
- <Routes>
-          <Route path='/' element={auth ? <Navigate replace to={"/blogs"} /> : <Navigate replace to={"/login"} />} />
-          <Route path='/login' element={auth ? <Navigate replace to={"/blogs"} /> : <UserLogin />} />
-          <Route path='/register' element={auth ? <Navigate replace to={"/blogs"} /> : <RegisterUser />} />
-          <Route path='/register' element={<RegisterUser />} />
-          <Route path='/blogs' element={ auth ? <BlogPosts /> : <Navigate replace to={"/login"} />} />
-          <Route path='/create/blog' element={auth ? <NewBlogPostForm /> : <Navigate replace to={"/login"} />} />
-          <Route path='blogs/:blogId' element={auth ? <BlogDetails /> : <Navigate replace to={"/login"} />} />
-          {/* <Route path="*" element={<ErrorPage />} /> /}
-          </Routes>
- */
