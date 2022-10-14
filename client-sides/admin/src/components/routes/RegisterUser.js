@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { RenderErrors } from './NewBlogPostForm';
 import { beginUserAuthenticationProcess } from '../utils';
 import { Navigate } from 'react-router-dom';
+import { RenderErrors } from '../RenderErrors';
 
 function RegisterUser() {
     let [auth, setAuth] = useState(false);

@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { sendDataToServer } from '../utils';
 import { Editor } from "@tinymce/tinymce-react"
 import { Navigate } from 'react-router';
+import { RenderErrors } from '../RenderErrors';
 
 function NewBlogPostForm({ }) {
   let [formData, setFormData] = useState({});
@@ -78,21 +79,6 @@ function NewBlogPostForm({ }) {
         <button type='submit'>Create Now</button>
       </form>
     </div>
-  )
-}
-
-export let RenderErrors = ({ errors }) => {
-  let renderErrors = () => errors?.map((error, idx) => <RenderError key={idx} error={error} />)
-  return (
-    <ul className='errors-list'>
-      {renderErrors()}
-    </ul>
-  )
-}
-
-let RenderError = ({ error }) => {
-  return (
-    <li className='list-item'>`{error.param} -- {error.msg}`</li>
   )
 }
 

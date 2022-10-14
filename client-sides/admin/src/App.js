@@ -10,6 +10,7 @@ import NewBlogPostForm from './components/routes/NewBlogPostForm';
 import { useEffect, useState } from 'react';
 import { getExpiration, isLoggedIn } from './components/utils';
 import CommentForm from './components/CommentForm';
+import CommentDelete from './components/CommentDelete';
 
 function App() {
   let [auth, setAuth] = useState(false);
@@ -35,6 +36,7 @@ function App() {
           <Route path='/create/blog' element={auth ? <NewBlogPostForm /> : <Navigate replace to={"/login"} />} />
           <Route path='blogs/:blogId' element={auth ? <BlogDetails /> : <Navigate replace to={"/login"} />} />
           <Route path='/comments/:commentId' element={auth ? <CommentForm /> : <Navigate replace to={"/login"} />} />
+          <Route path='/comments/:commentId/delete' element={auth ? <CommentDelete /> : <Navigate replace to={"/login"} />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </div>

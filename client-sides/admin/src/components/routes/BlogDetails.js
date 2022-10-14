@@ -42,16 +42,17 @@ function BlogDetails() {
 }
 
 let RenderComment = ({ commentData }) => {
+  
   return (
     <li className="comment-wrapper">
       <div>Email: {commentData.email}</div>
       <div>Name: {commentData.name}</div>
       <div>Body: {commentData.body}</div>
       <div>Posted: {commentData.posted}</div>
-      <Link className='btns' to={`/comments/${commentData._id}`}>
-        <button>Edit</button>
-        <button>Delete</button>
-      </Link>
+      <div className='btns'>
+        <Link to={`/comments/${commentData._id}`}>Edit</Link>
+        <Link to={`/comments/${commentData._id}/delete`}>Delete</Link>
+      </div>
     </li>
   )
 }

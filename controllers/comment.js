@@ -6,7 +6,15 @@ let redirectToCommentForm = (req, res) => res.redirect("/comment/create")
 let commentFormGetRequest = (req, res) => res.send("comment form");
 
 let deleteComment = (req, res, next) => {
-    res.status(200).json({success: true, msg: "comment is deleted successfully"})
+    CommentSchema.findByIdAndDelete(req.body.commentId)
+    .then(() => {
+        console.log("delete successful")
+        res.status(200).json({success: true, msg: "comment is deleted successfully"})
+    })
+    .catch(err => {
+        console.error(err)
+        return next(err);
+    })
 }
 
 let updateCommentGetRequest = (req, res, next) => {
@@ -85,7 +93,8 @@ let postCommentToBlog = [
             posted: new Date().toISOString()
         })
 
-        newComment.save(() => {
+        newComment.save((err) => {
+            if(err) return next(err)
             console.log("comment posted")
             res.send("/blog")
         })

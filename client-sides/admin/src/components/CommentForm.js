@@ -1,7 +1,8 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { Navigate, useParams } from 'react-router';
-import { RenderErrors } from './routes/NewBlogPostForm';
+import { Link } from 'react-router-dom';
+import { RenderErrors } from './RenderErrors';
 import { fetchData, sendDataToServer } from './utils';
 
 function CommentForm({ }) {
@@ -19,11 +20,11 @@ function CommentForm({ }) {
         }
     }
 
-    let handleComemnt = data => setCommentData(data.data)
+    let handleComment = data => setCommentData(data.data)
 
     useEffect(() => {
         const url = `http://localhost:3000/comment/blog/${params.commentId}`;
-        fetchData(url, handleComemnt)
+        fetchData(url, handleComment)
     }, [])
 
     useEffect(() => {
@@ -62,7 +63,7 @@ function CommentForm({ }) {
         <div>
             <h1>User Comment</h1>
             {errorResponse?.errors ? <RenderErrors errors={errorResponse.errors} /> : null}
-            {donePosting ? <Navigate to="/blogs" /> : null}
+            {donePosting ? <Navigate to="/blogs/${commentData.blogPost}" /> : null}
 
             <form action='' method='post' onSubmit={handleFormDataSubmit}>
                 <legend>Update User Comment Form</legend>
@@ -84,7 +85,7 @@ function CommentForm({ }) {
                 </fieldset>
                 <div className='btns'>
                     <button type='submit'>Update</button>
-                    <button type='button'>Cancel</button>
+                    <Link to={`/blogs/${commentData.blogPost}`}>Cancel</Link>
                 </div>
             </form>
         </div>

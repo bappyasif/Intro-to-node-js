@@ -9,7 +9,7 @@ commentRoutes.post("/create", postCommentToBlog);
 
 commentRoutes.get("/:blogId/all-comments", getCommentsForSpecificBlogPost)
 
-commentRoutes.delete("/:blogId/:commentId", deleteComment)
+commentRoutes.delete("/blog/:commentId", deleteComment)
 
 commentRoutes.get("/blog/:commentId", updateCommentGetRequest)
 commentRoutes.post("/blog/:commentId", updateCommentPostRequest)

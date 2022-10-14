@@ -4,26 +4,36 @@ export let fetchData = (endpoint, dataUpdater) => {
     fetch(endpoint)
         .then(resp => resp.json())
         .catch(err => console.error("response error", err))
-            .then(data => dataUpdater(data))
-            .catch(err => new Error("error caught", err))
+        .then(data => dataUpdater(data))
+        .catch(err => new Error("error caught", err))
 }
 
-// export let fetchAllBlogPosts = (dataUpdater) => {
-//     fetch("http://localhost:3000/blog/all-posts")
-//         .then(resp => resp.json())
-//         .catch(err => console.error("response error", err))
-//             .then(data => dataUpdater(data.posts))
-//             .catch(err => new Error("error caught", err))
-// }
+export let deleteData = (endpoint, data, handleDoneDelete) => {
+    fetch(endpoint, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    }).then((res) => {
+        console.log("data deletion is ongoing")
+        if(res.status >= 200 && res.status <= 299) {
+            handleDoneDelete()
+        } else {
+            res.json({success: false, msg: "could not be deleted"})
+        }
+    })
+    .catch(err => console.error(err))
+}
 
-export let sendDataToServer = (blogPostObj, errorUpdater, endpoint) => {
+export let sendDataToServer = (dataObj, errorUpdater, endpoint) => {
     fetch((endpoint || "http://localhost:3000/blog/create"), {
         method: "post",
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(blogPostObj)
+        body: JSON.stringify(dataObj)
     }).then((resp) => {
         if (resp.status >= 200 && resp.status <= 299) {
             console.log("data is sent to server side", resp)

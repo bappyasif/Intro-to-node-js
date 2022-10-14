@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { RenderErrors } from './NewBlogPostForm';
 import { beginUserAuthenticationProcess, getExpiration, isLoggedIn } from '../utils';
 import { Navigate } from 'react-router';
+import { RenderErrors } from '../RenderErrors';
 
 function UserLogin({auth, setAuth}) {
     let [errors, setErrors] = useState([]);
