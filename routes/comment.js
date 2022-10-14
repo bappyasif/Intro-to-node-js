@@ -1,5 +1,5 @@
 const express = require("express");
-const { postCommentToBlog, commentFormGetRequest, redirectToCommentForm, getCommentsForSpecificBlogPost, deleteComment, updateComemnt } = require("../controllers/comment");
+const { postCommentToBlog, commentFormGetRequest, redirectToCommentForm, getCommentsForSpecificBlogPost, deleteComment, updateCommentPostRequest, updateCommentGetRequest } = require("../controllers/comment");
 const commentRoutes = express();
 
 commentRoutes.get("/", redirectToCommentForm);
@@ -11,6 +11,7 @@ commentRoutes.get("/:blogId/all-comments", getCommentsForSpecificBlogPost)
 
 commentRoutes.delete("/:blogId/:commentId", deleteComment)
 
-commentRoutes.put("/:blogId/:commentId", updateComemnt)
+commentRoutes.get("/blog/:commentId", updateCommentGetRequest)
+commentRoutes.post("/blog/:commentId", updateCommentPostRequest)
 
 module.exports = commentRoutes;

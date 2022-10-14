@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
+import { Link } from 'react-router-dom';
 import { fetchData } from '../utils'
 
 function BlogDetails() {
@@ -41,17 +42,16 @@ function BlogDetails() {
 }
 
 let RenderComment = ({ commentData }) => {
-
   return (
     <li className="comment-wrapper">
       <div>Email: {commentData.email}</div>
       <div>Name: {commentData.name}</div>
       <div>Body: {commentData.body}</div>
       <div>Posted: {commentData.posted}</div>
-      <div className='btns'>
+      <Link className='btns' to={`/comments/${commentData._id}`}>
         <button>Edit</button>
         <button>Delete</button>
-      </div>
+      </Link>
     </li>
   )
 }
