@@ -36,18 +36,18 @@ function UserLogin({auth, setAuth}) {
     <div className='ul-container'>
         <h2>Please Login First To Access Admin Dashboard Panel</h2>
         {errors.errors?.length ? <RenderErrors errors={errors.errors} /> : null}
-        {errors?.success === false ? errors?.msg: null}
+        {errors?.success === false ? <div className='error'>{errors?.msg}</div>: null}
         {auth ? <Navigate to={"/blogs"} /> : null}
 
         <form method='post' action='' onSubmit={handleSubmit}>
             <legend>Enter your registered email and password</legend>
             <fieldset>
-                <label>Email: </label>
-                <input type={"email"} autoComplete="email" onChange={(event) => handleFormControlChange(event, "email")} placeholder="your email goes here" autoFocus required />
+                <label htmlFor='email'>Email: </label>
+                <input id='email' type={"email"} autoComplete="email" onChange={(event) => handleFormControlChange(event, "email")} placeholder="your email goes here" autoFocus required />
             </fieldset>
             <fieldset>
-                <label>Password: </label>
-                <input type={"password"} autoComplete={"password"} onChange={(event) => handleFormControlChange(event, "password")} placeholder="your email goes here" required />
+                <label htmlFor='password'>Password: </label>
+                <input id='password' type={"password"} autoComplete={"password"} onChange={(event) => handleFormControlChange(event, "password")} placeholder="your email goes here" required />
             </fieldset>
             <button type='submit'>Login</button>
         </form>

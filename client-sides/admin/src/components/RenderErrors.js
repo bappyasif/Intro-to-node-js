@@ -1,9 +1,9 @@
 export let RenderErrors = ({ errors }) => {
     let renderErrors = () => errors?.map((error, idx) => <RenderError key={idx} error={error} />)
     return (
-      <ul className='errors-list'>
+      <ol className='errors-list'>
         {renderErrors()}
-      </ul>
+      </ol>
     )
   }
   

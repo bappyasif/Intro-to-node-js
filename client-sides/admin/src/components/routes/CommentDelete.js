@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Navigate, useParams } from 'react-router'
 import { Link } from 'react-router-dom'
-import { deleteData, fetchData } from './utils';
+import { deleteData, fetchData } from '../utils';
 
 function CommentDelete() {
     let [commentData, setCommentData] = useState([]);
@@ -31,8 +31,8 @@ function CommentDelete() {
         <form method='post' action='' onSubmit={handleSubmit}>
             <input hidden name='commentId' />
             {/* <button><Link to={`/blogs/${commentData.blogPost}`}>Delete</Link></button> */}
-            <button>Delete</button>
-            <Link to={`/blogs/${commentData.blogPost}`}>Cancel</Link>
+            <button type='submit'>Delete</button>
+            <Link className='nav-link' to={`/blogs/${commentData.blogPost}`}>Cancel</Link>
         </form>
     </div>
   )

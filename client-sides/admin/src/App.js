@@ -3,14 +3,14 @@ import BlogPosts from './components/routes/BlogPosts';
 import ShowNavs from './components/ShowNavs';
 import BlogDetails from "./components/routes/BlogDetails"
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom"
-import ErrorPage from './components/ErrorPage';
+import ErrorPage from './components/routes/ErrorPage';
 import UserLogin from './components/routes/UserLogin';
 import RegisterUser from './components/routes/RegisterUser';
 import NewBlogPostForm from './components/routes/NewBlogPostForm';
 import { useEffect, useState } from 'react';
 import { getExpiration, isLoggedIn } from './components/utils';
-import CommentForm from './components/CommentForm';
-import CommentDelete from './components/CommentDelete';
+import CommentForm from './components/routes/CommentForm';
+import CommentDelete from './components/routes/CommentDelete';
 
 function App() {
   let [auth, setAuth] = useState(false);

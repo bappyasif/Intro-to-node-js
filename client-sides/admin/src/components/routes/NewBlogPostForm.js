@@ -24,6 +24,7 @@ function NewBlogPostForm({ }) {
     sendDataToServer(formData, handleErrorResponse);
   }
 
+  // form controls are using same change handler for avoiding almost duplication or repetitions
   let handleChange = (evt, element) => {
     if (element === "published") {
       setFormData(prev => ({ ...prev, [element]: !prev[element] }));

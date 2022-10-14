@@ -24,8 +24,7 @@ function BlogDetails() {
   let renderComments = () => comments?.map(comment => <RenderComment key={comment._id} commentData={comment} />)
 
   return (
-    <div>
-      {comments?.length} BlogDetails {param.blogId}
+    <div className='bd-wrapper'>
       <div className='blog-post'>
         <h2 className='post-title'>{blogData.title}</h2>
         <p className='post-body'>{blogData.body}</p>
@@ -36,22 +35,24 @@ function BlogDetails() {
         </p>
       </div>
       <h1>All Comments</h1>
-      {comments.length ? renderComments() : null}
+      <ol>
+        {comments.length ? renderComments() : null}
+      </ol>
     </div>
   )
 }
 
 let RenderComment = ({ commentData }) => {
-  
+
   return (
     <li className="comment-wrapper">
-      <div>Email: {commentData.email}</div>
-      <div>Name: {commentData.name}</div>
-      <div>Body: {commentData.body}</div>
-      <div>Posted: {commentData.posted}</div>
+      <div className='item-div'><span>Email: </span> <span>{commentData.email}</span></div>
+      <div className='item-div'>Name: {commentData.name}</div>
+      <div className='item-div'>Body: {commentData.body}</div>
+      <div className='item-div'>Posted: {commentData.posted}</div>
       <div className='btns'>
-        <Link to={`/comments/${commentData._id}`}>Edit</Link>
-        <Link to={`/comments/${commentData._id}/delete`}>Delete</Link>
+        <Link className='nav-link' to={`/comments/${commentData._id}`}>Edit</Link>
+        <Link className='nav-link' to={`/comments/${commentData._id}/delete`}>Delete</Link>
       </div>
     </li>
   )
