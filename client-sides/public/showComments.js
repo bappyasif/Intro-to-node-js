@@ -34,9 +34,9 @@ let commenceRenderingPostComments = data => {
 
 let commentMarkup = (commentData) => {
     let domStr = `<div class="comment-wrapper">
-        <div>Name: ${commentData.name}</div>
-        <div>Body: ${commentData.body}</div>
-        <div>Posted: ${commentData.posted}</div>
+        <div class="name">Name: ${commentData.name}</div>
+        <div class="body">Body: ${commentData.body}</div>
+        <div class="posted">Posted: ${moment(commentData.posted).format("YYYY-MM-DD")} <span>${moment(commentData.posted).from(moment())}</span></div>
     </div>`
 
     return document.createRange().createContextualFragment(domStr).firstChild

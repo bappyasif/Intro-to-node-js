@@ -23,6 +23,14 @@ body {
   background-color: var(--bg-clr);
 }
 
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 .App {
   text-align: center;
   padding: 20px 4px;
@@ -51,6 +59,13 @@ button[type="submit"] {
   background-color: var(--link-clr);
   cursor: pointer;
   color: var(--bg-clr);
+}
+
+button[type="submit"]:hover,
+.blog-post .info-wrapper button:hover,
+a.nav-link:hover {
+  background-color: var(--bg-clr);
+  color: var(--text-clr);
 }
 
 .ul-container,
@@ -101,15 +116,31 @@ ul {
   background-color: var(--special-clr);
 }
 
-.blog-post .info-wrapper {
+.blog-post .info-wrapper,
+.blog-post .info-wrapper .posted {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.blog-post .info-wrapper span {
-  width: 33%;
+.blog-post .info-wrapper .author-name,
+.blog-post .info-wrapper .posted {
+  width: 38%;
 }
+
+.blog-post .info-wrapper .posted {
+  justify-content: flex-start;
+}
+
+.bd-wrapper .blog-post .info-wrapper .posted {
+  justify-content: space-between;
+}
+
+/* .blog-post .info-wrapper .author-name::before {
+  content: "\f7f3";
+  font-family: FontAwesome;
+  margin: 0 11px 0 0;
+} */
 
 .blog-post .info-wrapper button {
   padding: 2px 11px;
@@ -135,9 +166,16 @@ ul {
 .form-wrapper,
 .ul-container,
 .regu-container {
-  background-color: var(--link-clr);
+  background-color: var(--text-clr);
   padding: 53px;
   border-radius: 8px;
+}
+.bp-container h1,
+.bd-wrapper h1,
+legend,
+.regu-container h2 {
+  margin: 11px 0;
+  color: var(--btn-clr);
 }
 
 h2.post-title {
@@ -200,22 +238,22 @@ a.nav-link {
 .form-wrapper,
 .ul-container,
 .regu-container {
-  background-color: var(--special-clr);
+  background-color: var(--text-clr);
 }
 
 .bd-wrapper .blog-post {
   text-align: justify;
-    outline: dotted .4px var(--link-clr);
-    padding: 0px 13px 8px;
-    border-radius: 6px;
-    background-color: var(--bg-clr);
+  outline: dotted .4px var(--link-clr);
+  padding: 0px 13px 8px;
+  border-radius: 6px;
+  background-color: var(--bg-clr);
 }
 
-.comment-wrapper  {
+.comment-wrapper {
   text-align: justify;
   padding: 11px;
-  border: dotted .8px var(--text-clr);
-  margin: 4px 8px 0 0;
+  outline: dotted 1.1px var(--special-clr);
+  margin: 15px 9px 0 0;
   border-radius: 8px;
   width: 737px;
 }
@@ -223,6 +261,7 @@ a.nav-link {
 .comment-wrapper .item-div {
   font-size: x-large;
   line-height: 1.7em;
+  color: var(--bg-clr);
 }
 
 .comment-wrapper .btns {
@@ -243,4 +282,9 @@ a.nav-link:first-child {
   content: "Errors List";
   color: maroon;
   font-size: x-large;
+}
+
+.info-wrapper .fres {
+  font-size: x-large;
+  margin: 0 11px 0 0;
 }

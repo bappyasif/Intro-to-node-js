@@ -1,5 +1,8 @@
+import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {faCalendarCheck, faClipboardUser} from "@fortawesome/free-solid-svg-icons"
 import { fetchData, updateThisBlogPost } from '../utils';
 
 function BlogPosts() {
@@ -51,8 +54,8 @@ let RenderThisBlogPost = ({blogPost}) => {
             <Link to={`/blogs/${_id}`}><h2 className='post-title'>{title}</h2></Link>
             <p className='post-body'>{body}</p>
             <p className='info-wrapper'>
-                <span className='author-name'>{authorName}</span>
-                <span className='posted'>{posted}</span>
+                <span className='author-name'><FontAwesomeIcon icon={faClipboardUser} className="fres" /><span>{authorName}</span></span>
+                <span className='posted'><FontAwesomeIcon icon={faCalendarCheck} className="fres" /><span>{moment(posted).format("YYYY/MM/DD -- hA")}</span></span>
                 <button onClick={handleClick}>{togglePublish ? "Unpublish" : "Publish"}</button>
             </p>
         </li>

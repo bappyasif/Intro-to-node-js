@@ -47,7 +47,7 @@ function UserLogin({auth, setAuth}) {
             </fieldset>
             <fieldset>
                 <label htmlFor='password'>Password: </label>
-                <input id='password' type={"password"} autoComplete={"password"} onChange={(event) => handleFormControlChange(event, "password")} placeholder="your email goes here" required />
+                <input id='password' type={"password"} autoComplete={"password"} onChange={(event) => handleFormControlChange(event, "password")} placeholder="your password goes here" required />
             </fieldset>
             <button type='submit'>Login</button>
         </form>

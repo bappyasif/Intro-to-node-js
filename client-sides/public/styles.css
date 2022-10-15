@@ -6,6 +6,10 @@
     --special-clr: #9DB17C;
 }
 
+ul {
+    list-style: none;
+}
+
 body {
     background-color: var(--link-clr);
 }
@@ -25,7 +29,9 @@ nav a {
     font-weight: bold;
 }
 
-.blogs {
+.blogs,
+.comments,
+.all-comments {
     width: 760px;
     margin: auto;
 }
@@ -40,13 +46,23 @@ nav a {
 }
 
 .next-btn,
-.prev-btn {
+.prev-btn,
+button[type="submit"] {
     border: none;
     padding: 6px 31px;
     font-size: xx-large;
     border-radius: 6px;
     margin: 11px 0;
     background-color: var(--bg-clr);
+    cursor: pointer;
+}
+
+nav a:hover,
+.next-btn:hover,
+.prev-btn:hover,
+button[type="submit"]:hover {
+    background-color: var(--bg-clr);
+    color: var(--text-clr);
 }
 
 .info-wrapper {
@@ -111,3 +127,46 @@ nav {
 .comments .show-comments {
     display: block;
 } */
+
+fieldset {
+    margin: 6px 0;
+    border-radius: 6px;
+    text-align: justify;
+    display: flex;
+    flex-direction: column;
+    font-size: xx-large;
+}
+
+.all-comments .comment-wrapper,
+fieldset input,
+fieldset textarea,
+legend {
+    font-size: xx-large;
+}
+
+fieldset input,
+fieldset textarea {
+    border: none;
+    outline: dotted var(--special-clr) .8px;
+    background-color: transparent;
+    border-radius: 4px;
+}
+
+.all-comments .comment-wrapper {
+    text-align: justify;
+    padding: 11px;
+    border: dotted .8px var(--text-clr);
+    margin: 4px 8px 0 0;
+    border-radius: 8px;
+    width: 737px;
+}
+
+.all-comments .comment-wrapper .posted {
+    display: flex;
+    justify-content: space-between;
+}
+
+.errors li {
+    color: var(--bg-clr);
+    font-size: x-large;
+}

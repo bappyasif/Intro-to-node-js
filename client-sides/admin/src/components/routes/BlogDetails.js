@@ -1,6 +1,9 @@
+import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { Link } from 'react-router-dom';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {faCalendarCheck, faClipboardUser, faStopwatch} from "@fortawesome/free-solid-svg-icons"
 import { fetchData } from '../utils'
 
 function BlogDetails() {
@@ -29,8 +32,14 @@ function BlogDetails() {
         <h2 className='post-title'>{blogData.title}</h2>
         <p className='post-body'>{blogData.body}</p>
         <p className='info-wrapper'>
-          <span className='author-name'>{blogData.authorName}</span>
-          <span className='posted'>{blogData.posted}</span>
+          <span className='author-name'>
+            <span><FontAwesomeIcon icon={faClipboardUser} className="fres" /></span>
+            <span>{blogData.authorName}</span>
+          </span>
+          <span className='posted'>
+            <span className='format'><FontAwesomeIcon icon={faCalendarCheck} className="fres" /><span>{moment(blogData.posted).format("YYYY/MM/DD")}</span></span>
+            <span className='relative'><FontAwesomeIcon icon={faStopwatch} className="fres" /><span>{moment(blogData.posted).from(moment())}</span></span>
+          </span>
           {/* <button onClick={handleClick}>{togglePublish ? "Unpublish" : "Publish"}</button> */}
         </p>
       </div>
@@ -49,7 +58,7 @@ let RenderComment = ({ commentData }) => {
       <div className='item-div'><span>Email: </span> <span>{commentData.email}</span></div>
       <div className='item-div'>Name: {commentData.name}</div>
       <div className='item-div'>Body: {commentData.body}</div>
-      <div className='item-div'>Posted: {commentData.posted}</div>
+      <div className='item-div'>Posted: {moment(commentData.posted).format("YYYY / MM / DD")}</div>
       <div className='btns'>
         <Link className='nav-link' to={`/comments/${commentData._id}`}>Edit</Link>
         <Link className='nav-link' to={`/comments/${commentData._id}/delete`}>Delete</Link>
