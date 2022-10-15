@@ -28,7 +28,11 @@ let handleUserCommentSubmit = () => {
 
     console.log(data, "data")
 
-    postDataToServer(data)
+    if(email && name && body) {
+        postDataToServer(data)
+    } else {
+        alert("provide all required fields")
+    }
 }
 
 let renderErrorMarkup = (errors) => {
@@ -87,6 +91,7 @@ let postDataToServer = (data) => {
         if (resp.status >= 200 && resp.status <= 299) {
             console.log("data is sent to server side", resp)
             removeValues();
+            fetchCommentsForPost(data.blogPost)
         } else {
             let data = resp.json();
             data

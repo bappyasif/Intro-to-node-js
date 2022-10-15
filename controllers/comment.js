@@ -73,12 +73,12 @@ let getCommentsForSpecificBlogPost = (req, res) => {
 let postCommentToBlog = [
     body("email", "value must be of email type")
     .trim().isEmail().escape(),
-    body("name", "filed can not be left empty")
-    .trim().isLength({min: 1}).escape(),
-    body("body", "filed can not be left empty")
-    .trim().isLength({min: 1}).escape(),
-    body("blogPost", "filed can not be left empty")
-    .trim().isLength({min: 1}).escape(),
+    body("name", "name field must be 2 or more characters long")
+    .trim().isLength({min: 2}).escape(),
+    body("body", "body field must be 4 or more characters long")
+    .trim().isLength({min: 4}).escape(),
+    body("blogPost", "blogId can not be left empty")
+    .trim().isAlphanumeric().escape(),
     (req, res, next) => {
         let errors = validationResult(req);
         if(!errors.isEmpty()) {
