@@ -2,6 +2,7 @@ const indexRoute = require("../routes");
 
 const request = require("supertest");
 const express = require("express");
+const initializeMongoDbServer = require("./mongoDbConfigTesting");
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
@@ -26,3 +27,7 @@ test("test route is functioning", done => {
                 .expect({ array: ["hey hoe"] }, done)
         });
 });
+
+// test("mongodb connection is on", done => {
+//     request(initializeMongoDbServer)
+// })

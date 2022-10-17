@@ -1,5 +1,6 @@
 const express = require("express");
 const routes = require("./routes");
+require("./config/mongodb");
 let app = express();
 
 app.use(express.urlencoded({extended: true}));
