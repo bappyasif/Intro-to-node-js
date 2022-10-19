@@ -42,7 +42,7 @@
   "scripts": {
     "tests": "node tests/index.js",
     "start": "node app.js",
-    "devstart": "nodemon app.js",
+    "devServer": "nodemon app.js",
     "lint": "eslint *.js"
   },
   "author": "a b",
