@@ -1,9 +1,17 @@
+const User = require("../models/user");
+
 const getAllUsers = (req, res, next) => {
-    res.send("all users")
+    User.find({})
+        .then(results => {
+            res.status(200).json({success: true, data: results})
+        }).catch(err => next(err))
 }
 
 const getAnUser = (req, res, next) => {
-    res.send("get user")
+    User.findById({_id: req.params.userId})
+        .then(result => {
+            res.status(200).json({success: true, data: result})
+        }).catch(err => next(err))
 }
 
 const registerUser = (req, res, next) => {
@@ -19,7 +27,11 @@ const updateUser = (req, res, next) => {
 }
 
 const deleteUser = (req, res, next) => {
-    res.send("delete user")
+    User.findByIdAndDelete({_id: req.params.userId})
+        .then(err => {
+            if(err) return next(err);
+            res.status(200).json({success: true, msg: "user has been deleted"})
+        }).catch(err => next(err))
 }
 
 module.exports = {
