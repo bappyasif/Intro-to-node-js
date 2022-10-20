@@ -1,12 +1,9 @@
 const express = require("express");
-const { getAllUsers, getAnUser, registerUser, loginUser, updateUser, deleteUser } = require("../controllers/user");
+const { getAllUsers, getAnUser, updateUser, deleteUser } = require("../controllers/user");
 const userRoutes = express();
 
 userRoutes.get("/", getAllUsers)
 userRoutes.get("/:userId", getAnUser)
-
-userRoutes.post("/register", registerUser)
-userRoutes.post("/login", loginUser)
 
 userRoutes.put("/:userId", updateUser)
 userRoutes.delete("/:userId", deleteUser)
