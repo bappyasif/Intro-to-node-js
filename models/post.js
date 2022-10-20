@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const Post = new Schema({
     body: {type: Schema.Types.String, required: true},
     created: {type: Schema.Types.Date, required: true},
-    userId: {type: Schema.Types.ObjectId},
+    userId: {type: Schema.Types.ObjectId, ref: "user"},
     likesCount: Schema.Types.Number,
     loveCount: Schema.Types.Number,
     dislikesCount: Schema.Types.Number,
