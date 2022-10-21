@@ -1,3 +1,17 @@
 .App {
   text-align: center;
 }
+
+.wrapper-div.nav-wrapper, 
+.wrapper-div.fl-wrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+.wrapper-div.nav-wrapper {
+  background-color: darkgray;
+}
+
+.wrapper-div.fl-wrapper {
+  align-items: center;
+}
