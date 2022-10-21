@@ -1,15 +1,15 @@
 import React from 'react'
-import { AnchorElement, H1Element, NavElement, WrapperDiv } from './GeneralElements'
+import { H1Element, LinkElement, NavElement, WrapperDiv } from './GeneralElements'
 
 function MainNavigation() {
   return (
     <WrapperDiv className="nav-wrapper">
-        <H1Element value={"Main Navigation"} />
-        <NavElement>
-            <AnchorElement className={"nav-item"} value={"Login"} />
-            <AnchorElement className={"nav-item"} value={"Register"} />
-            <AnchorElement className={"nav-item"} value={"Timeline"} />
-        </NavElement>
+      <H1Element value={"Main Navigation"} />
+      <NavElement>
+        <LinkElement className={"nav-item"} value={"Login"} path={"login"} />
+        <LinkElement className={"nav-item"} value={"Register"} path={"register"} />
+        <LinkElement className={"nav-item"} value={"Timeline"} path={"timeline"} />
+      </NavElement>
     </WrapperDiv>
   )
 }

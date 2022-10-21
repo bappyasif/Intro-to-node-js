@@ -1,4 +1,5 @@
 import React, { createContext } from 'react';
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 import './App.css';
 import MainNavigation from './components/MainNavigation';
 import LoginForm from './components/routes/LoginForm';
@@ -12,10 +13,14 @@ export const AppContexts = createContext()
 function App() {
   return (
     <AppContexts.Provider value={contexts}>
-      <div className="App">
-        <MainNavigation />
-        <LoginForm />
-      </div>
+      <BrowserRouter>
+        <div className="App">
+          <MainNavigation />
+          <Routes>
+            <Route path='/login' element={<LoginForm />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
     </AppContexts.Provider>
   );
 }

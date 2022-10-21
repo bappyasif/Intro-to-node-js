@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom"
 
 let WrapperDiv = (props) => {
     return <div className={`wrapper-div ${props.className}`}>{props.children}</div>
@@ -44,6 +45,10 @@ let LiElement = (props) => {
     return <li>{props.msg}</li>
 }
 
+let LinkElement = ({className, value, path}) => {
+    return <Link className={className} to={path}>{value}</Link>
+}
+
 export {
     WrapperDiv,
     DivElement,
@@ -55,5 +60,6 @@ export {
     AnchorElement,
     UlElement,
     OlElement,
-    LiElement
+    LiElement,
+    LinkElement
 }
