@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { LoginTwoTone, AppRegistrationTwoTone, TimelineTwoTone } from "@mui/icons-material";
-import { H1Element, H4Element, WrapperDiv } from './GeneralElements'
+import { H1Element, H4Element, NavElement, WrapperDiv } from './GeneralElements'
 import { MuiButtonElement, MuiInputElement, TabElement, TabsElement } from './MuiElements';
 import { FormElement } from './FormElements';
 import { sendDataToServer } from './utils';
@@ -15,11 +15,14 @@ function MainNavigation() {
   return (
     <WrapperDiv className="nav-wrapper">
       <H1Element value={"Main Navigation"} />
-      <TabsElement className="main-nav" handleChange={handleChange} value={-1}>
+      {/* <TabsElement className="main-nav" handleChange={handleChange} value={-1}>
         <TabElement className={"nav-item"} labelText={"Login"} path={"login"} icon={<LoginTwoTone />} />
         <TabElement className={"nav-item"} labelText={"Register"} path={"register"} icon={<AppRegistrationTwoTone />} />
         <TabElement className={"nav-item"} labelText={"Timeline"} path={"timeline"} icon={<TimelineTwoTone />} />
-      </TabsElement>
+      </TabsElement> */}
+
+      <NavigationLinks />
+
       {/* <NavElement>
         <LinkElement className={"nav-item"} value={"Login"} path={"login"} />
         <LinkElement className={"nav-item"} value={"Register"} path={"register"} />
@@ -27,6 +30,16 @@ function MainNavigation() {
       </NavElement> */}
       <FloatingLogin />
     </WrapperDiv>
+  )
+}
+
+export let NavigationLinks = () => {
+  return (
+    <NavElement className="main-nav">
+        <TabElement className={"nav-item"} labelText={"Login"} path={"login"} icon={<LoginTwoTone />} />
+        <TabElement className={"nav-item"} labelText={"Register"} path={"register"} icon={<AppRegistrationTwoTone />} />
+        <TabElement className={"nav-item"} labelText={"Timeline"} path={"timeline"} icon={<TimelineTwoTone />} />
+      </NavElement>
   )
 }
 

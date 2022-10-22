@@ -32,7 +32,8 @@ const TabElementWithoutLink = ({ icon, labelText }) => {
 const MuiInputElement = ({ id, type, handleChange, text, required, color, error }) => {
     console.log(error)
     return (
-        <Input 
+        <Input
+            sx={{border: 2, margin: 1.1, width: "263px", color: color, borderColor: "secondary.main"}} 
             id={id}
             name={id}
             type={type}
