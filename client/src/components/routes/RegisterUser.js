@@ -17,7 +17,7 @@ function RegisterUser() {
 
     let handleSubmit = evt => {
         evt.preventDefault();
-        sendDataToServer(enpoint.baseUrl+"register", formData, handleError)
+        sendDataToServer(enpoint.baseUrl+"/register", formData, handleError)
     }
     
     let renderFieldsets = () => createFormWithThese.map(data => <RenderFieldset key={data.id} data={data} handleChange={handleChange} />)

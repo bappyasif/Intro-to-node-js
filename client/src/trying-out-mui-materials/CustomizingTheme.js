@@ -1,5 +1,5 @@
 import { createTheme, CssBaseline, Paper, ThemeProvider, Typography } from '@mui/material'
-import { deepPurple, yellow } from "@mui/material/colors"
+import { yellow } from "@mui/material/colors"
 import React from 'react'
 
 function CustomizingTheme() {
@@ -44,7 +44,7 @@ function CustomizingTheme() {
             {/* using css baseline will make entire app take effect of "mode" */}
             {/* padding will be gone, gets dark mode, and defualts regular typography sizes for html elements */}
             {/* this should be used just once in app, it will work as a css baseline for entire app and start adding styles on top of it */}
-            {/* <CssBaseline /> */}
+            <CssBaseline />
             <div>
                 <Typography variant={"h2"}>Themeing Example</Typography>
                 <Typography color={"primary.light"}>Color Changes</Typography>

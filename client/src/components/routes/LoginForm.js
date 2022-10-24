@@ -16,7 +16,7 @@ function LoginForm() {
 
     let handleSubmit = evt => {
         evt.preventDefault();
-        sendDataToServer(enpoint.baseUrl+"login", formData, handleError)
+        sendDataToServer(enpoint.baseUrl+"/login", formData, handleError)
     }
     // console.log(formData, "formData!!");
     console.log(errors, "errors!!")
