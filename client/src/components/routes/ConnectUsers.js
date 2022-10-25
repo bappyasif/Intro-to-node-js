@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContexts } from '../../App'
 import { WrapperDiv } from '../GeneralElements'
-import { BoxElement, ButtonElement, CardContentElement, CardElement, CardHeaderElement, MasonryElement, StackElement, TypographyElement } from '../MuiElements'
+import { BoxElement, ButtonElement, CardContentElement, CardElement, CardHeaderElement, MasonryElement, SkeletonBasicElement, StackElement, TypographyElement } from '../MuiElements'
 import { readDataFromServer } from '../utils'
 
 function ConnectUsers() {
   let [data, setData] = useState({})
+  let [timers, setTimers] = useState(false)
 
   let appCtx = useContext(AppContexts)
 
@@ -19,14 +20,33 @@ function ConnectUsers() {
 
   console.log(data)
 
+  // making timers flag to be true after 1.7sec
+  let timer = setTimeout(() => setTimers(true), 1700)
+
+  // when flag is true then we are clearing its timer for performance and best practice, also turning timers flag to false
+  useEffect(() => {
+    timers && clearTimeout(timer)
+    timers && setTimers(false);
+  }, [timers, timer])
+
   let renderUsers = () => data?.data?.data.map(user => <RenderUser key={user._id} userData={user} />)
 
   return (
     <WrapperDiv className="cards-wrapper">
       <TypographyElement text={"Connect With Other User"} type="h1" />
-      <MasonryElement className="masonry-elem">
-        {renderUsers()}
-      </MasonryElement>
+      
+      {/* making skeleton show up when data is still not available */}
+      {!timers && Array.from([1, 2, 3,4]).map(idx => <CardSkeleton key={idx} />)}
+
+      {
+        timers
+          ?
+          <MasonryElement className="masonry-elem">
+            {renderUsers()}
+          </MasonryElement>
+          :
+          null
+      }
     </WrapperDiv>
   )
 }
@@ -57,6 +77,23 @@ let RenderUser = ({ userData }) => {
             </BoxElement>
           </BoxElement>
         </StackElement>
+      </CardContentElement>
+    </CardElement>
+  )
+}
+
+let CardSkeleton = () => {
+  return (
+    <CardElement
+      className="card-wrapper"
+      styles={{ backgroundColor: "text.secondary" }}
+    >
+      <SkeletonBasicElement width={"40px"} height="40px" />
+      <CardContentElement>
+        <SkeletonBasicElement variant='rectangular' />
+        <SkeletonBasicElement variant='rectangular' />
+        <SkeletonBasicElement variant='rectangular' height="40px" />
+        <SkeletonBasicElement variant='rectangular' height="40px" />
       </CardContentElement>
     </CardElement>
   )

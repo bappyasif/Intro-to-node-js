@@ -1,4 +1,4 @@
-import { Tab, Tabs, Input, Button, Box, Typography, Card, CardHeader, Avatar, CardContent, Stack } from "@mui/material";
+import { Tab, Tabs, Input, Button, Box, Typography, Card, CardHeader, Avatar, CardContent, Stack, Skeleton } from "@mui/material";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import {Masonry} from "@mui/lab"
@@ -106,11 +106,14 @@ const StackElement = (props) => <Stack className={props.className}>{props.childr
 
 const MasonryElement = props => <Masonry columns={3} spacing={2} className={props.className}>{props.children}</Masonry>
 
+const SkeletonBasicElement = ({height, width, animation, variant}) => <Skeleton variant={variant || "circular"} animation={animation || "wave"} height={height || 10} width={width || "80%"} />
+
 // const MuiIconElement = ({icon}) => {
 
 // }
 
 export {
+    SkeletonBasicElement,
     MasonryElement,
     StackElement,
     BoxElement,
