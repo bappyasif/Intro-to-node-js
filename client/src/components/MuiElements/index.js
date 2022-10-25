@@ -1,7 +1,8 @@
-import { Tab, Tabs, Input, Button, Box, Typography, Card, CardHeader, Avatar, CardContent, Stack, Skeleton } from "@mui/material";
+import { Tab, Tabs, Input, Button, Box, Typography, Card, CardHeader, Avatar, CardContent, Stack, Skeleton, IconButton } from "@mui/material";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import {Masonry} from "@mui/lab"
+import { DeleteOutlineRounded, ThumbUpAltRounded, ThumbDownAltRounded, HeatPumpRounded, ShareRounded } from "@mui/icons-material";
 
 const TabsElement = (props) => {
     return (
@@ -63,8 +64,8 @@ const MuiBoxElement = (props) => {
     )
 }
 
-const TypographyElement = ({ text, type }) => {
-    return <Typography variant={type}>{text}</Typography>
+const TypographyElement = ({ text, type, styles }) => {
+    return <Typography variant={type} sx={styles}>{text}</Typography>
 }
 
 const CardElement = (props) => {
@@ -108,11 +109,29 @@ const MasonryElement = props => <Masonry columns={3} spacing={2} className={prop
 
 const SkeletonBasicElement = ({height, width, animation, variant}) => <Skeleton variant={variant || "circular"} animation={animation || "wave"} height={height || 10} width={width || "80%"} />
 
+const IconButtonElement = (props) => <IconButton>{props.children}</IconButton>
+
+const DeleteIconElement = ({fontSize}) => <DeleteOutlineRounded fontSize={fontSize || "medium"} />
+
+const LikeIconElement = ({fontSize}) => <ThumbUpAltRounded fontSize={fontSize || "medium"} />
+
+const DislikeIconElement = ({fontSize}) => <ThumbDownAltRounded fontSize={fontSize || "medium"} />
+
+const LoveIconElement = ({fontSize}) => <HeatPumpRounded fontSize={fontSize || "medium"} />
+
+const ShareIconElement = ({fontSize}) => <ShareRounded fontSize={fontSize || "medium"} />
+
 // const MuiIconElement = ({icon}) => {
 
 // }
 
 export {
+    IconButtonElement,
+    DeleteIconElement,
+    LikeIconElement,
+    DislikeIconElement,
+    LoveIconElement,
+    ShareIconElement,
     SkeletonBasicElement,
     MasonryElement,
     StackElement,

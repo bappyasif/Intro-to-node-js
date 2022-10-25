@@ -34,12 +34,6 @@
   grid-template-columns: repeat(3, 1fr);
   row-gap: 29px;
   justify-items: center;
-  /* grid-template-rows: 30px 30px; */
-  /* grid-auto-flow: row; */
-}
-
-.cards-wrapper .masonry-elem {
-  /* padding-left: 89px; */
 }
 
 .cards-wrapper .card-wrapper {
@@ -103,4 +97,26 @@
   display: flex;
   justify-content: center;
   margin: 20px 0 0 auto;
+}
+
+.all-posts .post-card {
+  width: 920px;
+  margin: 4px auto;
+  border-radius: 11px;
+}
+
+.all-posts .post-card .post-actions-icons,
+.all-posts .post-card .icon-button {
+  display: flex;
+  justify-content: center;
+}
+
+.all-posts .post-card .post-actions-icons {
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.all-posts .post-card .icon-button {
+  flex-direction: column;
+  align-items: center;
 }

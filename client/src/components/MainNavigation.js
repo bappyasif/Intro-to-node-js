@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { LoginTwoTone, AppRegistrationTwoTone, TimelineTwoTone, VerifiedUserSharp } from "@mui/icons-material";
+import { LoginTwoTone, AppRegistrationTwoTone, TimelineTwoTone, VerifiedUserSharp, DynamicFeedSharp } from "@mui/icons-material";
 import { H1Element, H4Element, NavElement, WrapperDiv } from './GeneralElements'
 import { MuiButtonElement, MuiInputElement, TabElement } from './MuiElements';
 import { FormElement } from './FormElements';
@@ -21,8 +21,8 @@ export let NavigationLinks = () => {
     <NavElement className="main-nav">
       <TabElement className={"nav-item"} labelText={"Login"} path={"login"} icon={<LoginTwoTone />} />
       <TabElement className={"nav-item"} labelText={"Register"} path={"register"} icon={<AppRegistrationTwoTone />} />
-      <TabElement className={"nav-item"} labelText={"Connect Users"} path={"connect-users"} icon={<VerifiedUserSharp />} />
-      <TabElement className={"nav-item"} labelText={"Timeline"} path={"timeline"} icon={<TimelineTwoTone />} />
+      <TabElement className={"nav-item"} labelText={"Connect"} path={"connect"} icon={<VerifiedUserSharp />} />
+      <TabElement className={"nav-item"} labelText={"Feeds"} path={"news-feeds"} icon={<DynamicFeedSharp />} />
     </NavElement>
   )
 }
