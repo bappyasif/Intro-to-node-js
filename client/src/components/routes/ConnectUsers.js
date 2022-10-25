@@ -24,12 +24,9 @@ function ConnectUsers() {
   return (
     <WrapperDiv className="cards-wrapper">
       <TypographyElement text={"Connect With Other User"} type="h1" />
-      <StackElement className="all-cards">
+      <MasonryElement >
         {renderUsers()}
-      </StackElement>
-      {/* <MasonryElement className="all-cards">
-        {renderUsers()}
-      </MasonryElement> */}
+      </MasonryElement>
     </WrapperDiv>
   )
 }
@@ -37,11 +34,11 @@ function ConnectUsers() {
 let RenderUser = ({ userData }) => {
   let { fullName, email, friends, created, bio } = { ...userData }
   let test = "https://pbs.twimg.com/profile_images/877631054525472768/Xp5FAPD5_reasonably_small.jpg"
-  
+
   return (
-    <CardElement 
-      className="card-wrapper" 
-      styles={{ width: "510px", backgroundColor: "text.secondary" }}
+    <CardElement
+      className="card-wrapper"
+      styles={{ width: "510px", backgroundColor: "text.secondary", minHeight: "277px" }}
     >
       <CardHeaderElement avatarUrl={test} altText={fullName} title={fullName} joined={created} />
       <CardContentElement>
@@ -52,7 +49,7 @@ let RenderUser = ({ userData }) => {
             <TypographyElement text={"Friends: "} type={"h4"} />
             <TypographyElement text={friends.length} type={"h4"} />
           </BoxElement>
-          <BoxElement  className="fr">
+          <BoxElement className="fr">
             <TypographyElement text={"Friend Request"} type={"h4"} />
             <BoxElement className="all-btns">
               <ButtonElement text={"Send"} type="contained" />
