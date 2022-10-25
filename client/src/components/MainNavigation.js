@@ -9,7 +9,7 @@ import { AppContexts } from '../App';
 function MainNavigation() {
   return (
     <WrapperDiv className="nav-wrapper">
-      <H1Element value={"Main Navigation"} />
+      <H1Element value={"OdBo"} />
       <NavigationLinks />
       <FloatingLogin />
     </WrapperDiv>

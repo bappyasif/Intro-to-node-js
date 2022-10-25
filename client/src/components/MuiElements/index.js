@@ -1,4 +1,4 @@
-import { Tab, Tabs, Input, Button, Box, Typography, Card, CardHeader, Avatar, CardContent, Stack, Skeleton, IconButton } from "@mui/material";
+import { Tab, Tabs, Input, Button, Box, Typography, Card, CardHeader, Avatar, CardContent, Stack, Skeleton, IconButton, Paper, Container, TextField } from "@mui/material";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import {Masonry} from "@mui/lab"
@@ -121,11 +121,20 @@ const LoveIconElement = ({fontSize}) => <HeatPumpRounded fontSize={fontSize || "
 
 const ShareIconElement = ({fontSize}) => <ShareRounded fontSize={fontSize || "medium"} />
 
+const PaperElement = (props) => <Paper sx={{backgroundColor: props.bgColor || "darkslategray"}}>{props.children}</Paper>
+
+const ContainerElement = props => <Container maxWidth={props.width || "lg"}>{props.children}</Container>
+
+const TextFieldMultilineElement = () => <TextField multiline rows={4} defaultValue="this is a test" />
+
 // const MuiIconElement = ({icon}) => {
 
 // }
 
 export {
+    TextFieldMultilineElement,
+    ContainerElement,
+    PaperElement,
     IconButtonElement,
     DeleteIconElement,
     LikeIconElement,

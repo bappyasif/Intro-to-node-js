@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContexts } from '../../App'
+import CreatePost from '../CreatePost'
 import { WrapperDiv } from '../GeneralElements'
-import { BoxElement, CardContentElement, CardElement, CardHeaderElement, DislikeIconElement, IconButtonElement, LikeIconElement, LoveIconElement, ShareIconElement, StackElement, TypographyElement } from '../MuiElements'
+import { BoxElement, CardContentElement, CardElement, CardHeaderElement, ContainerElement, DislikeIconElement, IconButtonElement, LikeIconElement, LoveIconElement, ShareIconElement, StackElement, TypographyElement } from '../MuiElements'
 import { readDataFromServer } from '../utils'
 
 function NewsFeeds() {
@@ -29,22 +30,25 @@ let ShowBasicPosts = () => {
     let renderPosts = () => dataset?.data?.data.map(post => <RenderBasicPost key={post._id} data={post} />)
 
     return (
-        <BoxElement className="all-posts">
-            {dataset?.data?.data ? renderPosts() : null}
-        </BoxElement>
+        <ContainerElement>
+            <CreatePost />
+            <BoxElement className="all-posts">
+                {dataset?.data?.data ? renderPosts() : null}
+            </BoxElement>
+        </ContainerElement>
     )
 }
 
 let RenderBasicPost = ({ data }) => {
     let { body, created, likesCount, loveCount, dislikesCount, shareCount, mfUrl } = { ...data }
     return (
-        <CardElement 
+        <CardElement
             className="post-card"
-            styles={{backgroundColor: "lightGray"}}
+            styles={{ backgroundColor: "lightGray" }}
         >
             <CardHeaderElement avatarUrl={mfUrl} title="This is a test" joined={created} altText="this is a test" />
             <CardContentElement>
-                <TypographyElement text={body} type={"body2"} styles={{ width: "87%", margin: "auto", textAlign: "justify"}} />
+                <TypographyElement text={body} type={"body2"} styles={{ width: "87%", margin: "auto", textAlign: "justify" }} />
             </CardContentElement>
             <StackElement className="post-actions-icons">
                 {[likesCount, loveCount, dislikesCount, shareCount].map((count, idx) => (
