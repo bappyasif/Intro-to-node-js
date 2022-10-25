@@ -24,7 +24,7 @@ function ConnectUsers() {
   return (
     <WrapperDiv className="cards-wrapper">
       <TypographyElement text={"Connect With Other User"} type="h1" />
-      <MasonryElement >
+      <MasonryElement className="masonry-elem">
         {renderUsers()}
       </MasonryElement>
     </WrapperDiv>
@@ -38,7 +38,7 @@ let RenderUser = ({ userData }) => {
   return (
     <CardElement
       className="card-wrapper"
-      styles={{ width: "510px", backgroundColor: "text.secondary", minHeight: "277px" }}
+      styles={{ backgroundColor: "text.secondary" }}
     >
       <CardHeaderElement avatarUrl={test} altText={fullName} title={fullName} joined={created} />
       <CardContentElement>

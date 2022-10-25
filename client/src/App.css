@@ -24,6 +24,11 @@
   row-gap: 29px;
 } */
 
+.cards-wrapper {
+  width: 92vw;
+  margin: auto;
+}
+
 .cards-wrapper .all-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -33,12 +38,22 @@
   /* grid-auto-flow: row; */
 }
 
-.cards-wrapper .all-cards .card-wrapper {
-  width: 510px;
-  display: inline-block;
+.cards-wrapper .masonry-elem {
+  /* padding-left: 89px; */
 }
 
+.cards-wrapper .card-wrapper {
+  width: 420px;
+  border-radius: 99px;
+  padding: 35px 38px 8px 35px;
+}
 
+.MuiCardHeader-content.css-1qbkelo-MuiCardHeader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  margin-left: 29px;
+}
 
 /* .cards-wrapper .all-cards  {
   column-count: 4;
@@ -69,10 +84,14 @@
   width:  100%; 
  } */
 
+.af-wrapper {
+  margin: 20px 0;
+}
+
 .af-wrapper .fc,
 .af-wrapper .fr .all-btns {
   flex-direction: row;
-    margin: auto;
+  margin: auto;
 }
 
 .af-wrapper .fc {
@@ -83,4 +102,5 @@
   gap: 11px;
   display: flex;
   justify-content: center;
+  margin: 20px 0 0 auto;
 }

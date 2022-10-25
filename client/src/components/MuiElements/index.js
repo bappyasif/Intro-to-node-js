@@ -51,7 +51,7 @@ const MuiInputElement = ({ id, type, handleChange, text, required, color, error 
 
 const MuiButtonElement = ({ type, text }) => {
     return (
-        <Button variant="contained" color={"success"} type={type}>{text}</Button>
+        <Button variant="contained" color={"success"} type={type} sx={{borderRadius: 9}}>{text}</Button>
     )
 }
 
@@ -95,7 +95,7 @@ const CardContentElement = (props) => {
 }
 
 const ButtonElement = ({text, type, fontSize}) => {
-    return <Button sx={{fontSize: fontSize || "20px"}} variant={type}>{text}</Button>
+    return <Button sx={{fontSize: fontSize || "20px", borderRadius: 4}} variant={type}>{text}</Button>
 }
 
 const BoxElement = (props) => {
