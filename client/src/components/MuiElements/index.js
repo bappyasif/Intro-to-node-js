@@ -1,8 +1,8 @@
-import { Tab, Tabs, Input, Button, Box, Typography, Card, CardHeader, Avatar, CardContent, Stack, Skeleton, IconButton, Paper, Container, TextField } from "@mui/material";
+import { Tab, Tabs, Input, Button, Box, Typography, Card, CardHeader, Avatar, CardContent, Stack, Skeleton, IconButton, Paper, Container, TextField, FormControl, InputLabel, FormHelperText } from "@mui/material";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import {Masonry} from "@mui/lab"
-import { DeleteOutlineRounded, ThumbUpAltRounded, ThumbDownAltRounded, HeatPumpRounded, ShareRounded } from "@mui/icons-material";
+import { PeopleAltRounded, AllInclusiveRounded, PollRounded, PrivacyTipRounded, InsertEmoticonRounded, GifBoxRounded, ImageRounded, VideoCameraFrontRounded, DeleteOutlineRounded, ThumbUpAltRounded, ThumbDownAltRounded, HeatPumpRounded, ShareRounded } from "@mui/icons-material";
 
 const TabsElement = (props) => {
     return (
@@ -95,12 +95,12 @@ const CardContentElement = (props) => {
     return <CardContent>{props.children}</CardContent>
 }
 
-const ButtonElement = ({text, type, fontSize}) => {
-    return <Button sx={{fontSize: fontSize || "20px", borderRadius: 4}} variant={type}>{text}</Button>
+const ButtonElement = ({text, type, fontSize, action = null}) => {
+    return <Button type={action} sx={{fontSize: fontSize || "20px", borderRadius: 4}} variant={type}>{text}</Button>
 }
 
 const BoxElement = (props) => {
-    return <Box className={props.className}>{props.children}</Box>
+    return <Box sx={{width: "100%"}} className={props.className}>{props.children}</Box>
 }
 
 const StackElement = (props) => <Stack className={props.className}>{props.children}</Stack>
@@ -109,7 +109,7 @@ const MasonryElement = props => <Masonry columns={3} spacing={2} className={prop
 
 const SkeletonBasicElement = ({height, width, animation, variant}) => <Skeleton variant={variant || "circular"} animation={animation || "wave"} height={height || 10} width={width || "80%"} />
 
-const IconButtonElement = (props) => <IconButton>{props.children}</IconButton>
+const IconButtonElement = (props) => <IconButton onClick={e=>props.clickHandler(e, props.elm, true)}>{props.children}</IconButton>
 
 const DeleteIconElement = ({fontSize}) => <DeleteOutlineRounded fontSize={fontSize || "medium"} />
 
@@ -127,11 +127,50 @@ const ContainerElement = props => <Container maxWidth={props.width || "lg"}>{pro
 
 const TextFieldMultilineElement = () => <TextField multiline rows={4} defaultValue="this is a test" />
 
+const VideoCameraFrontElement = ({fontSize}) => <VideoCameraFrontRounded fontSize={fontSize || "medium"} />
+
+const ImageElement = ({fontSize}) => <ImageRounded fontSize={fontSize || "medium"} />
+
+const GifElement = ({fontSize}) => <GifBoxRounded fontSize={fontSize || "medium"} />
+
+const EmoticonElement = ({fontSize}) => <InsertEmoticonRounded fontSize={fontSize || "medium"} />
+
+const PrivacyElement = ({fontSize}) => <PrivacyTipRounded fontSize={fontSize || "medium"} />
+
+const PollElement = ({fontSize}) => <PollRounded fontSize={fontSize || "medium"} />
+
+const EverybodyElement = ({fontSize}) => <AllInclusiveRounded fontSize={fontSize || "medium"} />
+
+const FriendsElement = ({fontSize}) => <PeopleAltRounded fontSize={fontSize || "medium"} />
+
+const FormControlElement = (props) => <FormControl sx={{width: "100%"}}>{props.children}</FormControl>
+
+const InputLabelElement = ({hFor, text}) => <InputLabel htmlFor={hFor}>{text}</InputLabel>
+
+const UserInputElement = ({id, helperId , type, handleChange, width}) => <Input type={type} id={id} aria-describedby={helperId} onChange={handleChange} fullWidth={true} />
+
+const HelperTextElement = ({id, text}) => <FormHelperText id={id}>{text}</FormHelperText>
+
+const SearchUserInputElement = ({id, type, handleChange}) => <Input sx={{ pt: 2, pl: 2, mb: 4, bgcolor: "text.success", border: 1.1, borderColor: "teal", fontSize: "x-large"}} type={type} id={id} onChange={handleChange} />
+
 // const MuiIconElement = ({icon}) => {
 
 // }
 
 export {
+    SearchUserInputElement,
+    HelperTextElement,
+    UserInputElement,
+    InputLabelElement,
+    FormControlElement,
+    FriendsElement,
+    EverybodyElement,
+    PollElement,
+    PrivacyElement,
+    EmoticonElement,
+    GifElement,
+    ImageElement,
+    VideoCameraFrontElement,
     TextFieldMultilineElement,
     ContainerElement,
     PaperElement,
