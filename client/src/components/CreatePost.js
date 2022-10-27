@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { GiphyFetch } from "@giphy/js-fetch-api"
-import { Gif, Grid, Video } from "@giphy/react-components"
+import { Gif, Grid } from "@giphy/react-components"
 import EmojiPicker from "emoji-picker-react"
 import { Editor } from "@tinymce/tinymce-react"
-import { FieldsetElement, FormElement, LegendElement } from './FormElements'
-import { WrapperDiv } from './GeneralElements'
-import { BoxElement, ButtonElement, CardContentElement, CardElement, CardHeaderElement, ContainerElement, DislikeIconElement, EmoticonElement, FormControlElement, GifElement, HelperTextElement, IconButtonElement, ImageElement, InputLabelElement, LikeIconElement, LoveIconElement, PaperElement, PollElement, PrivacyElement, SearchUserInputElement, ShareIconElement, TextFieldMultilineElement, TypographyElement, UserInputElement, VideoCameraFrontElement } from './MuiElements'
+import { FormElement } from './FormElements'
+import { BoxElement, ButtonElement, CardContentElement, CardElement, CardHeaderElement, ContainerElement, EmoticonElement, FormControlElement, GifElement, HelperTextElement, IconButtonElement, ImageElement, InputLabelElement, PaperElement, PollElement, PrivacyElement, SearchUserInputElement, TypographyElement, UserInputElement, VideoCameraFrontElement } from './MuiElements'
 import ChoosePrivacy from './ChoosePrivacy'
 import CreatePoll from './CreatePoll'
 
@@ -27,7 +26,6 @@ function CreatePost() {
           <CardHeaderElement avatarUrl={null} altText={"fullname"} title={"User Name"} joined={null} />
 
           <CardContentElement>
-            {/* <TextFieldMultilineElement /> */}
             <ShowRichTextEditor />
           </CardContentElement>
 
@@ -104,10 +102,6 @@ let ShowGifSelectingElement = () => {
     setGifData(gif)
   }
 
-  useEffect(() => {
-    fetchGifs()
-  }, [searchText])
-
   let handleSearchText = evt => setSearchText(evt.target.value)
 
   return (
@@ -146,20 +140,16 @@ let ShowUrlGrabbingForm = ({ handleValue, currentElement }) => {
 
   let handleSubmit = event => {
     event.preventDefault();
-    console.log("here here", value)
     handleValue(event, currentElement, value)
   }
 
   return (
     <FormElement handleSubmit={handleSubmit}>
-      {/* <LegendElement text={"Enter Your Resource Url"} /> */}
-      {/* <FieldsetElement> */}
       <FormControlElement>
         <InputLabelElement hFor={"url"} text={"Enter Url Of Media Resource Here"} />
         <UserInputElement id={"url"} helperId="url-helper-text" type={"text"} handleChange={handleChange} />
         <HelperTextElement id={"url-helper-text"} text={"Enter a valid a url of your media resource"} />
       </FormControlElement>
-      {/* </FieldsetElement> */}
       <ButtonElement type={"submit"} text="Upload" />
     </FormElement>
   )

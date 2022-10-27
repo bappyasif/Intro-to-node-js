@@ -3,11 +3,13 @@ import { AppContexts } from '../../App'
 import CreatePost from '../CreatePost'
 import { WrapperDiv } from '../GeneralElements'
 import { BoxElement, CardContentElement, CardElement, CardHeaderElement, ContainerElement, DislikeIconElement, IconButtonElement, LikeIconElement, LoveIconElement, ShareIconElement, StackElement, TypographyElement } from '../MuiElements'
+import UserProfile from '../UserProfile'
 import { readDataFromServer } from '../utils'
 
 function NewsFeeds() {
     return (
         <WrapperDiv className="news-feeds">
+            <UserProfile />
             <ShowBasicPosts />
         </WrapperDiv>
     )
