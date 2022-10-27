@@ -1,8 +1,8 @@
-import { Tab, Tabs, Input, Button, Box, Typography, Card, CardHeader, Avatar, CardContent, Stack, Skeleton, IconButton, Paper, Container, TextField, FormControl, InputLabel, FormHelperText } from "@mui/material";
+import { Tab, Tabs, Input, Button, Box, Typography, Card, CardHeader, Avatar, CardContent, Stack, Skeleton, IconButton, Paper, Container, TextField, FormControl, InputLabel, FormHelperText, MenuItem, Select } from "@mui/material";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import {Masonry} from "@mui/lab"
-import { PeopleAltRounded, AllInclusiveRounded, PollRounded, PrivacyTipRounded, InsertEmoticonRounded, GifBoxRounded, ImageRounded, VideoCameraFrontRounded, DeleteOutlineRounded, ThumbUpAltRounded, ThumbDownAltRounded, HeatPumpRounded, ShareRounded } from "@mui/icons-material";
+import { PeopleAltRounded, AllInclusiveRounded, PollRounded, PrivacyTipRounded, InsertEmoticonRounded, GifBoxRounded, ImageRounded, VideoCameraFrontRounded, DeleteOutlineRounded, ThumbUpAltRounded, ThumbDownAltRounded, HeatPumpRounded, ShareRounded, PublicRounded } from "@mui/icons-material";
 
 const TabsElement = (props) => {
     return (
@@ -59,8 +59,8 @@ const MuiButtonElement = ({ type, text }) => {
 const MuiBoxElement = (props) => {
     return (
         <Box
-            sx={{ border: 1.1, borderColor: props.color }}
-            color={props.color}>{props.children}</Box>
+            sx={{ border: 1.1, borderColor: props.color, alignItems: "center"}}
+            color={props.color || "teal"}>{props.children}</Box>
     )
 }
 
@@ -139,11 +139,11 @@ const PrivacyElement = ({fontSize}) => <PrivacyTipRounded fontSize={fontSize || 
 
 const PollElement = ({fontSize}) => <PollRounded fontSize={fontSize || "medium"} />
 
-const EverybodyElement = ({fontSize}) => <AllInclusiveRounded fontSize={fontSize || "medium"} />
+const EverybodyElement = ({fontSize}) => <PublicRounded fontSize={fontSize || "medium"} />
 
 const FriendsElement = ({fontSize}) => <PeopleAltRounded fontSize={fontSize || "medium"} />
 
-const FormControlElement = (props) => <FormControl sx={{width: "100%"}}>{props.children}</FormControl>
+const FormControlElement = (props) => <FormControl sx={props.styles || {width: "100%"}}>{props.children}</FormControl>
 
 const InputLabelElement = ({hFor, text}) => <InputLabel htmlFor={hFor}>{text}</InputLabel>
 
@@ -153,11 +153,17 @@ const HelperTextElement = ({id, text}) => <FormHelperText id={id}>{text}</FormHe
 
 const SearchUserInputElement = ({id, type, handleChange}) => <Input sx={{ pt: 2, pl: 2, mb: 4, bgcolor: "text.success", border: 1.1, borderColor: "teal", fontSize: "x-large"}} type={type} id={id} onChange={handleChange} />
 
+const SelectElement = (props) => <Select id={props.id} value={props.value} onChange={(e) => console.log(e, e.target.value)}>{props.children}</Select>
+
+ const MenuItemElement = ({value, text}) => <MenuItem value={value}>{text}</MenuItem>
+
 // const MuiIconElement = ({icon}) => {
 
 // }
 
 export {
+    MenuItemElement,
+    SelectElement,
     SearchUserInputElement,
     HelperTextElement,
     UserInputElement,

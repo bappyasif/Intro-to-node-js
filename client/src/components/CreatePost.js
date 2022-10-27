@@ -5,7 +5,9 @@ import EmojiPicker from "emoji-picker-react"
 import { Editor } from "@tinymce/tinymce-react"
 import { FieldsetElement, FormElement, LegendElement } from './FormElements'
 import { WrapperDiv } from './GeneralElements'
-import { BoxElement, ButtonElement, CardContentElement, CardElement, CardHeaderElement, ContainerElement, DislikeIconElement, EmoticonElement, FormControlElement, GifElement, HelperTextElement, IconButtonElement, ImageElement, InputLabelElement, LikeIconElement, LoveIconElement, PaperElement, PollElement, PrivacyElement, SearchUserInputElement, ShareIconElement, TextFieldMultilineElement, TypographyElement, UserInputElement, VideoCameraFrontElement } from './MuiElements'
+import { BoxElement, ButtonElement, CardContentElement, CardElement, CardHeaderElement, ContainerElement, DislikeIconElement, EmoticonElement, EverybodyElement, FormControlElement, FriendsElement, GifElement, HelperTextElement, IconButtonElement, ImageElement, InputLabelElement, LikeIconElement, LoveIconElement, MenuItemElement, PaperElement, PollElement, PrivacyElement, SearchUserInputElement, SelectElement, ShareIconElement, TextFieldMultilineElement, TypographyElement, UserInputElement, VideoCameraFrontElement } from './MuiElements'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import ChoosePrivacy from './ChoosePrivacy'
 
 function CreatePost() {
   let [addedOptions, setAddedOptions] = useState({})
@@ -54,7 +56,7 @@ let ShowRichTextEditor = () => {
           toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
         }}
         id="body"
-        // onChange={(e) => handleChange(e, 'body')}
+      // onChange={(e) => handleChange(e, 'body')}
       />
     </>
   )
@@ -72,11 +74,65 @@ let ShowClickActionsFunctionality = ({ currentElement, handleValue }) => {
   } else if (currentElement === "Poll") {
     renderFunctionality = "Show Poll Selecting Element"
   } else if (currentElement === "Privacy") {
-    renderFunctionality = "Show Privacy Selecting Element"
+    renderFunctionality = <ChoosePrivacy />
   }
 
   return (
     renderFunctionality
+  )
+}
+
+let ShowPrivacySettingsOptions = () => {
+  let [settingSelected, setSettingSelected] = useState('')
+
+  let handleSettingSelected = event => {
+    console.log(event, event.target)
+    setSettingSelected(event.target.value)
+    // setSettingSelected(event.target.value !== undefined ? event.target.value : "")
+  }
+
+  // let renderSettings = () => privacyIcons.map(item => <MenuItemElement key={item.name} value={item.name} text={item.name} />)
+  
+  // let renderSettings = () => privacyIcons.map(item => <MenuItem key={item.name} value={item.name}>{item.name}</MenuItem>)
+
+  return (
+    <BoxElement>
+      {settingSelected}
+      <FormControlElement variant="filled" styles={{ m: 1, minWidth: 220 }}>
+        <InputLabelElement hFor={"select-elem"} text={"Select Privacy"} />
+        <Select
+          labelId="select-elem"
+          id="select-elem"
+          value={settingSelected}
+          onChange={handleSettingSelected}
+          label="Select Privacy"
+        >
+          <MenuItem value="">None</MenuItem>
+          {/* {renderSettings()} */}
+        </Select>
+      </FormControlElement>
+
+      {/* <FormControlElement variant="filled" styles={{ m: 2, mt: 4, minWidth: 220 }}>
+        <InputLabelElement hFor={"select-element"} text={"Choose Privacy"} />
+        <SelectElement
+          id={"select-element"}
+          value={settingSelected !== undefined ? settingSelected : ''}
+          changeHandler={handleSettingSelected}
+          label="Choose Privacy"
+        >
+          <MenuItemElement value={""} text={"None"} />
+          {renderSettings()}
+        </SelectElement>
+      </FormControlElement> */}
+    </BoxElement>
+  )
+}
+
+let RenderPrivacySettingIcon = ({ item }) => {
+  return (
+    <BoxElement>
+
+    </BoxElement>
   )
 }
 
@@ -174,7 +230,7 @@ let ShowIconBtns = ({ item, handleAddedOptions }) => {
   )
 }
 
-// dataset needs to be changed asap
+// dataset for post create icons elements
 let iconsBtns = [
   { name: "Image", elem: <ImageElement /> },
   { name: "Video", elem: <VideoCameraFrontElement /> },
@@ -182,6 +238,6 @@ let iconsBtns = [
   { name: "Emoji", elem: <EmoticonElement /> },
   { name: "Poll", elem: <PollElement /> },
   { name: "Privacy", elem: <PrivacyElement /> }
-]
+];
 
 export default CreatePost
