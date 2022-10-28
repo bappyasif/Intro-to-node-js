@@ -8,6 +8,7 @@ import RegisterUser from './components/routes/RegisterUser';
 import ErrorPage from './components/ErrorPage';
 import ConnectUsers from './components/routes/ConnectUsers';
 import NewsFeeds from './components/routes/NewsFeeds';
+import ChooseTopics from './components/routes/ChooseTopics';
 
 const contexts = {
   baseUrl: "http://localhost:3000"
@@ -25,6 +26,7 @@ function App() {
           <Routes>
             <Route path='/login' element={<LoginForm />} />
             <Route path='/register' element={<RegisterUser />} />
+            <Route path='/choose-topics' element={<ChooseTopics />} />
             <Route path='/connect' element={<ConnectUsers />} />
             <Route path='/news-feeds' element={<NewsFeeds />} />
             <Route path='*' element={<ErrorPage />} />
