@@ -19,7 +19,7 @@ function App() {
   return (
     <AppContexts.Provider value={contexts}>
       <BrowserRouter>
-        <div className="App">
+        <div className="App" style={{backgroundColor: "honeydew"}}>
           <MainNavigation />
           {/* <TryoutContainer /> */}
           <Routes>
