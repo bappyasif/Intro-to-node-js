@@ -31,6 +31,7 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "qs": "^6.11.0",
     "twitter-api-v2": "^1.12.9",
     "upper-case": "^2.0.2",
     "uuid": "^8.3.2"

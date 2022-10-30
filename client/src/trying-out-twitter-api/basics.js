@@ -1,10 +1,26 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 // import {TwitterApi} from "twitter-api-v2"
-let {TwitterApi} = require("twitter-api-v2")
+// let {TwitterApi} = require("twitter-api-v2")
 
 function BasicsUsage() {
     // console.log(process.env.REACT_APP_TWITTER_BEARER_TOKEN, process.env.REACT_APP_PORT, process.env.REACT_APP_TWITTER_CONSUMER_KEY)
     console.log(process.env.REACT_APP_TWITTER_BEARER_TOKEN, process.env.REACT_APP_PORT, process.env.REACT_APP_TWITTER_CONSUMER_KEY)
+    
+    let url ="http://localhost:3000/twitter/accounts/multiple/:names"
+    // let accIds = {a: 1957404727, b: 3040721962}
+    let accIds = {a: "bappyasif", b: "hoxieloxie"}
+
+    let sendRequest = () => {
+        let endpoint = new URL(url);
+        endpoint.search = new URLSearchParams(accIds)
+        console.log(endpoint, "endpoint")
+        fetch(endpoint)
+        .then(() => console.log("done"))
+        .catch(err => console.error(err))
+    }
+
+    useEffect(() => sendRequest(), [])
+    
     return (
         <div>BasicsUsage</div>
     )
