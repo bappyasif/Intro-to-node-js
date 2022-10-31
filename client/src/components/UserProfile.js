@@ -5,7 +5,7 @@ import React from 'react'
 
 function UserProfile() {
     return (
-        <Box sx={{mb: 2}}>
+        <Box sx={{ mb: 2 }}>
             <CoverPhoto />
             <Box
                 sx={{ width: "920px", margin: "auto", bgcolor: "gainsboro", pl: 2, pt: .4, pr: 2, pb: .1, borderRadius: 2 }}
@@ -18,7 +18,7 @@ function UserProfile() {
     )
 }
 
-let CoverPhoto = () => {
+export let CoverPhoto = () => {
     return (
         <Box sx={{ width: "100%" }}>
             <ImageListItem cols={1}>
@@ -91,25 +91,31 @@ let UserNameAndInfo = () => {
         <Stack
             sx={{ flexDirection: "row", gap: "35px", mt: .6 }}
         >
-            <img
-                width={'85px'}
-                height={'95px'}
-                src={`${fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`}
-                srcSet={`${fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format&dpr= 2 2x`}
-                alt="user X profile display"
-                loading='lazy'
-            />
+            <ProfilePhoto />
             <Stack>
-                <Typography variant='h6' component={"h3"}>{fakeDataModel[0].FullName}</Typography>
+                <Typography variant='h6' component={"h3"}>{fakeDataModel[0].fullName}</Typography>
                 <Typography>{fakeDataModel[0].email}</Typography>
             </Stack>
         </Stack>
     )
 }
 
-let fakeDataModel = [
+export let ProfilePhoto = () => {
+    return (
+        <img
+            width={'85px'}
+            height={'95px'}
+            src={`${fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`}
+            srcSet={`${fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format&dpr= 2 2x`}
+            alt="user X profile display"
+            loading='lazy'
+        />
+    )
+}
+
+export let fakeDataModel = [
     {
-        FullName: "FULL NAME",
+        fullName: "FULL NAME",
         email: "email@ail.vod",
         friends: 4,
         frSent: 4,

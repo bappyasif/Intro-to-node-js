@@ -10,6 +10,7 @@ import ConnectUsers from './components/routes/ConnectUsers';
 import NewsFeeds from './components/routes/NewsFeeds';
 import ChooseTopics from './components/routes/ChooseTopics';
 import BasicsUsage from './trying-out-twitter-api/basics';
+import EditUserProfile from './components/routes/EditUserProfile';
 
 const contexts = {
   baseUrl: "http://localhost:3000"
@@ -24,13 +25,14 @@ function App() {
         <div className="App" style={{backgroundColor: "honeydew"}}>
           <MainNavigation />
           {/* <TryoutContainer /> */}
-          <BasicsUsage />
+          {/* <BasicsUsage /> */}
           <Routes>
             <Route path='/login' element={<LoginForm />} />
             <Route path='/register' element={<RegisterUser />} />
             <Route path='/choose-topics' element={<ChooseTopics />} />
             <Route path='/connect' element={<ConnectUsers />} />
             <Route path='/news-feeds' element={<NewsFeeds />} />
+            <Route path='/edit-user-profile' element={<EditUserProfile />} />
             <Route path='*' element={<ErrorPage />} />
           </Routes>
         </div>
