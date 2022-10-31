@@ -10,13 +10,10 @@ function EditUserProfile() {
 
     useEffect(() => setUserData(fakeDataModel[0]), [])
 
-    console.log(userData, "userData", userData?.fullName)
-
     return (
         <Box>
             <Typography variant='h1'>Edit User Profile</Typography>
             <CoverPhoto />
-            {/* {userData.fullName ? <EditNameAndInfo handleData={handleData} data={userData} /> : null} */}
             {userData.fullName ? <RenderFormWithData handleData={handleData} data={userData} /> : null}
         </Box>
     )
@@ -59,28 +56,6 @@ let RenderFormControlItem = ({ handleData, dataVal, elem }) => {
                     <Input type={elem === "email" ? "email" : "text"} defaultValue={dataVal} onChange={e => handleData(e, elem)} />
             }
         </FormControl>
-    )
-}
-
-let EditNameAndInfo = ({ handleData, data }) => {
-    let { fullName, email } = { ...data }
-
-    return (
-        <Box>
-            <Stack>
-                <ProfilePhoto />
-            </Stack>
-            <Stack>
-                <FormControl sx={{ m: 2 }}>
-                    <InputLabel htmlFor='name'>Name</InputLabel>
-                    <Input defaultValue={fullName} onChange={e => handleData(e, "fullName")} />
-                </FormControl>
-                <FormControl>
-                    <InputLabel htmlFor='email'>Email</InputLabel>
-                    <Input defaultValue={email} type="email" onChange={e => handleData(e, "email")} />
-                </FormControl>
-            </Stack>
-        </Box>
     )
 }
 

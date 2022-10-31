@@ -5,7 +5,7 @@ const routes = require("./routes")
 const app = express();
 const User = require("./models/user");
 // require("./utils/fakeSeeds");
-require("./configs/twitter")
+// require("./configs/twitter")
 
 app.use(cors());
 app.use(express.json());

@@ -1,6 +1,7 @@
 let { TwitterApi } = require("twitter-api-v2")
 let needle = require("needle");
 const { getTweetsFromMultipleAccountIds } = require("../utils/httpRequests");
+// let endpoint = '';
 
 let getTweetsFromAccount = (req, res, next) => {
     let accountId = req.params.name;
@@ -8,8 +9,8 @@ let getTweetsFromAccount = (req, res, next) => {
 }
 
 let getTweetsFromMultipleAccounts = (req, res, next) => {
-    // let endpoint = "https://api.twitter.com/2/users/?ids="
-    let endpoint = "https://api.twitter.com/2/users/by?usernames="
+    let endpoint = "https://api.twitter.com/2/users/?ids="
+    // let endpoint = "https://api.twitter.com/2/users/by?usernames="
     
     for(let key in req.query) {
         endpoint+= req.query[key].toString() +","
@@ -20,7 +21,8 @@ let getTweetsFromMultipleAccounts = (req, res, next) => {
     console.log(req.params, "<><>", req.query, endpoint)
     
     const params = {
-        "usernames": "bappyasif,hoxieloxie",
+        // "usernames": "bappyasif,hoxieloxie",
+        ids: "1957404727,3040721962",
         "user.fields": "created_at,description", // Edit optional query parameters here
         "expansions": "pinned_tweet_id"
     }
@@ -49,7 +51,20 @@ let getCurrentTrendingTweets = (req, res, next) => {
     res.send("get current trending tweets")
 }
 
+let searchRecentTweetsAboutTopic = (req, res, next) => {
+    let endpoint = "https://api.twitter.com/2/tweets/search/recent"
+
+    const params = {
+        "query": "Sports",
+        "user.fields": "created_at,description", // Edit optional query parameters here
+    }
+ 
+    getTweetsFromMultipleAccountIds(endpoint, params).then(results => console.log(results)).catch(err=>console.error(err))
+    res.send("search recent tweets about this topic")
+}
+
 module.exports = {
+    searchRecentTweetsAboutTopic,
     getTweetsFromAccount,
     getTweetsFromMultipleAccounts,
     getTweetsAboutTopic,
