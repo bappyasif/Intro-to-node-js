@@ -53,9 +53,15 @@ let getCurrentTrendingTweets = (req, res, next) => {
 
 let searchRecentTweetsAboutTopic = (req, res, next) => {
     let endpoint = "https://api.twitter.com/2/tweets/search/recent"
+    let searchTerm = req.params.term;
+    let focusedTopic = req.params.topic.toLowerCase();
+    // let focusedTopicCapitalized = focusedTopic[0].toUpperCase()+focusedTopic.substr(1)
+
+    console.log(searchTerm, focusedTopic)
 
     const params = {
-        "query": "Womens league",
+        // "query": "Womens league",
+        "query": `${searchTerm} -is:retweet`,
         "user.fields": "created_at,description", // Edit optional query parameters here
         "tweet.fields": "author_id,context_annotations",
         "max_results": 11
@@ -67,12 +73,22 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
         results?.data?.forEach(item => {
             if(item?.context_annotations?.length) {
                 item?.context_annotations?.forEach(elem => {
-                    if(elem.domain.name.includes("sport") || elem.domain.name.includes("Sport")) {
-                        filtered.push(item)
+                    
+                    // console.log(elem.domain.name.includes(`${focusedTopic}`), "chk1")
+
+                    if(elem.domain.name.toLowerCase().includes(focusedTopic)) {
+                        let findIdx = filtered.findIndex(item2 => item2.id === item.id)
+                        let chkTxt = filtered.findIndex(item2 => item2.text === item.text)
+                        if(findIdx === -1 && chkTxt === -1) {
+                            filtered.push(item)
+                        }
                     }
                 })
             } else {
-                if(item?.context_annotations?.domain?.name.includes("Sport") || item?.context_annotations?.domain?.name.includes("sport")) {
+                
+                // console.log(item?.context_annotations?.domain?.name.includes(focusedTopic.toLowerCase()), "chk2")
+                
+                if(item?.context_annotations?.domain?.name.toLowerCase().includes(focusedTopic.toLowerCase())) {
                     filtered.push(item)
                 }
             }
@@ -80,7 +96,7 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
         console.log(filtered)
         res.status(200).json({success: true, data: filtered})
     }).catch(err=>console.error(err))
-    res.send("search recent tweets about this topic")
+    // res.send("search recent tweets about this topic")
 }
 
 module.exports = {
