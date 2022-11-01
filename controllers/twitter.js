@@ -55,11 +55,31 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
     let endpoint = "https://api.twitter.com/2/tweets/search/recent"
 
     const params = {
-        "query": "Sports",
+        "query": "Womens league",
         "user.fields": "created_at,description", // Edit optional query parameters here
+        "tweet.fields": "author_id,context_annotations",
+        "max_results": 11
     }
  
-    getTweetsFromMultipleAccountIds(endpoint, params).then(results => console.log(results)).catch(err=>console.error(err))
+    getTweetsFromMultipleAccountIds(endpoint, params).then(results => {
+        // let filtered = results?.data?.filter(item => item?.context_annotations?.domain?.name.includes("Sport"))
+        let filtered = []
+        results?.data?.forEach(item => {
+            if(item?.context_annotations?.length) {
+                item?.context_annotations?.forEach(elem => {
+                    if(elem.domain.name.includes("sport") || elem.domain.name.includes("Sport")) {
+                        filtered.push(item)
+                    }
+                })
+            } else {
+                if(item?.context_annotations?.domain?.name.includes("Sport") || item?.context_annotations?.domain?.name.includes("sport")) {
+                    filtered.push(item)
+                }
+            }
+        })
+        console.log(filtered)
+        res.status(200).json({success: true, data: filtered})
+    }).catch(err=>console.error(err))
     res.send("search recent tweets about this topic")
 }
 
