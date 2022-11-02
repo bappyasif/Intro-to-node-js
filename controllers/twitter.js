@@ -1,6 +1,6 @@
 let { TwitterApi } = require("twitter-api-v2")
 let needle = require("needle");
-const { getTweetsFromMultipleAccountIds } = require("../utils/httpRequests");
+const { getTweetsFromRecentTermSearch } = require("../utils/httpRequests");
 // let endpoint = '';
 
 let getTweetsFromAccount = (req, res, next) => {
@@ -62,14 +62,21 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
     const params = {
         // "query": "Womens league",
         "query": `${searchTerm} -is:retweet`,
-        "user.fields": "created_at,description", // Edit optional query parameters here
+        "user.fields": "created_at,description,name,username,public_metrics", // Edit optional query parameters here
         "tweet.fields": "author_id,context_annotations",
-        "max_results": 11
+        "max_results": 11,
+        "expansions": "attachments.media_keys",
+        "media.fields": "url,preview_image_url",
     }
  
-    getTweetsFromMultipleAccountIds(endpoint, params).then(results => {
+    getTweetsFromRecentTermSearch(endpoint, params, "v2RecentSearchJS").then(results => {
         // let filtered = results?.data?.filter(item => item?.context_annotations?.domain?.name.includes("Sport"))
         let filtered = []
+
+        console.log(results, "results.includes<><>")
+        
+        if(results?.includes) { filtered.push(results.includes) }
+
         results?.data?.forEach(item => {
             if(item?.context_annotations?.length) {
                 item?.context_annotations?.forEach(elem => {
@@ -93,10 +100,20 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
                 }
             }
         })
-        console.log(filtered)
+        // console.log(filtered)
         res.status(200).json({success: true, data: filtered})
     }).catch(err=>console.error(err))
     // res.send("search recent tweets about this topic")
+}
+
+let getSingleTweetData = (req, res, next) => {
+    let endpoint = `https://api.twitter.com/2/tweets/${req.params.id}`
+    let params = {
+        "user.fields": "created_at,description,name,username", // Edit optional query parameters here
+        "tweet.fields": "author_id,context_annotations",
+        "expansions": "attachments.media_keys",
+        "media.fields": "url,preview_image_url",
+    }
 }
 
 module.exports = {
