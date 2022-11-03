@@ -1,7 +1,7 @@
 let { TwitterApi } = require("twitter-api-v2")
 let needle = require("needle")
 
-let getTweetsFromRecentTermSearch = async (endpointURL, params, userAgent) => {
+let getDataFromTwitter = async (endpointURL, params, userAgent) => {
      // this is the HTTP header that adds bearer token authentication
      console.log(endpointURL, process.env.TWITTER_BEARER_TOKEN)
     //  endpoint = "https://api.twitter.com/2/tweets/search/recent?max_results=20&expansions=attachments.media_keys&media.fields=url&user.fields=name,username&query=party"
@@ -23,5 +23,5 @@ let getTweetsFromRecentTermSearch = async (endpointURL, params, userAgent) => {
 }
 
 module.exports = {
-    getTweetsFromRecentTermSearch
+    getDataFromTwitter
 }

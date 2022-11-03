@@ -1,6 +1,6 @@
 let { TwitterApi } = require("twitter-api-v2")
 let needle = require("needle");
-const { getTweetsFromRecentTermSearch } = require("../utils/httpRequests");
+const { getDataFromTwitter } = require("../utils/httpRequests");
 // let endpoint = '';
 
 let getTweetsFromAccount = (req, res, next) => {
@@ -69,25 +69,20 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
         "media.fields": "url,preview_image_url",
     }
  
-    getTweetsFromRecentTermSearch(endpoint, params, "v2RecentSearchJS").then(results => {
-        // let filtered = results?.data?.filter(item => item?.context_annotations?.domain?.name.includes("Sport"))
+    getDataFromTwitter(endpoint, params, "v2RecentSearchJS").then(results => {
         let filtered = []
 
-        console.log(results, "results.includes<><>")
-        
-        // if(results?.includes) { filtered.push(results.includes) }
+        // console.log(results, "results.includes<><>")
 
         results?.data?.forEach(item => {
             if(item?.context_annotations?.length) {
+
                 item?.context_annotations?.forEach((elem, idx) => {
-                    
-                    // console.log(elem.domain.name.includes(`${focusedTopic}`), "chk1")
 
                     if(elem.domain.name.toLowerCase().includes(focusedTopic)) {
-                        // let findIdx = filtered.findIndex(item2 => item2.id === item.id)
-                        // let chkTxt = filtered.findIndex(item2 => item2.text === item.text)
                         let findIdx = filtered.findIndex(item2 => item2.postData.id === item.id)
                         let chkTxt = filtered.findIndex(item2 => item2.postData.text === item.text)
+
                         if(findIdx === -1 && chkTxt === -1) {
                             if(item?.attachments && results?.includes) {
                                 let uRef = item.attachments.media_keys[0];
@@ -96,27 +91,18 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
                             } else {
                                 filtered.push({postData: item})
                             }
-                            // if(results?.includes) { 
-                            //     filtered.push({postData: item, medias: results.includes.media[idx]}) 
-                            // } else {
-                            //     filtered.push({postData: item})
-                            // }
                         }
                     }
                 })
             } else {
-                
-                // console.log(item?.context_annotations?.domain?.name.includes(focusedTopic.toLowerCase()), "chk2")
                 
                 if(item?.context_annotations?.domain?.name.toLowerCase().includes(focusedTopic.toLowerCase())) {
                     filtered.push(item)
                 }
             }
         })
-        // console.log(filtered)
         res.status(200).json({success: true, data: filtered})
     }).catch(err=>console.error(err))
-    // res.send("search recent tweets about this topic")
 }
 
 let getSingleTweetData = (req, res, next) => {
@@ -129,7 +115,26 @@ let getSingleTweetData = (req, res, next) => {
     }
 }
 
+let getUserAccountInfo = (req, res, next) => {
+    let endpoint = `https://api.twitter.com/2/users/${req.params.id}`
+    
+    let params = {
+        "user.fields": "profile_image_url,verified,created_at,public_metrics"
+    }
+    
+    getDataFromTwitter(endpoint, params, "v2UserLookupJS")
+    .then(result => {
+        console.log(result, "result!!")
+        res.status(200).json({data: result.data, errors: []})
+    }).catch(err => {
+        console.error(err)
+        res.status(402).json({data: {}, errors: err})
+        return next(err)
+    })
+}
+
 module.exports = {
+    getUserAccountInfo,
     searchRecentTweetsAboutTopic,
     getTweetsFromAccount,
     getTweetsFromMultipleAccounts,
