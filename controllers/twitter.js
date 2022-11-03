@@ -75,19 +75,32 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
 
         console.log(results, "results.includes<><>")
         
-        if(results?.includes) { filtered.push(results.includes) }
+        // if(results?.includes) { filtered.push(results.includes) }
 
         results?.data?.forEach(item => {
             if(item?.context_annotations?.length) {
-                item?.context_annotations?.forEach(elem => {
+                item?.context_annotations?.forEach((elem, idx) => {
                     
                     // console.log(elem.domain.name.includes(`${focusedTopic}`), "chk1")
 
                     if(elem.domain.name.toLowerCase().includes(focusedTopic)) {
-                        let findIdx = filtered.findIndex(item2 => item2.id === item.id)
-                        let chkTxt = filtered.findIndex(item2 => item2.text === item.text)
+                        // let findIdx = filtered.findIndex(item2 => item2.id === item.id)
+                        // let chkTxt = filtered.findIndex(item2 => item2.text === item.text)
+                        let findIdx = filtered.findIndex(item2 => item2.postData.id === item.id)
+                        let chkTxt = filtered.findIndex(item2 => item2.postData.text === item.text)
                         if(findIdx === -1 && chkTxt === -1) {
-                            filtered.push(item)
+                            if(item?.attachments && results?.includes) {
+                                let uRef = item.attachments.media_keys[0];
+                                let urlObjFromIncludes = results.includes.media.filter(uObj => uObj.media_key === uRef)
+                                filtered.push({postData: item, medias: urlObjFromIncludes}) 
+                            } else {
+                                filtered.push({postData: item})
+                            }
+                            // if(results?.includes) { 
+                            //     filtered.push({postData: item, medias: results.includes.media[idx]}) 
+                            // } else {
+                            //     filtered.push({postData: item})
+                            // }
                         }
                     }
                 })
