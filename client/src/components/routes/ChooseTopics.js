@@ -30,22 +30,47 @@ let ShowCategoryTopics = ({ category }) => {
 }
 
 let RenderTopics = ({ topics }) => {
+    let [scrollInfo, setScrollInfo] = useState({});
     let [currentScroll, setCurrentScroll] = useState();
 
     let renderTopics = () => topics.map(topic => <RenderTopic key={topic} topic={topic} />)
     
-    let handleLeft = (evt) => {
+    let settingUpMaxMinScrollWidth = (evt) => {
+        setScrollInfo(prev => ({...prev, scrollView: evt.target.parentNode.parentNode.clientWidth, max: evt.target.parentNode.parentNode.scrollWidth}))
+    }
 
+    let handleScrollAmount = value => setCurrentScroll(value)
+
+    let handleLeft = (evt) => {
+        // scrollInfo.max === undefined ? settingUpMaxMinScrollWidth(evt) : false
+        settingUpMaxMinScrollWidth(evt)
         console.log(evt.target.parentNode.parentNode.clientWidth, "left", evt.target.parentNode.parentNode)
+    }
+
+    let newScrollView = () => {
+        if(currentScroll + scrollInfo.scrollView <= scrollInfo.max) {
+            handleScrollAmount(currentScroll + scrollInfo.scrollView)
+        } else {
+            // handleScrollAmount(scrollInfo.max - currentScroll)
+            handleScrollAmount(scrollInfo.max)
+        }
     }
     
     let handleRight = (evt) => {
+        settingUpMaxMinScrollWidth(evt);
+        // scrollInfo.max === undefined ? settingUpMaxMinScrollWidth(evt) : null
+        newScrollView();
+        evt.target.parentNode.parentNode.scrollTo = currentScroll
+
         console.log(evt.target.parentNode.parentNode.clientWidth, "right", evt.target.parentNode.parentNode)
     }
 
-    useEffect(() => setCurrentScroll(1292), [])
+    useEffect(() => {
+        setCurrentScroll("1292")
+        // setScrollInfo(prev => ({...prev, scrollView: evt.target.parentNode.parentNode.clientWidth, max: evt.target.parentNode.parentNode.width}))
+    }, [])
 
-    console.log(currentScroll, "currentScroll")
+    console.log(currentScroll, "currentScroll", scrollInfo)
     
     return (
         <Stack
@@ -59,15 +84,15 @@ let RenderTopics = ({ topics }) => {
                 backgroundColor: "lightskyblue",
                 borderRadius: 2,
                 alignItems: "center",
-                position: "relative"
+                position: "relative",
             }}
         >
             <IconButton onClick={handleLeft} sx={{position: "absolute", left: 0}}>
-                <ArrowBackIosNewRounded sx={{visibility: currentScroll == "1292" ? "hidden" : "visible",  bgcolor: "lightsalmon", borderRadius: '50%', p: .6}} />
+                <ArrowBackIosNewRounded sx={{visibility: currentScroll === "1292" ? "hidden" : "visible",  bgcolor: "lightsalmon", borderRadius: '50%', p: .6}} />
             </IconButton>
             {renderTopics()}
             <IconButton  onClick={handleRight} sx={{position: "absolute", right: 0}}>
-                <ArrowForwardIos sx={{bgcolor: "lightsalmon", borderRadius: '50%', p: .6}} />
+                <ArrowForwardIos sx={{visibility: currentScroll <= scrollInfo.max ? "hidden" : "visible", bgcolor: "lightsalmon", borderRadius: '50%', p: .6}} />
             </IconButton>
         </Stack>
     )
