@@ -20,7 +20,7 @@ let ShowTopics = () => {
 }
 
 let ShowCategoryTopics = ({ category }) => {
-    let renderCategoryTopics = () => Object.values(category).map(name => <RenderTopics key={name} topics={name} />)
+    let renderCategoryTopics = () => Object.values(category).map(name => <RenderTopics key={name} topics={name} categoryName={Object.keys(category)} />)
     return (
         <>
             <Typography sx={{ textAlign: "justify", pl: 3.5 }} variant='h4' component={"h2"}>{Object.keys(category)[0]}</Typography>
@@ -29,72 +29,150 @@ let ShowCategoryTopics = ({ category }) => {
     )
 }
 
-let RenderTopics = ({ topics }) => {
+let RenderTopics = ({ topics, categoryName }) => {
     let [scrollInfo, setScrollInfo] = useState({});
     let [currentScroll, setCurrentScroll] = useState();
 
     let renderTopics = () => topics.map(topic => <RenderTopic key={topic} topic={topic} />)
-    
-    let settingUpMaxMinScrollWidth = (evt) => {
-        setScrollInfo(prev => ({...prev, scrollView: evt.target.parentNode.parentNode.clientWidth, max: evt.target.parentNode.parentNode.scrollWidth}))
-    }
 
     let handleScrollAmount = value => setCurrentScroll(value)
 
-    let handleLeft = (evt) => {
-        // scrollInfo.max === undefined ? settingUpMaxMinScrollWidth(evt) : false
-        settingUpMaxMinScrollWidth(evt)
-        console.log(evt.target.parentNode.parentNode.clientWidth, "left", evt.target.parentNode.parentNode)
+    let scrollDiv = document.getElementsByClassName(`${categoryName[0].split(' ').join('')}`)[0];
+
+    let settingUpMaxMinScrollWidth = (evt) => {
+
+        // setScrollInfo(prev => ({ ...prev, scrollView: evt.target.parentNode.parentNode.clientWidth, max: evt.target.parentNode.parentNode.scrollWidth }))
+        // console.log(Array.from(evt.target.parentNode.parentNode.classList).includes("scrollItem"))
+        // console.log(Array.from(evt.target.parentNode.parentNode.parentNode.classList).includes("scrollItem"))
+
+        // let scrollDiv = document.querySelector(`.${categoryName[0].split(' ').join('')}`)
+        let scrollDiv = document.getElementsByClassName(`${categoryName[0].split(' ').join('')}`)[0]
+        setScrollInfo(prev => ({ ...prev, scrollView: scrollDiv.clientWidth, max: scrollDiv.scrollWidth - 1292 }))
+
+        // if (evt.target.parentNode.parentNode.clientWidth <= 50) {
+        //     setScrollInfo(prev => ({ ...prev, scrollView: evt.target.parentNode.parentNode.parentNode.clientWidth, max: evt.target.parentNode.parentNode.parentNode.scrollWidth }))
+        // } else {
+        //     setScrollInfo(prev => ({ ...prev, scrollView: evt.target.parentNode.parentNode.clientWidth, max: evt.target.parentNode.parentNode.scrollWidth }))
+        // }
     }
 
-    let newScrollView = () => {
-        if(currentScroll + scrollInfo.scrollView <= scrollInfo.max) {
-            handleScrollAmount(currentScroll + scrollInfo.scrollView)
+    let scrollViewForLeft = () => {
+        console.log("left calculate");
+        // let calculate = currentScroll;
+        let calculate = 0;
+
+        if (scrollInfo.scrollView) {
+            let chk = currentScroll - scrollInfo.scrollView
+            if (chk >= 1292) {
+                console.log(chk, "chk1")
+                calculate = chk;
+            } else {
+                console.log(chk, "chk2")
+                calculate = 0;
+            }
         } else {
-            // handleScrollAmount(scrollInfo.max - currentScroll)
-            handleScrollAmount(scrollInfo.max)
+            console.log("chk3")
+            calculate = 0;
         }
-    }
-    
-    let handleRight = (evt) => {
-        settingUpMaxMinScrollWidth(evt);
-        // scrollInfo.max === undefined ? settingUpMaxMinScrollWidth(evt) : null
-        newScrollView();
-        evt.target.parentNode.parentNode.scrollTo = currentScroll
 
-        console.log(evt.target.parentNode.parentNode.clientWidth, "right", evt.target.parentNode.parentNode)
+        console.log("chk4", calculate)
+        handleScrollAmount(calculate)
+    }
+
+    let handleLeft = (evt) => {
+        // settingUpMaxMinScrollWidth(evt)
+        scrollViewForLeft();
+        // evt.target.parentNode.parentNode.scrollTo(currentScroll, 0)
+        console.log(currentScroll, "currentScroll", scrollInfo)
+    }
+
+    let scrollViewForRight = () => {
+        console.log(currentScroll, "right calculate", scrollInfo.scrollView);
+        let calculate = 0;
+        if (scrollInfo?.scrollView) {
+            if (currentScroll + scrollInfo.scrollView >= scrollInfo.max) {
+                calculate = scrollInfo.max
+            } else {
+                calculate = currentScroll + scrollInfo.scrollView;
+            }
+        } 
+        // else {
+        //     // calculate = currentScroll + currentScroll / 2
+        //     // calculate = 1292
+        // }
+        handleScrollAmount(calculate)
+    }
+
+    let handleRight = (evt) => {
+        // settingUpMaxMinScrollWidth(evt);
+        scrollViewForRight();
+        // evt.target.parentNode.parentNode.scrollTo(currentScroll, 0)
+        // scrollDiv.scrollTo(currentScroll, 0)
+        console.log(currentScroll, "currentScroll", scrollInfo)
     }
 
     useEffect(() => {
-        setCurrentScroll("1292")
-        // setScrollInfo(prev => ({...prev, scrollView: evt.target.parentNode.parentNode.clientWidth, max: evt.target.parentNode.parentNode.width}))
+        scrollDiv?.scrollTo(currentScroll, 0)
+    }, [currentScroll])
+
+    useEffect(() => {
+        // setCurrentScroll(1292)
+        // setCurrentScroll(0)
+        settingUpMaxMinScrollWidth()
     }, [])
 
     console.log(currentScroll, "currentScroll", scrollInfo)
-    
+
+    // console.log(categoryName, typeof categoryName)
+
     return (
-        <Stack
-            sx={{
-                flexDirection: "row",
-                // flexWrap: "wrap",
-                // overflowX: "scroll",
-                overflowX: "hidden",
-                m: 1,
-                p: 1.5,
-                backgroundColor: "lightskyblue",
-                borderRadius: 2,
-                alignItems: "center",
-                position: "relative",
-            }}
-        >
-            <IconButton onClick={handleLeft} sx={{position: "absolute", left: 0}}>
-                <ArrowBackIosNewRounded sx={{visibility: currentScroll === "1292" ? "hidden" : "visible",  bgcolor: "lightsalmon", borderRadius: '50%', p: .6}} />
-            </IconButton>
-            {renderTopics()}
-            <IconButton  onClick={handleRight} sx={{position: "absolute", right: 0}}>
-                <ArrowForwardIos sx={{visibility: currentScroll <= scrollInfo.max ? "hidden" : "visible", bgcolor: "lightsalmon", borderRadius: '50%', p: .6}} />
-            </IconButton>
-        </Stack>
+        <Paper sx={{ position: "relative" }}>
+            <Stack
+                className={categoryName[0].split(' ').join('')}
+                sx={{
+                    flexDirection: "row",
+                    // flexWrap: "wrap",
+                    // overflowX: "scroll",
+                    overflowX: "hidden",
+                    scrollBehavior: "smooth",
+                    m: 1,
+                    p: 1.5,
+                    backgroundColor: "lightskyblue",
+                    borderRadius: 2,
+                    alignItems: "center",
+                }}
+            >
+                <IconButton onClick={handleLeft} sx={{ position: "absolute", left: 0 }}>
+                    {
+                        currentScroll > 0
+                            ?
+                            <ArrowBackIosNewRounded
+                                sx={{
+                                    // visibility: currentScroll <= 1292 ? "hidden" : "visible",
+                                    // display: currentScroll <= 1292 ? "none" : "flex",
+                                    bgcolor: "lightsalmon",
+                                    borderRadius: '50%',
+                                    p: .6,
+                                    zIndex: 99
+                                }}
+                            />
+                            :
+                            null
+                    }
+                </IconButton>
+                {renderTopics()}
+                <IconButton onClick={handleRight} sx={{ position: "absolute", right: 0 }}>
+                    <ArrowForwardIos
+                        sx={{
+                            bgcolor: "lightsalmon",
+                            borderRadius: '50%',
+                            p: .6,
+                            zIndex: 99
+                        }}
+                    />
+                </IconButton>
+            </Stack>
+        </Paper>
     )
 }
 
@@ -154,3 +232,128 @@ let topicCategories = [
 ]
 
 export default ChooseTopics
+
+/**
+ * 
+ * 
+ let RenderTopics = ({ topics }) => {
+    let [scrollInfo, setScrollInfo] = useState({});
+    let [currentScroll, setCurrentScroll] = useState();
+
+    let renderTopics = () => topics.map(topic => <RenderTopic key={topic} topic={topic} />)
+
+    let handleScrollAmount = value => setCurrentScroll(value)
+
+    let settingUpMaxMinScrollWidth = (evt) => {
+
+        // setScrollInfo(prev => ({ ...prev, scrollView: evt.target.parentNode.parentNode.clientWidth, max: evt.target.parentNode.parentNode.scrollWidth }))
+
+        if (evt.target.parentNode.parentNode.clientWidth <= 50) return
+        else setScrollInfo(prev => ({ ...prev, scrollView: evt.target.parentNode.parentNode.clientWidth, max: evt.target.parentNode.parentNode.scrollWidth }))
+    }
+
+    let scrollViewForLeft = () => {
+        console.log(currentScroll - scrollInfo.scrollView, "ehat ehat", scrollInfo);
+        if(scrollInfo.scrollView) {
+            if(currentScroll - scrollInfo.scrollView >= 0) {
+                
+                handleScrollAmount(currentScroll - scrollInfo.scrollView)
+            } else {
+                // handleScrollAmount(scrollInfo.max - currentScroll)
+                handleScrollAmount(0)
+            }
+        } else {
+            // handleScrollAmount(currentScroll - currentScroll/2)
+            return
+        }
+    }
+
+    let handleLeft = (evt) => {
+        // scrollInfo.max === undefined ? settingUpMaxMinScrollWidth(evt) : false
+        settingUpMaxMinScrollWidth(evt)
+        scrollViewForLeft();
+        // evt.target.parentNode.parentNode.scrollTo(currentScroll, 0)
+        evt.target.parentNode.parentNode.scrollTo(currentScroll, 0)
+        console.log(currentScroll, evt.target.parentNode.parentNode.clientWidth, "left", evt.target.parentNode.parentNode)
+    }
+
+    let scrollViewForRight = () => {
+        console.log(currentScroll + scrollInfo.scrollView, "ehat ehat>><<");
+
+        if(scrollInfo.scrollView) {
+            if(currentScroll + scrollInfo.scrollView <= scrollInfo.max) {
+                console.log(currentScroll + scrollInfo.scrollView, "ehat ehat");
+                handleScrollAmount(currentScroll + scrollInfo.scrollView > scrollInfo.max ? scrollInfo.max : currentScroll + scrollInfo.scrollView)
+            } else {
+                // handleScrollAmount(scrollInfo.max - currentScroll)
+                handleScrollAmount(scrollInfo.max)
+            }
+        } else {
+            handleScrollAmount(currentScroll + currentScroll/2)
+        }
+    }
+
+    // let newScrollView = () => {
+    //     console.log(currentScroll + scrollInfo.scrollView, "ehat ehat>><<");
+    // }
+
+    let handleRight = (evt) => {
+        settingUpMaxMinScrollWidth(evt);
+        // scrollInfo.max === undefined ? settingUpMaxMinScrollWidth(evt) : null
+        scrollViewForRight();
+        // evt.target.parentNode.parentNode.scrollTo = currentScroll
+        evt.target.parentNode.parentNode.scrollTo(currentScroll, 0)
+
+        console.log(evt.target.parentNode.parentNode.clientWidth, "right", evt.target.parentNode.parentNode)
+    }
+
+    useEffect(() => {
+        setCurrentScroll(1292)
+        // setScrollInfo(prev => ({...prev, scrollView: evt.target.parentNode.parentNode.clientWidth, max: evt.target.parentNode.parentNode.width}))
+    }, [])
+
+    console.log(currentScroll, "currentScroll", scrollInfo)
+
+    return (
+        <Paper sx={{position: "relative"}}>
+            <Stack
+                sx={{
+                    flexDirection: "row",
+                    // flexWrap: "wrap",
+                    // overflowX: "scroll",
+                    overflowX: "hidden",
+                    scrollBehavior: "smooth",
+                    m: 1,
+                    p: 1.5,
+                    backgroundColor: "lightskyblue",
+                    borderRadius: 2,
+                    alignItems: "center",
+                }}
+            >
+                <IconButton onClick={handleLeft} sx={{ position: "absolute", left: 0 }}>
+                    <ArrowBackIosNewRounded
+                        sx={{
+                            visibility: currentScroll <= 1292 ? "hidden" : "visible",
+                            bgcolor: "lightsalmon",
+                            borderRadius: '50%',
+                            p: .6,
+                            zIndex: 99
+                        }}
+                    />
+                </IconButton>
+                {renderTopics()}
+                <IconButton onClick={handleRight} sx={{ position: "absolute", right: 0 }}>
+                    <ArrowForwardIos
+                        sx={{
+                            bgcolor: "lightsalmon",
+                            borderRadius: '50%',
+                            p: .6,
+                            zIndex: 99
+                        }}
+                    />
+                </IconButton>
+            </Stack>
+        </Paper>
+    )
+}
+ */
