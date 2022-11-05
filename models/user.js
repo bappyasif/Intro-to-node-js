@@ -8,6 +8,7 @@ const User = new Schema({
     password: {type: Schema.Types.String, required: true},
     salt: {type: Schema.Types.String},
     hash: {type: Schema.Types.String},
+    profileID: {type: Schema.Types.String},
     friends: Schema.Types.Array,
     frSent: Schema.Types.Array,
     frRecieved: Schema.Types.Array,

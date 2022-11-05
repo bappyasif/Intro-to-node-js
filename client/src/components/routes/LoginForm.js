@@ -65,7 +65,7 @@ let ThirdPartyLoginOutlets = () => {
 let RenderLoginOutlet = ({ item }) => {
     return (
         <Stack
-            sx={{ alignItems: "center", flexDirection: "row", justifyContent: "left", m: 1, p: 1, pl: 4, pr: 4, outline: "solid .2px", borderRadius: 11 }}
+            sx={{ alignItems: "center", flexDirection: "row", justifyContent: "left", m: 1, p: 1, pl: 4, pr: 4, outline: "solid .2px", borderRadius: 11, cursor: "pointer" }}
         >
             <IconButton>
                 <Icon sx={{ m: .4, color: "skyblue", textAlign: "left" }}>

@@ -1,3 +1,4 @@
+const passport = require("passport");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/user");
 
@@ -83,9 +84,18 @@ const loginUser = [
                 }
             }).catch(err => next(err))
     }
-]
+];
+
+let loginWithOauthProvider = (req, res) => {
+    
+    res.status(200).json({success: true})
+}
+
+let loginOauthProviderCallback = (req, res) => res.status(200).json({success: true})
 
 module.exports = {
     loginUser,
-    registerUser
+    registerUser,
+    loginWithOauthProvider,
+    loginOauthProviderCallback
 }

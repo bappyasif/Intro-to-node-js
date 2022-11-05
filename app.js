@@ -6,6 +6,7 @@ const app = express();
 const User = require("./models/user");
 // require("./utils/fakeSeeds");
 // require("./configs/twitter")
+require("./configs/passport")
 
 app.use(cors());
 app.use(express.json());
