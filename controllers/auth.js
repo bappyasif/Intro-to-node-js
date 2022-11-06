@@ -87,15 +87,29 @@ const loginUser = [
 ];
 
 let loginWithOauthProvider = (req, res) => {
-    
+    console.log(req, "<><>")
     res.status(200).json({success: true})
 }
 
-let loginOauthProviderCallback = (req, res) => res.status(200).json({success: true})
+let loginOauthProviderCallback = (req, res) => {
+    // if user is not logged in we will be sending back 402 error otherwise 200
+    if(req.user) {
+        // extracting user object from req object which was done through passport
+        res.status(200).json({success: true, user: req.user})
+    } else {
+        res.status(402).json({success: false, msg: "user not logged in"})
+    }
+}
+
+const logoutUser = (req, res) => {
+    req.logout()
+    res.status(200).json({success: true, msg: "user logged out successfully"})
+}
 
 module.exports = {
     loginUser,
     registerUser,
     loginWithOauthProvider,
-    loginOauthProviderCallback
+    loginOauthProviderCallback,
+    logoutUser
 }

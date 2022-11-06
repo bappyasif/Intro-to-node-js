@@ -7,6 +7,18 @@ const User = require("./models/user");
 // require("./utils/fakeSeeds");
 // require("./configs/twitter")
 require("./configs/passport")
+const cookieSession = require("cookie-session");
+const passport = require("passport");
+
+// settingup cookie
+app.use(cookieSession({
+    maxAge: 24*60*60*1000, // cookie time in millis
+    keys: [process.env.PASSPOSRT_KEY]
+}))
+
+// initilize passport
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(cors());
 app.use(express.json());

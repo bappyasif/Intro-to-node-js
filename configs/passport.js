@@ -4,10 +4,24 @@ const User = require("../models/user");
 
 let strategyOptions = {
     // options for google strategy
-    callbackURL: "/auth/google/redirect",
+    
+    // consider callback url is same as initial url "/auth/google", 
+    // so that data can be send back to client side without have to redirecting url causing cors issue
+    callbackURL: "/auth/google/",
+    // callbackURL: "/auth/google/redirect",
     clientID: process.env.GOOGLE_PLUS_CLIENT_ID,
     clientSecret: process.env.GOOGLE_PLUS_CLIENT_SECRET
 }
+
+passport.serializeUser((user, done) => {
+    done(null, user.id)
+})
+
+passport.deserializeUser((id, done) => {
+    User.findById(id).then(user => {
+        done(null, user)
+    })
+})
 
 let strategyCallback = (accessToken, refreshToken, profileData, done) => {
     // callback function
@@ -22,6 +36,7 @@ let strategyCallback = (accessToken, refreshToken, profileData, done) => {
             if (currentUser) {
                 // found user in db
                 console.log("user is : ", currentUser)
+                done(null, currentUser)
             } else {
                 // its safe to user into our db
                 new User({
@@ -29,7 +44,10 @@ let strategyCallback = (accessToken, refreshToken, profileData, done) => {
                     profileID: uId,
                     email: email,
                     password: "test"
-                }).save().then(newUser => console.log("new user is created", newUser))
+                }).save().then(newUser => {
+                    console.log("new user is created", newUser)
+                    done(null, newUser)
+                })
                     .catch(err => done(err))
             }
         })

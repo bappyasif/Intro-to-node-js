@@ -6,6 +6,7 @@ import { AppContexts } from "../../App"
 import ShowErrors from '../ShowErrors';
 import { Box, Icon, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { Facebook, GitHub, Google, LinkedIn } from '@mui/icons-material';
+import {readDataFromServer} from "../utils"
 
 function LoginForm() {
     let [errors, setErrors] = useState([]);
@@ -63,8 +64,22 @@ let ThirdPartyLoginOutlets = () => {
 }
 
 let RenderLoginOutlet = ({ item }) => {
+    let [dataset, setDataset] = useState({})
+
+    let appCtx = useContext(AppContexts)
+    
+    let handleData = result => setDataset(result)
+
+    let handleClick = evt => {
+        let url = `${appCtx.baseUrl}/auth/google`
+        readDataFromServer(url, handleData)
+    }
+    
+    console.log(dataset, "dataset!!")
+
     return (
         <Stack
+            onClick={handleClick}
             sx={{ alignItems: "center", flexDirection: "row", justifyContent: "left", m: 1, p: 1, pl: 4, pr: 4, outline: "solid .2px", borderRadius: 11, cursor: "pointer" }}
         >
             <IconButton>
