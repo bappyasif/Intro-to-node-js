@@ -7,8 +7,8 @@ let strategyOptions = {
     
     // consider callback url is same as initial url "/auth/google", 
     // so that data can be send back to client side without have to redirecting url causing cors issue
-    callbackURL: "/auth/google/",
-    // callbackURL: "/auth/google/redirect",
+    // callbackURL: "/auth/google/",
+    callbackURL: "/auth/google/redirect",
     clientID: process.env.GOOGLE_PLUS_CLIENT_ID,
     clientSecret: process.env.GOOGLE_PLUS_CLIENT_SECRET
 }
@@ -25,7 +25,7 @@ passport.deserializeUser((id, done) => {
 
 let strategyCallback = (accessToken, refreshToken, profileData, done) => {
     // callback function
-    console.log("google strategy callback function", accessToken, refreshToken, profileData)
+    // console.log("google strategy callback function", accessToken, refreshToken, profileData)
     // lets create a new user and save it into our database, so that user can be verifed if registered before
     let uId = profileData.id;
     let name = profileData.displayName;

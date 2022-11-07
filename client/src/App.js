@@ -12,6 +12,7 @@ import ChooseTopics from './components/routes/ChooseTopics';
 import BasicsUsage from './trying-out-twitter-api/basics';
 import EditUserProfile from './components/routes/EditUserProfile';
 import TopicCategory from './components/routes/TopicCategory';
+import LoginSuccess from './components/routes/LoginSuccess';
 
 const contexts = {
   baseUrl: "http://localhost:3000"
@@ -29,6 +30,7 @@ function App() {
           {/* <BasicsUsage /> */}
           <Routes>
             <Route path='/login' element={<LoginForm />} />
+            <Route path='/login/success' element={<LoginSuccess />} />
             <Route path='/register' element={<RegisterUser />} />
             <Route path='/choose-topics' element={<ChooseTopics />} />
             <Route path='/choose-topics/:category' element={<TopicCategory />} errorElement={<ErrorPage />} />

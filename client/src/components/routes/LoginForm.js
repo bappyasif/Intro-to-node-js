@@ -6,7 +6,8 @@ import { AppContexts } from "../../App"
 import ShowErrors from '../ShowErrors';
 import { Box, Icon, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { Facebook, GitHub, Google, LinkedIn } from '@mui/icons-material';
-import {readDataFromServer} from "../utils"
+import { readDataFromServer } from "../utils"
+import axios from "axios"
 
 function LoginForm() {
     let [errors, setErrors] = useState([]);
@@ -56,7 +57,7 @@ function LoginForm() {
 let ThirdPartyLoginOutlets = () => {
     let renderLoginOutlets = () => loginOutlets.map(item => <RenderLoginOutlet key={item.name} item={item} />)
     return (
-        <Paper sx={{ml: 2, mt: 1, borderRadius: 2}}>
+        <Paper sx={{ ml: 2, mt: 1, borderRadius: 2 }}>
             <Typography variant='h2'>Login With</Typography>
             {renderLoginOutlets()}
         </Paper>
@@ -67,14 +68,64 @@ let RenderLoginOutlet = ({ item }) => {
     let [dataset, setDataset] = useState({})
 
     let appCtx = useContext(AppContexts)
-    
+
     let handleData = result => setDataset(result)
 
     let handleClick = evt => {
-        let url = `${appCtx.baseUrl}/auth/google`
-        readDataFromServer(url, handleData)
+        // let url = `${appCtx.baseUrl}/auth/google/redirect`
+        let url = `http://localhost:3000/auth/google`
+        const newWindow = window.open(url, "_blank", "width=500, height=500")
+        // readDataFromServer(url, handleData)
+
+        let timer = 0;
+
+        if (newWindow) {
+            timer = setInterval(() => {
+                if (newWindow.closed) {
+                    console.log("we're authenticated!!")
+                    if (timer) clearInterval(timer)
+                    url = `${appCtx.baseUrl}/auth/user`
+                    // readDataFromServer(url, handleData)
+                    // axios.get(url, {withCredentials: true})
+                    // axios.get(url)
+                    //     .then(result => console.log(result, "!!")).catch(err => console.log(err, "err!!"))
+
+                    // fetch(
+                    //     url,
+                    //     { credentials: 'include' }
+                    // ).then(result => console.log(result, "!!")).catch(err => console.log(err, "err!!"))
+
+                    // fetch(
+                    //     url,
+                    //     {
+                    //         method: "GET",
+                    //         'credentials': 'include',
+                    //         headers: new Headers({
+                    //             'Accept': 'application/json',
+                    //             'Access-Control-Allow-Origin': 'http://localhost:3001',
+                    //             "Access-Control-Request-Headers": "http://localhost:3001",
+                    //             // 'Access-Control-Allow-Origin': true,
+                    //             'Content-Type': 'application/json',
+                    //         })
+                    //     }
+                    // ).then(result => console.log(result, "!!")).catch(err => console.log(err, "err!!"))
+
+                    fetch(
+                        url,
+                        {
+                          method: "GET",
+                        //   'credentials': 'include',
+                          headers: new Headers({
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                           })
+                         }
+                       ).then(result => console.log(result, "!!")).catch(err => console.log(err, "err!!"))
+                }
+            }, 1001)
+        }
     }
-    
+
     console.log(dataset, "dataset!!")
 
     return (

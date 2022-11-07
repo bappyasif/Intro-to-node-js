@@ -101,6 +101,11 @@ let loginOauthProviderCallback = (req, res) => {
     }
 }
 
+const returnAuthenticatedUser = (req, res, next) => {
+    console.log("User", req.user, req, "CHECK!!")
+    res.status(200).json({success: true, data: req.user})
+}
+
 const logoutUser = (req, res) => {
     req.logout()
     res.status(200).json({success: true, msg: "user logged out successfully"})
@@ -111,5 +116,6 @@ module.exports = {
     registerUser,
     loginWithOauthProvider,
     loginOauthProviderCallback,
-    logoutUser
+    logoutUser,
+    returnAuthenticatedUser
 }
