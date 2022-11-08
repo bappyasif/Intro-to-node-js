@@ -55,7 +55,7 @@ function LoginForm() {
 
 let ThirdPartyLoginOutlets = () => {
     let renderLoginOutlets = () => loginOutlets.map(item => <RenderLoginOutlet key={item.name} item={item} />)
-    
+
     return (
         <Paper sx={{ ml: 2, mt: 1, borderRadius: 2 }}>
             <Typography variant='h2'>Login With</Typography>
@@ -68,20 +68,13 @@ let RenderLoginOutlet = ({ item }) => {
     const navigate = useNavigate()
 
     let handleClick = evt => {
-        let url = `http://localhost:3000/auth/google`
-        const newWindow = window.open(url, "_blank", "width=500, height=500")
-
-        let timer = 0;
-
-        if (newWindow) {
-            timer = setInterval(() => {
-                if (newWindow.closed) {
-                    console.log("we're authenticated!!")
-                    if (timer) clearInterval(timer)
-                    navigate("/")
-                }
-            }, 1001)
+        let url = ''
+        if(item.name === "Google") {
+            url = `http://localhost:3000/auth/google`
+        } else if(item.name === "Facebook") {
+            url = `http://localhost:3000/auth/facebook`
         }
+        loginPrompt(url, navigate)
     }
 
     return (
@@ -97,6 +90,21 @@ let RenderLoginOutlet = ({ item }) => {
             <Typography variant='h4' sx={{ textAlign: "center", ml: 4 }}>{item.name}</Typography>
         </Stack>
     )
+}
+
+let loginPrompt = (url, navigate) => {
+    const newWindow = window.open(url, "_blank", "width=500, height=500")
+
+    let timer = 0;
+
+    if (newWindow) {
+        timer = setInterval(() => {
+            if (newWindow.closed) {
+                if (timer) clearInterval(timer)
+                navigate("/")
+            }
+        }, 1001)
+    }
 }
 
 let loginOutlets = [

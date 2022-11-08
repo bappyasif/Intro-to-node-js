@@ -21,8 +21,14 @@ authRoutes.get("/auth/google", passport.authenticate("google", {
     scope: ["profile", "email"],
     prompt: "consent"
 }))
-
 authRoutes.get("/auth/google/redirect", passport.authenticate("google", {
+    failureMessage: "Login error",
+    failureRedirect: "http://localhost:3001/login",
+    successRedirect: "http://localhost:3001/login/success"
+}))
+
+authRoutes.get("/auth/facebook", passport.authenticate("facebook", { scope : ['email']}))
+authRoutes.get("/auth/facebook/redirect", passport.authenticate("facebook", {
     failureMessage: "Login error",
     failureRedirect: "http://localhost:3001/login",
     successRedirect: "http://localhost:3001/login/success"
