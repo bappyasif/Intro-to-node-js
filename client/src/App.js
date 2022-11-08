@@ -32,33 +32,31 @@ function App() {
     getAuthenticatedUserDataFromServer(url, handleData)
   }
 
-  useEffect(() => getUser(), [])
-
   useEffect(() => {
-    // console.log("running!!")
-    getUser()
+    // location.pathname === "/" && console.log("running!!")
+    location.pathname === "/" && getUser()
   }, [location.pathname === "/"])
 
   user && console.log(user, "user!!")
 
   return (
     <AppContexts.Provider value={contexts}>
-        <div className="App" style={{ backgroundColor: "honeydew" }}>
-          <MainNavigation />
-          {/* <TryoutContainer /> */}
-          {/* <BasicsUsage /> */}
-          <Routes>
-            <Route path='/login' element={<LoginForm />} />
-            <Route path='/login/success' element={<LoginSuccess />} />
-            <Route path='/register' element={<RegisterUser />} />
-            <Route path='/choose-topics' element={<ChooseTopics />} />
-            <Route path='/choose-topics/:category' element={<TopicCategory />} errorElement={<ErrorPage />} />
-            <Route path='/connect' element={<ConnectUsers />} />
-            <Route path='/news-feeds' element={<NewsFeeds />} />
-            <Route path='/edit-user-profile' element={<EditUserProfile />} />
-            <Route path='*' element={<ErrorPage />} />
-          </Routes>
-        </div>
+      <div className="App" style={{ backgroundColor: "honeydew" }}>
+        <MainNavigation />
+        {/* <TryoutContainer /> */}
+        {/* <BasicsUsage /> */}
+        <Routes>
+          <Route path='/login' element={<LoginForm />} />
+          <Route path='/login/success' element={<LoginSuccess />} />
+          <Route path='/register' element={<RegisterUser />} />
+          <Route path='/choose-topics' element={<ChooseTopics />} />
+          <Route path='/choose-topics/:category' element={<TopicCategory />} errorElement={<ErrorPage />} />
+          <Route path='/connect' element={<ConnectUsers />} />
+          <Route path='/news-feeds' element={<NewsFeeds />} />
+          <Route path='/edit-user-profile' element={<EditUserProfile />} />
+          <Route path='*' element={<ErrorPage />} />
+        </Routes>
+      </div>
     </AppContexts.Provider>
   );
 }

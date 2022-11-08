@@ -23,19 +23,6 @@ const sendDataToServer = (endpoint, dataObj, errorHandler) => {
         .catch(err => console.error('post request is failed', err))
 }
 
-// const readDataFromServer = (endpoint, dataUpdater, errorHandler) => {
-//     fetch(endpoint)
-//         .then(resp => resp.json())
-//         .catch(err => {
-//             errorHandler(err);
-//         })
-//         .then(data => {
-//             dataUpdater(data);
-//             errorHandler([])
-//         })
-//         .catch(err => errorHandler(err))
-// }
-
 const readDataFromServer = (endpoint, dataUpdater) => {
     fetch(endpoint)
         .then(resp => resp.json())

@@ -22,7 +22,7 @@ function LoginForm() {
         sendDataToServer(enpoint.baseUrl + "/login", formData, handleError)
     }
     // console.log(formData, "formData!!");
-    console.log(errors, "errors!!")
+    // console.log(errors, "errors!!")
 
     return (
         <Box
@@ -54,11 +54,8 @@ function LoginForm() {
 }
 
 let ThirdPartyLoginOutlets = () => {
-    // let [redirect, setRedirect] = useState(false)
-
-    const navigate = useNavigate()
-
     let renderLoginOutlets = () => loginOutlets.map(item => <RenderLoginOutlet key={item.name} item={item} />)
+    
     return (
         <Paper sx={{ ml: 2, mt: 1, borderRadius: 2 }}>
             <Typography variant='h2'>Login With</Typography>
@@ -81,8 +78,7 @@ let RenderLoginOutlet = ({ item }) => {
                 if (newWindow.closed) {
                     console.log("we're authenticated!!")
                     if (timer) clearInterval(timer)
-                    navigate("/", {target: "_blank"})
-                    // setRedirect(true)
+                    navigate("/")
                 }
             }, 1001)
         }
@@ -123,76 +119,3 @@ let loginOutlets = [
 ]
 
 export default LoginForm
-
-/**
- * 
- * 
- let handleClick = evt => {
-        // let url = `${appCtx.baseUrl}/auth/google/redirect`
-        let url = `http://localhost:3000/auth/google`
-        const newWindow = window.open(url, "_blank", "width=500, height=500")
-        // readDataFromServer(url, handleData)
-
-        let timer = 0;
-
-        if (newWindow) {
-            timer = setInterval(() => {
-                if (newWindow.closed) {
-                    console.log("we're authenticated!!")
-                    if (timer) clearInterval(timer)
-                    url = `${appCtx.baseUrl}/auth/user`
-                    // readDataFromServer(url, handleData)
-                    // axios.get(url, {withCredentials: true})
-                    // axios.get(url)
-                    //     .then(result => console.log(result, "!!")).catch(err => console.log(err, "err!!"))
-
-                    // fetch(
-                    //     url,
-                    //     { credentials: 'include' }
-                    // ).then(result => console.log(result, "!!")).catch(err => console.log(err, "err!!"))
-
-                    // fetch(
-                    //     url,
-                    //     {
-                    //         method: "GET",
-                    //         'credentials': 'include',
-                    //         headers: new Headers({
-                    //             'Accept': 'application/json',
-                    //             'Access-Control-Allow-Origin': 'http://localhost:3001',
-                    //             "Access-Control-Request-Headers": "http://localhost:3001",
-                    //             // 'Access-Control-Allow-Origin': true,
-                    //             'Content-Type': 'application/json',
-                    //         })
-                    //     }
-                    // ).then(result => console.log(result, "!!")).catch(err => console.log(err, "err!!"))
-
-                    // fetch(
-                    //     url,
-                    //     {
-                    //       method: "GET",
-                    //     //   'credentials': 'include',
-                    //       headers: new Headers({
-                    //         'Accept': 'application/json',
-                    //         'Content-Type': 'application/json',
-                    //        })
-                    //      }
-                    //    ).then(result => console.log(result, "!!")).catch(err => console.log(err, "err!!"))
-
-                    // fetch(
-                    //     url,
-                    //     {
-                    //       method: "GET",
-                    //       credentials: 'include',
-                    //       headers: {
-                    //         Accept: 'application/json',
-                    //         'Content-Type': 'application/json',
-                    //         "Access-Control-Allow-Credentials": true
-                    //        }
-                    //      }
-                    //    ).then(resp => resp.json()).catch(err => console.log(err, "err!!"))
-                    //    .then(data => console.log(data, "!!")).catch(err => console.log(err, "err!!"))
-                }
-            }, 1001)
-        }
-    }
- */
