@@ -95,6 +95,7 @@ let loginOauthProviderCallback = (req, res) => {
     // if user is not logged in we will be sending back 402 error otherwise 200
     if(req.user) {
         // extracting user object from req object which was done through passport
+        console.log("user: ", req.user)
         res.status(200).json({success: true, user: req.user})
     } else {
         res.status(402).json({success: false, msg: "user not logged in"})
@@ -102,8 +103,12 @@ let loginOauthProviderCallback = (req, res) => {
 }
 
 const returnAuthenticatedUser = (req, res, next) => {
-    console.log("User", req.user, req, "CHECK!!")
-    res.status(200).json({success: true, data: req.user})
+    // console.log("User", req.user, "CHECK!!")
+    if(req.user) {
+        res.status(200).json({success: true, data: req.user, cookies: req.cookies})
+    } else {
+        res.status(401).json({success: false, msg: "user not logged in"})
+    }
 }
 
 const logoutUser = (req, res) => {

@@ -6,8 +6,7 @@ import { AppContexts } from "../../App"
 import ShowErrors from '../ShowErrors';
 import { Box, Icon, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { Facebook, GitHub, Google, LinkedIn } from '@mui/icons-material';
-import { readDataFromServer } from "../utils"
-import axios from "axios"
+import { useNavigate } from 'react-router';
 
 function LoginForm() {
     let [errors, setErrors] = useState([]);
@@ -55,6 +54,10 @@ function LoginForm() {
 }
 
 let ThirdPartyLoginOutlets = () => {
+    // let [redirect, setRedirect] = useState(false)
+
+    const navigate = useNavigate()
+
     let renderLoginOutlets = () => loginOutlets.map(item => <RenderLoginOutlet key={item.name} item={item} />)
     return (
         <Paper sx={{ ml: 2, mt: 1, borderRadius: 2 }}>
@@ -65,13 +68,66 @@ let ThirdPartyLoginOutlets = () => {
 }
 
 let RenderLoginOutlet = ({ item }) => {
-    let [dataset, setDataset] = useState({})
-
-    let appCtx = useContext(AppContexts)
-
-    let handleData = result => setDataset(result)
+    const navigate = useNavigate()
 
     let handleClick = evt => {
+        let url = `http://localhost:3000/auth/google`
+        const newWindow = window.open(url, "_blank", "width=500, height=500")
+
+        let timer = 0;
+
+        if (newWindow) {
+            timer = setInterval(() => {
+                if (newWindow.closed) {
+                    console.log("we're authenticated!!")
+                    if (timer) clearInterval(timer)
+                    navigate("/", {target: "_blank"})
+                    // setRedirect(true)
+                }
+            }, 1001)
+        }
+    }
+
+    return (
+        <Stack
+            onClick={handleClick}
+            sx={{ alignItems: "center", flexDirection: "row", justifyContent: "left", m: 1, p: 1, pl: 4, pr: 4, outline: "solid .2px", borderRadius: 11, cursor: "pointer" }}
+        >
+            <IconButton>
+                <Icon sx={{ m: .4, color: "skyblue", textAlign: "left" }}>
+                    {item.icon}
+                </Icon>
+            </IconButton>
+            <Typography variant='h4' sx={{ textAlign: "center", ml: 4 }}>{item.name}</Typography>
+        </Stack>
+    )
+}
+
+let loginOutlets = [
+    {
+        name: "Google",
+        icon: <Google />
+    },
+    {
+        name: "Facebook",
+        icon: <Facebook />
+    },
+    {
+        name: "Github",
+        icon: <GitHub />
+    },
+    {
+        name: "LinkedIn",
+        icon: <LinkedIn />
+    }
+]
+
+export default LoginForm
+
+/**
+ * 
+ * 
+ let handleClick = evt => {
         // let url = `${appCtx.baseUrl}/auth/google/redirect`
         let url = `http://localhost:3000/auth/google`
         const newWindow = window.open(url, "_blank", "width=500, height=500")
@@ -110,56 +166,33 @@ let RenderLoginOutlet = ({ item }) => {
                     //     }
                     // ).then(result => console.log(result, "!!")).catch(err => console.log(err, "err!!"))
 
-                    fetch(
-                        url,
-                        {
-                          method: "GET",
-                        //   'credentials': 'include',
-                          headers: new Headers({
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                           })
-                         }
-                       ).then(result => console.log(result, "!!")).catch(err => console.log(err, "err!!"))
+                    // fetch(
+                    //     url,
+                    //     {
+                    //       method: "GET",
+                    //     //   'credentials': 'include',
+                    //       headers: new Headers({
+                    //         'Accept': 'application/json',
+                    //         'Content-Type': 'application/json',
+                    //        })
+                    //      }
+                    //    ).then(result => console.log(result, "!!")).catch(err => console.log(err, "err!!"))
+
+                    // fetch(
+                    //     url,
+                    //     {
+                    //       method: "GET",
+                    //       credentials: 'include',
+                    //       headers: {
+                    //         Accept: 'application/json',
+                    //         'Content-Type': 'application/json',
+                    //         "Access-Control-Allow-Credentials": true
+                    //        }
+                    //      }
+                    //    ).then(resp => resp.json()).catch(err => console.log(err, "err!!"))
+                    //    .then(data => console.log(data, "!!")).catch(err => console.log(err, "err!!"))
                 }
             }, 1001)
         }
     }
-
-    console.log(dataset, "dataset!!")
-
-    return (
-        <Stack
-            onClick={handleClick}
-            sx={{ alignItems: "center", flexDirection: "row", justifyContent: "left", m: 1, p: 1, pl: 4, pr: 4, outline: "solid .2px", borderRadius: 11, cursor: "pointer" }}
-        >
-            <IconButton>
-                <Icon sx={{ m: .4, color: "skyblue", textAlign: "left" }}>
-                    {item.icon}
-                </Icon>
-            </IconButton>
-            <Typography variant='h4' sx={{ textAlign: "center", ml: 4 }}>{item.name}</Typography>
-        </Stack>
-    )
-}
-
-let loginOutlets = [
-    {
-        name: "Google",
-        icon: <Google />
-    },
-    {
-        name: "Facebook",
-        icon: <Facebook />
-    },
-    {
-        name: "Github",
-        icon: <GitHub />
-    },
-    {
-        name: "LinkedIn",
-        icon: <LinkedIn />
-    }
-]
-
-export default LoginForm
+ */

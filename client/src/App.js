@@ -1,5 +1,5 @@
-import React, { createContext } from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import React, { createContext, useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom"
 // import TryoutContainer from './trying-out-mui-materials/TryoutContainer';
 import './App.css';
 import MainNavigation from './components/MainNavigation';
@@ -13,6 +13,7 @@ import BasicsUsage from './trying-out-twitter-api/basics';
 import EditUserProfile from './components/routes/EditUserProfile';
 import TopicCategory from './components/routes/TopicCategory';
 import LoginSuccess from './components/routes/LoginSuccess';
+import { getAuthenticatedUserDataFromServer } from './components/utils';
 
 const contexts = {
   baseUrl: "http://localhost:3000"
@@ -21,10 +22,28 @@ const contexts = {
 export const AppContexts = createContext()
 
 function App() {
+  let [user, setUser] = useState([]);
+  let location = useLocation()
+
+  let handleData = result => setUser(result.data.data)
+
+  let getUser = () => {
+    let url = `http://localhost:3000/login/success`
+    getAuthenticatedUserDataFromServer(url, handleData)
+  }
+
+  useEffect(() => getUser(), [])
+
+  useEffect(() => {
+    // console.log("running!!")
+    getUser()
+  }, [location.pathname === "/"])
+
+  user && console.log(user, "user!!")
+
   return (
     <AppContexts.Provider value={contexts}>
-      <BrowserRouter>
-        <div className="App" style={{backgroundColor: "honeydew"}}>
+        <div className="App" style={{ backgroundColor: "honeydew" }}>
           <MainNavigation />
           {/* <TryoutContainer /> */}
           {/* <BasicsUsage /> */}
@@ -40,7 +59,6 @@ function App() {
             <Route path='*' element={<ErrorPage />} />
           </Routes>
         </div>
-      </BrowserRouter>
     </AppContexts.Provider>
   );
 }

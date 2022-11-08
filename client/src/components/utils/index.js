@@ -40,15 +40,37 @@ const readDataFromServer = (endpoint, dataUpdater) => {
     fetch(endpoint)
         .then(resp => resp.json())
         .catch(err => {
-            dataUpdater({errors: [err], data: []})
+            dataUpdater({ errors: [err], data: [] })
         })
         .then(data => {
-            dataUpdater({data: data, errors: []})
+            dataUpdater({ data: data, errors: [] })
         })
-        .catch(err => dataUpdater({errors: [err], data: []}))
+        .catch(err => dataUpdater({ errors: [err], data: [] }))
+}
+
+const getAuthenticatedUserDataFromServer = (endpoint, dataUpdater) => {
+    fetch(
+        endpoint,
+        {
+            method: "GET",
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Credentials": true
+            }
+        }
+    ).then(resp => {
+        if (resp.status === 200) {
+            return resp.json()
+        }
+    }).catch(err => console.error(err, "response err!!"))
+        .then(data => dataUpdater({ data: data, errors: [] }))
+        .catch(err => dataUpdater({ errors: [err], data: [] }))
 }
 
 export {
     sendDataToServer,
-    readDataFromServer
+    readDataFromServer,
+    getAuthenticatedUserDataFromServer
 }

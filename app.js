@@ -9,6 +9,44 @@ const User = require("./models/user");
 require("./configs/passport")
 const cookieSession = require("cookie-session");
 const passport = require("passport");
+
+// settingup cookie
+app.use(cookieSession({
+    maxAge: 24 * 60 * 60 * 1000, // cookie time in millis
+    keys: [process.env.PASSPORT_KEY]
+}))
+
+// initilize passport
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use(cors({
+    origin: "http://localhost:3001",
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true
+}))
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(routes)
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`server is running on port ${PORT}`))
+
+/**
+ * 
+ * 
+ require("./configs/database");
+const cors = require("cors");
+const express = require("express");
+const routes = require("./routes")
+const app = express();
+const User = require("./models/user");
+// require("./utils/fakeSeeds");
+// require("./configs/twitter")
+require("./configs/passport")
+const cookieSession = require("cookie-session");
+const passport = require("passport");
 // const { createProxyMiddleware } = require('http-proxy-middleware');
 
 // app.use(
@@ -44,8 +82,9 @@ app.use(passport.session())
 
 app.use(cors({
     // "Access-Control-Allow-Origin": "http://localhost:3001",
-    "origin": "http://localhost:3001",
-    'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: "http://localhost:3001",
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true
 }))
 
 // app.use(function (req, res, next) {
@@ -60,3 +99,4 @@ app.use(routes)
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`server is running on port ${PORT}`))
+ */
