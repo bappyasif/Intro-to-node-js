@@ -34,6 +34,20 @@ authRoutes.get("/auth/facebook/redirect", passport.authenticate("facebook", {
     successRedirect: "http://localhost:3001/login/success"
 }))
 
+authRoutes.get('/auth/github',passport.authenticate('github'));
+authRoutes.get('/auth/github/redirect', passport.authenticate('github', { 
+    failureMessage: "Login error",
+    failureRedirect: "http://localhost:3001/login",
+    successRedirect: "http://localhost:3001/login/success"
+}));
+
+authRoutes.get('/auth/twitter',passport.authenticate('twitter'));
+authRoutes.get('/auth/twitter/redirect', passport.authenticate('twitter', { 
+    failureMessage: "Login error",
+    failureRedirect: "http://localhost:3001/login",
+    successRedirect: "http://localhost:3001/login/success"
+}));
+
 // this route was matching with "google authenticate route" thats what was causing this "cors" fetching issue
 // authRoutes.get("/auth/user", isAuthenticated, returnAuthenticatedUser)
 

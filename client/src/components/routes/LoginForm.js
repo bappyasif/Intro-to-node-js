@@ -5,7 +5,7 @@ import { sendDataToServer } from '../utils';
 import { AppContexts } from "../../App"
 import ShowErrors from '../ShowErrors';
 import { Box, Icon, IconButton, Paper, Stack, Typography } from '@mui/material';
-import { Facebook, GitHub, Google, LinkedIn } from '@mui/icons-material';
+import { Facebook, GitHub, Google, LinkedIn, Twitter } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
 
 function LoginForm() {
@@ -73,6 +73,10 @@ let RenderLoginOutlet = ({ item }) => {
             url = `http://localhost:3000/auth/google`
         } else if(item.name === "Facebook") {
             url = `http://localhost:3000/auth/facebook`
+        } else if(item.name === "Github") {
+            url = `http://localhost:3000/auth/github`
+        } else if(item.name === "Twitter") {
+            url = `http://localhost:3000/auth/twitter`
         }
         loginPrompt(url, navigate)
     }
@@ -121,8 +125,8 @@ let loginOutlets = [
         icon: <GitHub />
     },
     {
-        name: "LinkedIn",
-        icon: <LinkedIn />
+        name: "Twitter",
+        icon: <Twitter />
     }
 ]
 

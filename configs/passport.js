@@ -1,10 +1,12 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
+const GitHubStrategy = require('passport-github').Strategy;
+const TwitterStrategy =  require("passport-twitter").Strategy;
 const User = require("../models/user");
 
 let findOrCreateuser = (profileName, profileId, userData, done) => {
-    console.log({[profileName]: profileId}, "what?!")
+    // console.log({[profileName]: profileId}, "what?!")
     User.findOne({ [profileName]: profileId })
         .then(currentUser => {
             if (currentUser) {
@@ -74,7 +76,7 @@ let fbStrategyOptions = {
 }
 
 let fbStrategyCallback = (accessToken, refreshToken, profileData, done) => {
-    console.log(profileData, "<fb>")
+    // console.log(profileData, "<fb>")
     let uId = profileData.id;
     let name = profileData.displayName || `${profileData.name.givenName} ${profileData.name.familyName}`;
     let email = profileData?.emails[0]?.value || `f@b.com`
@@ -92,6 +94,62 @@ let fbStrategyCallback = (accessToken, refreshToken, profileData, done) => {
 let fbStrategy = new FacebookStrategy(fbStrategyOptions, fbStrategyCallback);
 
 
+// =============================GITHUB STRATEGY================================ //
+let githubStrategyOptions = {
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/github/redirect",
+    // profileFields: ['id', 'emails', 'name']
+}
+
+let githubStrategyCallback = (accessToken, refreshToken, profileData, done) => {
+    // console.log(profileData, "<github>")
+    let uId = profileData.id;
+    let name = profileData.displayName || `${profileData.name.givenName} ${profileData.name.familyName}`;
+    let email = profileData?.emails?.emails[0]?.value
+
+    let userData = {
+        fullName: name,
+        githubID: uId,
+        email: email,
+        password: "test"
+    }
+
+    findOrCreateuser("githubID", uId, userData, done)
+}
+
+let githubStrategy = new GitHubStrategy(githubStrategyOptions, githubStrategyCallback)
+
+// =============================TWITTER STRATEGY================================ //
+let twitterStrategyOptions = {
+    consumerKey: process.env.TWITTER_CONSUMER_KEY,
+    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+    // consumerKey: process.env.TWITTER_CLIENT_ID,
+    // consumerSecret: process.env.TWITTER_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/twitter/redirect",
+    // profileFields: ['id', 'emails', 'name']
+}
+
+let twitterStrategyCallback = (accessToken, refreshToken, profileData, done) => {
+    // console.log(profileData, "<twitter>")
+    let uId = profileData.id;
+    let name = profileData.displayName || `${profileData.name.givenName} ${profileData.name.familyName}`;
+    let email = profileData?.emails?.emails[0]?.value
+
+    let userData = {
+        fullName: name,
+        twitterID: uId,
+        email: email,
+        password: "test"
+    }
+
+    findOrCreateuser("twitterID", uId, userData, done)
+}
+
+let twitterStrategy = new TwitterStrategy(twitterStrategyOptions, twitterStrategyCallback)
+
 // ==============STRATEGY USES======================= //
+passport.use(twitterStrategy);
+passport.use(githubStrategy);
 passport.use(fbStrategy);
 passport.use(googleStrategy);
