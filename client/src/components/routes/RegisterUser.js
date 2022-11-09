@@ -26,7 +26,7 @@ function RegisterUser() {
         <WrapperDiv className={"register-user"}>
             <H1Element value={"Register User"} />
             
-            {errors.length ? <ShowErrors errors={errors} /> : null}
+            {errors?.length ? <ShowErrors errors={errors} /> : null}
 
             <FormElement handleSubmit={handleSubmit}>
                 <LegendElement text={"Please enter all required fileds data(denoted by * next to them)"} />

@@ -3,6 +3,10 @@ const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const GitHubStrategy = require('passport-github').Strategy;
 const TwitterStrategy =  require("passport-twitter").Strategy;
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt =  require("passport-jwt").ExtractJwt;
+const path = require("path");
+const fs = require("fs");
 const User = require("../models/user");
 
 let findOrCreateuser = (profileName, profileId, userData, done) => {
@@ -148,7 +152,31 @@ let twitterStrategyCallback = (accessToken, refreshToken, profileData, done) => 
 
 let twitterStrategy = new TwitterStrategy(twitterStrategyOptions, twitterStrategyCallback)
 
+// =============================JWT STRATEGY================================ //
+const pathToJwtPairedPublicKey = path.join(__dirname, "..", "id_rsa_pub.pem");
+const JWT_PAIRED_PUBLIC_KEY = fs.readFileSync(pathToJwtPairedPublicKey, "utf-8");
+
+const jwtStrategyOptions = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: JWT_PAIRED_PUBLIC_KEY,
+    algorithms: ["RS256"]
+}
+
+const jwtStrategyCallback = (payload, done) => {
+    User.findOne({_id: payload.sub})
+        .then(user => {
+            if(user) {
+                done(null, user)
+            } else {
+                done(null, false)
+            }
+        }).catch(err => done(err, false))
+}
+
+const jwtStrategy = new JwtStrategy(jwtStrategyOptions, jwtStrategyCallback);
+
 // ==============STRATEGY USES======================= //
+passport.use(jwtStrategy);
 passport.use(twitterStrategy);
 passport.use(githubStrategy);
 passport.use(fbStrategy);
