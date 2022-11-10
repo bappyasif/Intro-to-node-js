@@ -16,7 +16,9 @@ const getAnUser = (req, res, next) => {
 }
 
 const updateUser = (req, res, next) => {
-    res.send("update user")
+    User.findByIdAndUpdate(req.params._id, )
+
+    // res.send("update user")
 }
 
 const deleteUser = (req, res, next) => {
