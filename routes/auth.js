@@ -5,7 +5,7 @@ const authRoutes = express();
 
 let isAuthenticated = (req, res, next) => {
     if (req.user) {
-        console.log("user authenticated!!")
+        console.log("user authenticated!!", req?.jwt)
         next()
     } else {
         console.log("authentication error")

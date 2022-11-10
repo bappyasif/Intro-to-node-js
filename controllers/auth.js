@@ -46,25 +46,38 @@ const registerUser = [
         let newUser = new User(data)
 
         // let's check if this same email address is already been used or not
-        User.find({ email: req.body.email })
+        User.findOne({ email: req.body.email })
             .then((result) => {
                 if (result) {
                     // that email id already exists in database, lets response back user with this error message to try some other email address
-                    res.status(403).json({ success: false, msg: "email id already exists" })
+                    // return res.status(402).json({ success: false, msg: "email id already exists" })
+                    res.status(402).json({ success: false, errors: [{ msg: "email id already exists" }] })
                     return;
-                }
+                } 
             }).catch(err => next(err))
 
-        // email id is not found in databse and safe to complete user registration process with this email address
-        newUser.save((err, user) => {
-            if (err) return next(err);
+            // email id is not found in databse and safe to complete user registration process with this email address
+            newUser.save((err, user) => {
+                if (err) return next(err);
 
-            // issuing jwt token with our private key, so that out verfication with public key remains valid
-            const jwt = issueJWT(user);
+                // issuing jwt token with our private key, so that out verfication with public key remains valid
+                const jwt = issueJWT(user);
 
-            // user is saved successfully, returning a response so that authentication token can be passed on to client browser
-            res.status(200).json({ success: true, user: user, token: jwt.token, expiresIn: jwt.expires })
-        })
+                // user.token = jwt.token;
+                // user.expiresIn = jwt.expires
+                
+                req.jwt = jwt;
+                // req.user = user
+
+                // console.log(jwt, "!!", req.jwt, req.user)
+
+                // user is saved successfully, returning a response so that authentication token can be passed on to client browser
+                res.status(200).json({ success: true, user: user, token: jwt.token, expiresIn: jwt.expires })
+
+                console.log("not running!!")
+                // req.jwt = jwt;
+                // return
+            })
     }
 ]
 
@@ -131,7 +144,8 @@ let loginOauthProviderCallback = (req, res) => {
 const returnAuthenticatedUser = (req, res, next) => {
     // console.log("User", req.user, "CHECK!!")
     if (req.user) {
-        res.status(200).json({ success: true, data: req.user, cookies: req.cookies })
+        // console.log(req?.jwt, "auth!!")
+        res.status(200).json({ success: true, data: req.user, cookies: req.cookies, jwt: req?.jwt })
     } else {
         res.status(401).json({ success: false, msg: "user not logged in" })
     }

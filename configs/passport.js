@@ -5,6 +5,7 @@ const GitHubStrategy = require('passport-github').Strategy;
 const TwitterStrategy =  require("passport-twitter").Strategy;
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt =  require("passport-jwt").ExtractJwt;
+const LocalStrategy = require("passport-local").Strategy;
 const path = require("path");
 const fs = require("fs");
 const User = require("../models/user");
@@ -163,6 +164,7 @@ const jwtStrategyOptions = {
 }
 
 const jwtStrategyCallback = (payload, done) => {
+    console.log(payload, "payload!!")
     User.findOne({_id: payload.sub})
         .then(user => {
             if(user) {

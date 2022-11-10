@@ -1,13 +1,16 @@
 import React, { useContext, useState } from 'react'
+import {useNavigate} from "react-router-dom"
 import { AppContexts } from '../../App';
 import { FieldsetElement, FormElement, InputElement, LabelElement, LegendElement, SubmitButton } from '../FormElements'
 import { H1Element, WrapperDiv } from '../GeneralElements'
 import ShowErrors from '../ShowErrors';
 import { sendDataToServer } from '../utils';
 
-function RegisterUser() {
+function RegisterUser({handleData}) {
     let [errors, setErrors] = useState([]);
     let [formData, setFormData] = useState({});
+
+    let navigate = useNavigate()
     
     const enpoint = useContext(AppContexts)
 
@@ -15,9 +18,14 @@ function RegisterUser() {
 
     let handleError = data => setErrors(data.errors)
 
+    let updateData = result => {
+        handleData(result)
+        navigate("/");
+    }
+
     let handleSubmit = evt => {
         evt.preventDefault();
-        sendDataToServer(enpoint.baseUrl+"/register", formData, handleError)
+        sendDataToServer(enpoint.baseUrl+"/register", formData, handleError, updateData)
     }
     
     let renderFieldsets = () => createFormWithThese.map(data => <RenderFieldset key={data.id} data={data} handleChange={handleChange} />)

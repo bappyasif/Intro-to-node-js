@@ -33,7 +33,8 @@ const issueJWT = (user) => {
 
     const payload = {
         sub: userID,
-        iat: new Date().toISOString()
+        // iat: new Date().toISOString()
+        iat: Date.now()
     }
 
     const options = {

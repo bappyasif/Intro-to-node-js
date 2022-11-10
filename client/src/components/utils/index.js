@@ -1,4 +1,4 @@
-const sendDataToServer = (endpoint, dataObj, errorHandler) => {
+const sendDataToServer = (endpoint, dataObj, errorHandler, handleData) => {
     fetch(endpoint, {
         method: "post",
         headers: {
@@ -11,6 +11,7 @@ const sendDataToServer = (endpoint, dataObj, errorHandler) => {
             // console.log("data is sent to server side", resp)
             // just making all previously existing error to be removed with an empty array
             errorHandler([]);
+            return resp.json()
         } else {
             let data = resp.json();
             data
@@ -19,6 +20,11 @@ const sendDataToServer = (endpoint, dataObj, errorHandler) => {
                 })
                 .catch(err => console.error('error occured', err))
         }
+    }).then(data => {
+        alert("login successfull, will be redirected to home page")
+        console.log(data, "!!")
+        handleData(data)
+
     })
         .catch(err => console.error('post request is failed', err))
 }
@@ -52,7 +58,10 @@ const getAuthenticatedUserDataFromServer = (endpoint, dataUpdater) => {
             return resp.json()
         }
     }).catch(err => console.error(err, "response err!!"))
-        .then(data => dataUpdater({ data: data, errors: [] }))
+        .then(data => {
+            console.log(data, "!data!")
+            dataUpdater({ data: data, errors: [] })
+        })
         .catch(err => dataUpdater({ errors: [err], data: [] }))
 }
 

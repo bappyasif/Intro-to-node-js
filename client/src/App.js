@@ -23,9 +23,14 @@ export const AppContexts = createContext()
 
 function App() {
   let [user, setUser] = useState([]);
+  let [jwtUser, setJwtUser] = useState([]);
   let location = useLocation()
 
-  let handleData = result => setUser(result.data.data)
+  let handleData = result => {
+    console.log(result, "result!!")
+    // setUser(result?.data?.data || result?.user)
+    result?.user ? setJwtUser(result?.user) : setUser(result?.data?.data)
+  }
 
   let getUser = () => {
     let url = `http://localhost:3000/login/success`
@@ -37,7 +42,7 @@ function App() {
     location.pathname === "/" && getUser()
   }, [location.pathname === "/"])
 
-  user && console.log(user, "user!!")
+  user && console.log(user, "user!!", jwtUser)
 
   return (
     <AppContexts.Provider value={contexts}>
@@ -48,7 +53,7 @@ function App() {
         <Routes>
           <Route path='/login' element={<LoginForm />} />
           <Route path='/login/success' element={<LoginSuccess />} />
-          <Route path='/register' element={<RegisterUser />} />
+          <Route path='/register' element={<RegisterUser handleData={handleData} />} />
           <Route path='/choose-topics' element={<ChooseTopics />} />
           <Route path='/choose-topics/:category' element={<TopicCategory />} errorElement={<ErrorPage />} />
           <Route path='/connect' element={<ConnectUsers />} />
