@@ -22,7 +22,9 @@ function LoginForm({handleData}) {
 
     let updateData = result => {
         handleData(result)
-        navigate("/");
+        // navigate("/");
+        console.log(result, "result!!")
+        result.user?.topics.length < 4 ? navigate("/choose-topics") : navigate("/");
     }
 
     let handleSubmit = evt => {

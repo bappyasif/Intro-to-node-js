@@ -1,19 +1,43 @@
-import { Add, ArrowBackIosNewRounded, ArrowForwardIos, TaskAltRounded } from '@mui/icons-material'
-import { Box, IconButton, Paper, Stack, Typography } from '@mui/material'
+import { Add, ArrowBackIosNewRounded, ArrowForwardIos, CloudDone, TaskAltRounded } from '@mui/icons-material'
+import { Box, Button, IconButton, Paper, Stack, Typography } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import { redirect } from 'react-router'
 import { Link } from 'react-router-dom'
 
 function ChooseTopics() {
+    let [selectedTopics, setSelectedTopics] = useState([])
+
+    console.log(selectedTopics, "selecrted topi ")
+
     return (
         <Paper sx={{ color: "blueviolet" }}>
-            <ShowTopics />
+            <Typography variant='h1'>{selectedTopics.length === 0 ? `Atleast choose 4 topics` : selectedTopics.length > 4 ? `${selectedTopics.length} topics are selected` : `${selectedTopics.length} out of 4 topics`}</Typography>
+            <ButtonIconElement list={selectedTopics} />
+            <ShowTopics list={selectedTopics} setSelectedTopics={setSelectedTopics} />
+            <ButtonIconElement list={selectedTopics} />
         </Paper>
     )
 }
 
-let ShowTopics = () => {
-    let renderCategories = () => topicCategories.map((category, key) => <ShowCategoryTopics key={key} category={category} />)
+let ButtonIconElement = ({ list }) => {
+    return (
+        <Button
+            sx={{ borderRadius: 4, outline: "solid", visibility: list.length >= 4 ? "visible" : "hidden" }}
+        >
+            <Typography variant='h4'>Save And Continue</Typography>
+            <IconButton
+                sx={{ p: 2 }}
+            >
+                <CloudDone sx={{ fontSize: "xx-large" }} />
+            </IconButton>
+        </Button>
+    )
+}
+
+let ShowTopics = ({ list, setSelectedTopics }) => {
+
+    let renderCategories = () => topicCategories.map((category, key) => <ShowCategoryTopics key={key} category={category} list={list} setSelectedTopics={setSelectedTopics} />)
+
     return (
         <Box sx={{ width: "68.1vw", margin: "auto" }}>
             {renderCategories()}
@@ -21,8 +45,8 @@ let ShowTopics = () => {
     )
 }
 
-let ShowCategoryTopics = ({ category }) => {
-    let renderCategoryTopics = () => Object.values(category).map(name => <RenderTopics key={name} topics={name} categoryName={Object.keys(category)} />)
+let ShowCategoryTopics = ({ category, list, setSelectedTopics }) => {
+    let renderCategoryTopics = () => Object.values(category).map(name => <RenderTopics key={name} topics={name} categoryName={Object.keys(category)} list={list} setSelectedTopics={setSelectedTopics} />)
     return (
         <>
             <Link to={`/choose-topics/${Object.keys(category)[0]}`}>
@@ -33,7 +57,7 @@ let ShowCategoryTopics = ({ category }) => {
                     }}
                     variant='h4'
                     component={"h2"}
-                    // onClick={() => redirect(`/choose-topics/${Object.keys(category)[0]}`)}
+                // onClick={() => redirect(`/choose-topics/${Object.keys(category)[0]}`)}
                 >
                     {Object.keys(category)[0]}
                 </Typography>
@@ -43,11 +67,11 @@ let ShowCategoryTopics = ({ category }) => {
     )
 }
 
-let RenderTopics = ({ topics, categoryName }) => {
+let RenderTopics = ({ topics, categoryName, list, setSelectedTopics }) => {
     let [scrollInfo, setScrollInfo] = useState({});
     let [currentScroll, setCurrentScroll] = useState(0);
 
-    let renderTopics = () => topics.map(topic => <RenderTopic key={topic} topic={topic} />)
+    let renderTopics = () => topics.map(topic => <RenderTopic key={topic} topic={topic} list={list} setSelectedTopics={setSelectedTopics} />)
 
     let handleScrollAmount = value => setCurrentScroll(value)
 
@@ -151,10 +175,23 @@ let RenderTopics = ({ topics, categoryName }) => {
     )
 }
 
-export let RenderTopic = ({ topic }) => {
+export let RenderTopic = ({ topic, list, setSelectedTopics }) => {
     let [clicked, setClicked] = useState(null)
 
-    let toggleClicked = () => setClicked(!clicked)
+    let toggleClicked = () => {
+        setClicked(!clicked);
+        addOrRemoveTopicFromList()
+    }
+
+    let addOrRemoveTopicFromList = () => {
+        const idx = list?.findIndex(elem => elem === topic);
+
+        if (idx === -1) {
+            setSelectedTopics(prev => [...prev, topic])
+        } else {
+            setSelectedTopics(prev => prev.filter(item => item !== topic))
+        }
+    }
 
     useEffect(() => setClicked(false), [topic])
 

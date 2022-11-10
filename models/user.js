@@ -12,6 +12,7 @@ const User = new Schema({
     facebookID: {type: Schema.Types.String},
     githubID: {type: Schema.Types.String},
     twitterID: {type: Schema.Types.String},
+    topics: {type: Schema.Types.Array},
     friends: Schema.Types.Array,
     frSent: Schema.Types.Array,
     frRecieved: Schema.Types.Array,
