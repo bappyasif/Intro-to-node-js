@@ -8,10 +8,15 @@ const sendDataToServer = (endpoint, dataObj, errorHandler, handleData) => {
         body: JSON.stringify(dataObj)
     }).then((resp) => {
         if (resp.status >= 200 && resp.status <= 299) {
-            // console.log("data is sent to server side", resp)
             // just making all previously existing error to be removed with an empty array
             errorHandler([]);
-            return resp.json()
+            let data = resp.json();
+            data
+                .then(respData => {
+                    alert("login successfull, will be redirected to home page")
+                    handleData(respData)
+                })
+                .catch(err => console.error('error occured', err))
         } else {
             let data = resp.json();
             data
@@ -20,13 +25,7 @@ const sendDataToServer = (endpoint, dataObj, errorHandler, handleData) => {
                 })
                 .catch(err => console.error('error occured', err))
         }
-    }).then(data => {
-        alert("login successfull, will be redirected to home page")
-        console.log(data, "!!")
-        handleData(data)
-
-    })
-        .catch(err => console.error('post request is failed', err))
+    }).catch(err => console.error('post request is failed', err))
 }
 
 const readDataFromServer = (endpoint, dataUpdater) => {

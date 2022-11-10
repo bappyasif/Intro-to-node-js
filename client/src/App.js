@@ -23,7 +23,7 @@ export const AppContexts = createContext()
 
 function App() {
   let [user, setUser] = useState([]);
-  let [jwtUser, setJwtUser] = useState([]);
+  let [jwtUser, setJwtUser] = useState({});
   let location = useLocation()
 
   let handleData = result => {
@@ -39,8 +39,14 @@ function App() {
 
   useEffect(() => {
     // location.pathname === "/" && console.log("running!!")
-    location.pathname === "/" && getUser()
+    // also making sure if oauth is not used and jwtToken is used then dont fetch data from server again on route changes
+    Object.keys(jwtUser).length === 0 && location.pathname === "/" && getUser()
   }, [location.pathname === "/"])
+
+  useEffect(() => {
+    // when jwtUser data is present we'll deal with this, and for simplicity making userData empty
+    if(Object.keys(jwtUser).length !== 0) {setUser({})}
+  }, [jwtUser])
 
   user && console.log(user, "user!!", jwtUser)
 

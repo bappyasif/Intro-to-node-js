@@ -51,25 +51,24 @@ const registerUser = [
                     // that email id already exists in database, lets response back user with this error message to try some other email address
                     // return res.status(402).json({ success: false, msg: "email id already exists" })
                     res.status(402).json({ success: false, errors: [{ msg: "email id already exists" }] })
-                    return;
-                } 
+                } else {
+                    // email id is not found in databse and safe to complete user registration process with this email address
+                    newUser.save((err, user) => {
+                        if (err) return next(err);
+
+                        // issuing jwt token with our private key, so that out verfication with public key remains valid
+                        const jwt = issueJWT(user);
+
+                        // this doesnt get stick, cause its not going through other passoport oauth authentications alike
+                        // req.jwt = jwt;
+
+                        // console.log(jwt, "!!", req.jwt, req.user)
+
+                        // user is saved successfully, returning a response so that authentication token can be passed on to client browser
+                        res.status(200).json({ success: true, user: user, token: jwt.token, expiresIn: jwt.expires })
+                    })
+                }
             }).catch(err => next(err))
-
-            // email id is not found in databse and safe to complete user registration process with this email address
-            newUser.save((err, user) => {
-                if (err) return next(err);
-
-                // issuing jwt token with our private key, so that out verfication with public key remains valid
-                const jwt = issueJWT(user);
-
-                // this doesnt get stick, cause its not going through other passoport oauth authentications alike
-                req.jwt = jwt;
-
-                // console.log(jwt, "!!", req.jwt, req.user)
-
-                // user is saved successfully, returning a response so that authentication token can be passed on to client browser
-                res.status(200).json({ success: true, user: user, token: jwt.token, expiresIn: jwt.expires })
-            })
     }
 ]
 
@@ -109,10 +108,10 @@ const loginUser = [
 
                     } else {
                         // if token does not match then we;re sending back a 401 error saying password does nto match
-                        res.status(401).json({ success: false, errors: [{msg: "password does not match"}] })
+                        res.status(401).json({ success: false, errors: [{ msg: "password does not match" }] })
                     }
                 } else {
-                    res.status(402).json({ success: false, errors: [{msg: "user is not found with this email address"}] })
+                    res.status(402).json({ success: false, errors: [{ msg: "user is not found with this email address" }] })
                 }
             }).catch(err => next(err))
     }
