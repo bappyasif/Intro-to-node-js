@@ -6,20 +6,28 @@ import { AppContexts } from "../../App"
 import ShowErrors from '../ShowErrors';
 import { Box, Icon, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { Facebook, GitHub, Google, LinkedIn, Twitter } from '@mui/icons-material';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
-function LoginForm() {
+function LoginForm({handleData}) {
     let [errors, setErrors] = useState([]);
     let [formData, setFormData] = useState({});
+    
+    const navigate = useNavigate()
     const enpoint = useContext(AppContexts)
+
 
     let handleChange = (evt, elm) => setFormData(prev => ({ ...prev, [elm]: evt.target.value }))
 
-    let handleError = data => setErrors(data.errors)
+    let handleError = data => setErrors(data.errors);
+
+    let updateData = result => {
+        handleData(result)
+        navigate("/");
+    }
 
     let handleSubmit = evt => {
         evt.preventDefault();
-        sendDataToServer(enpoint.baseUrl + "/login", formData, handleError)
+        sendDataToServer(enpoint.baseUrl + "/login", formData, handleError, updateData)
     }
     // console.log(formData, "formData!!");
     // console.log(errors, "errors!!")

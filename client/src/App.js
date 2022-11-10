@@ -51,7 +51,7 @@ function App() {
         {/* <TryoutContainer /> */}
         {/* <BasicsUsage /> */}
         <Routes>
-          <Route path='/login' element={<LoginForm />} />
+          <Route path='/login' element={<LoginForm handleData={handleData} />} />
           <Route path='/login/success' element={<LoginSuccess />} />
           <Route path='/register' element={<RegisterUser handleData={handleData} />} />
           <Route path='/choose-topics' element={<ChooseTopics />} />

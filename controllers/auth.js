@@ -42,7 +42,6 @@ const registerUser = [
         }
 
         // data sanitized and validated
-        // console.log(data, "data!!")
         let newUser = new User(data)
 
         // let's check if this same email address is already been used or not
@@ -63,20 +62,13 @@ const registerUser = [
                 // issuing jwt token with our private key, so that out verfication with public key remains valid
                 const jwt = issueJWT(user);
 
-                // user.token = jwt.token;
-                // user.expiresIn = jwt.expires
-                
+                // this doesnt get stick, cause its not going through other passoport oauth authentications alike
                 req.jwt = jwt;
-                // req.user = user
 
                 // console.log(jwt, "!!", req.jwt, req.user)
 
                 // user is saved successfully, returning a response so that authentication token can be passed on to client browser
                 res.status(200).json({ success: true, user: user, token: jwt.token, expiresIn: jwt.expires })
-
-                console.log("not running!!")
-                // req.jwt = jwt;
-                // return
             })
     }
 ]
@@ -98,7 +90,7 @@ const loginUser = [
         }
 
         // lets check if that user actually exists with this given email id
-        User.find({ email: req.body.email })
+        User.findOne({ email: req.body.email })
             .then(user => {
                 if (user) {
                     // user is found with this email address, lets begin boarding user into our website with authentication and whole bits
@@ -112,21 +104,21 @@ const loginUser = [
                         const jwt = issueJWT(user);
 
                         // successfully verified and commencing user authentication with json web token
-                        res.status(200).json({ success: true, user: user })
+                        // returning response object with signed token for client to use as a valid user
+                        res.status(200).json({ success: true, user: user, token: jwt.token, expiresIn: jwt.expires })
 
                     } else {
                         // if token does not match then we;re sending back a 401 error saying password does nto match
-                        res.status(401).json({ success: false, msg: "password does not match" })
+                        res.status(401).json({ success: false, errors: [{msg: "password does not match"}] })
                     }
                 } else {
-                    res.status(402).json({ success: false, msg: "user is not found with this email address" })
+                    res.status(402).json({ success: false, errors: [{msg: "user is not found with this email address"}] })
                 }
             }).catch(err => next(err))
     }
 ];
 
 let loginWithOauthProvider = (req, res) => {
-    console.log(req, "<><>")
     res.status(200).json({ success: true })
 }
 
@@ -134,7 +126,6 @@ let loginOauthProviderCallback = (req, res) => {
     // if user is not logged in we will be sending back 402 error otherwise 200
     if (req.user) {
         // extracting user object from req object which was done through passport
-        console.log("user: ", req.user)
         res.status(200).json({ success: true, user: req.user })
     } else {
         res.status(402).json({ success: false, msg: "user not logged in" })
@@ -142,9 +133,7 @@ let loginOauthProviderCallback = (req, res) => {
 }
 
 const returnAuthenticatedUser = (req, res, next) => {
-    // console.log("User", req.user, "CHECK!!")
     if (req.user) {
-        // console.log(req?.jwt, "auth!!")
         res.status(200).json({ success: true, data: req.user, cookies: req.cookies, jwt: req?.jwt })
     } else {
         res.status(401).json({ success: false, msg: "user not logged in" })

@@ -164,7 +164,6 @@ const jwtStrategyOptions = {
 }
 
 const jwtStrategyCallback = (payload, done) => {
-    console.log(payload, "payload!!")
     User.findOne({_id: payload.sub})
         .then(user => {
             if(user) {
