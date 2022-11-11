@@ -14,6 +14,7 @@ import EditUserProfile from './components/routes/EditUserProfile';
 import TopicCategory from './components/routes/TopicCategory';
 import LoginSuccess from './components/routes/LoginSuccess';
 import { getAuthenticatedUserDataFromServer } from './components/utils';
+import UserSpecificNewsFeeds from './components/routes/UserSpecificNewsFeeds';
 
 // const contexts = {
 //   baseUrl: "http://localhost:3000"
@@ -32,7 +33,7 @@ function App() {
     result?.user ? setJwtUser(result?.user) : setUser(result?.data?.data)
   }
 
-  let updateData = (key, value) => setUser(prev => ({...prev, [key]: value}))
+  let updateData = (key, value) => setUser(prev => ({ ...prev, [key]: value }))
 
   const contexts = {
     baseUrl: "http://localhost:3000",
@@ -55,7 +56,7 @@ function App() {
   useEffect(() => {
     // when jwtUser data is present we'll deal with this, and for simplicity making userData empty
     // if(Object.keys(jwtUser).length !== 0) {setUser({})}
-    if(Object.keys(jwtUser).length !== 0) {setUser(jwtUser)}
+    if (Object.keys(jwtUser).length !== 0) { setUser(jwtUser) }
   }, [jwtUser])
 
   user && console.log(user, "user!!", jwtUser)
@@ -67,6 +68,7 @@ function App() {
         {/* <TryoutContainer /> */}
         {/* <BasicsUsage /> */}
         <Routes>
+          <Route path='/' element={<UserSpecificNewsFeeds />} />
           <Route path='/login' element={<LoginForm handleData={handleData} />} />
           <Route path='/login/success' element={<LoginSuccess />} />
           <Route path='/register' element={<RegisterUser handleData={handleData} />} />

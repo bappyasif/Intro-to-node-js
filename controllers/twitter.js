@@ -75,11 +75,15 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
         // console.log(results, "results.includes<><>")
 
         results?.data?.forEach(item => {
+            // console.log("chk4 here!!")
             if(item?.context_annotations?.length) {
+                // console.log("chk3 here!!")
 
                 item?.context_annotations?.forEach((elem, idx) => {
+                    console.log("chk2 here!!", elem.domain.name, elem.domain.name.toLowerCase(), elem.domain.name.toLowerCase().includes(focusedTopic),  focusedTopic)
 
-                    if(elem.domain.name.toLowerCase().includes(focusedTopic)) {
+                    if(elem.domain.name.toLowerCase().includes(focusedTopic) || elem.entity.name.toLowerCase().includes(focusedTopic)) {
+                        console.log("chk1 here!!", elem.domain.name)
                         let findIdx = filtered.findIndex(item2 => item2.postData.id === item.id)
                         let chkTxt = filtered.findIndex(item2 => item2.postData.text === item.text)
 
@@ -101,6 +105,7 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
                 }
             }
         })
+        console.log(filtered, "filtered!!")
         res.status(200).json({success: true, data: filtered})
     }).catch(err=>console.error(err))
 }

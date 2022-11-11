@@ -32,7 +32,7 @@ function ShowPostsFromTwitter() {
   )
 }
 
-let RenderPost = ({ item, baseUrl }) => {
+export let RenderPost = ({ item, baseUrl }) => {
   let [imgUrl, setImgUrl] = useState(null)
   let [userData, setUserData] = useState({})
 
@@ -61,7 +61,7 @@ let RenderPost = ({ item, baseUrl }) => {
 
   return (
     <Paper
-    sx={{ m: 1.5, p: 1.5, outline: "dashed", bgcolor: "secondary.text" }}
+    sx={{ m: 1.5, p: 1.5, outline: "dashed", bgcolor: "secondary.text", width: "940px", margin: "auto" }}
     >
       <Stack
         sx={{ flexDirection: "row" }}
@@ -89,7 +89,7 @@ let RenderPost = ({ item, baseUrl }) => {
         >
           <Stack>
             <Typography variant='h4'>{item.postData.text}</Typography>
-            {imgUrl ? <img src={imgUrl} /> : null}
+            {imgUrl ? <img src={imgUrl} height={'290px'} style={{objectFit: "cover"}} /> : null}
           </Stack>
         </Box>
       </Link>
