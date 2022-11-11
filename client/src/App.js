@@ -15,9 +15,9 @@ import TopicCategory from './components/routes/TopicCategory';
 import LoginSuccess from './components/routes/LoginSuccess';
 import { getAuthenticatedUserDataFromServer } from './components/utils';
 
-const contexts = {
-  baseUrl: "http://localhost:3000"
-}
+// const contexts = {
+//   baseUrl: "http://localhost:3000"
+// }
 
 export const AppContexts = createContext()
 
@@ -30,6 +30,15 @@ function App() {
     console.log(result, "result!!")
     // setUser(result?.data?.data || result?.user)
     result?.user ? setJwtUser(result?.user) : setUser(result?.data?.data)
+  }
+
+  let updateData = (key, value) => setUser(prev => ({...prev, [key]: value}))
+
+  const contexts = {
+    baseUrl: "http://localhost:3000",
+    user: user,
+    handleData: handleData,
+    updateData: updateData
   }
 
   let getUser = () => {
@@ -45,7 +54,8 @@ function App() {
 
   useEffect(() => {
     // when jwtUser data is present we'll deal with this, and for simplicity making userData empty
-    if(Object.keys(jwtUser).length !== 0) {setUser({})}
+    // if(Object.keys(jwtUser).length !== 0) {setUser({})}
+    if(Object.keys(jwtUser).length !== 0) {setUser(jwtUser)}
   }, [jwtUser])
 
   user && console.log(user, "user!!", jwtUser)

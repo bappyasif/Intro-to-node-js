@@ -28,6 +28,36 @@ const sendDataToServer = (endpoint, dataObj, errorHandler, handleData) => {
     }).catch(err => console.error('post request is failed', err))
 }
 
+const updateUserInDatabase = (endpoint, dataObj, dataUpdater) => {
+    fetch(endpoint, {
+        method: "put",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataObj)
+    }).then(resp => {
+        let data = null
+        if (resp.status >= 200 && resp.status <= 299) {
+            data = resp.json();
+            data.then(result => {
+                alert("user data is updated, will be redirected to home page")
+                console.log(result, "result!!")
+                let key = Object.keys(dataObj)[0]
+                let value = Object.values(dataObj)[0]
+                dataUpdater(key, value)
+            }).catch(err=>console.log(err))
+        } 
+        // else {
+        //     data = resp.json();
+        //     data.then(result => {
+        //         alert("login successfull, will be redirected to home page")
+        //         dataUpdater(dataObj)
+        //     }).catch(err=>console.log(err))
+        // }
+    }).catch(err=>console.log(err));
+}
+
 const readDataFromServer = (endpoint, dataUpdater) => {
     fetch(endpoint)
         .then(resp => resp.json())
@@ -67,5 +97,6 @@ const getAuthenticatedUserDataFromServer = (endpoint, dataUpdater) => {
 export {
     sendDataToServer,
     readDataFromServer,
-    getAuthenticatedUserDataFromServer
+    getAuthenticatedUserDataFromServer,
+    updateUserInDatabase
 }

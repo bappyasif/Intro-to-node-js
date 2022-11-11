@@ -16,7 +16,16 @@ const getAnUser = (req, res, next) => {
 }
 
 const updateUser = (req, res, next) => {
-    User.findByIdAndUpdate(req.params._id, )
+    User.findOne({_id: req.params.userId})
+        .then(currentUser => {
+            if(currentUser) {
+                currentUser.topics = req.body.topics;
+                console.log(currentUser, "currentUser!!")
+                User.findByIdAndUpdate(currentUser._id, currentUser, {})
+                .then(() => res.status(200).json({success: true, user: currentUser}))
+                .catch(err => next(err));
+            }
+        }).catch(err => next(err));
 
     // res.send("update user")
 }

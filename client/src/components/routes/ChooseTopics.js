@@ -1,27 +1,37 @@
 import { Add, ArrowBackIosNewRounded, ArrowForwardIos, CloudDone, TaskAltRounded } from '@mui/icons-material'
 import { Box, Button, IconButton, Paper, Stack, Typography } from '@mui/material'
-import React, { useState, useEffect } from 'react'
-import { redirect } from 'react-router'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { AppContexts } from '../../App'
+import { updateUserInDatabase } from '../utils'
 
 function ChooseTopics() {
     let [selectedTopics, setSelectedTopics] = useState([])
+
+    let appCtx = useContext(AppContexts);
+
+    let handleClickAndSave = () => {
+        let url = `${appCtx.baseUrl}/users/${appCtx.user._id}`
+        updateUserInDatabase(url, {topics: selectedTopics}, appCtx.updateData)
+        console.log(appCtx.user, "<><>")
+    }
 
     console.log(selectedTopics, "selecrted topi ")
 
     return (
         <Paper sx={{ color: "blueviolet" }}>
             <Typography variant='h1'>{selectedTopics.length === 0 ? `Atleast choose 4 topics` : selectedTopics.length > 4 ? `${selectedTopics.length} topics are selected` : `${selectedTopics.length} out of 4 topics`}</Typography>
-            <ButtonIconElement list={selectedTopics} />
+            <ButtonIconElement list={selectedTopics} handleClick={handleClickAndSave} />
             <ShowTopics list={selectedTopics} setSelectedTopics={setSelectedTopics} />
-            <ButtonIconElement list={selectedTopics} />
+            <ButtonIconElement list={selectedTopics} handleClick={handleClickAndSave} />
         </Paper>
     )
 }
 
-let ButtonIconElement = ({ list }) => {
+let ButtonIconElement = ({ list, handleClick }) => {
     return (
         <Button
+            onClick={handleClick}
             sx={{ borderRadius: 4, outline: "solid", visibility: list.length >= 4 ? "visible" : "hidden" }}
         >
             <Typography variant='h4'>Save And Continue</Typography>
