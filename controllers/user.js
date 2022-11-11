@@ -20,14 +20,12 @@ const updateUser = (req, res, next) => {
         .then(currentUser => {
             if(currentUser) {
                 currentUser.topics = req.body.topics;
-                console.log(currentUser, "currentUser!!")
+                // now updating with new user data
                 User.findByIdAndUpdate(currentUser._id, currentUser, {})
                 .then(() => res.status(200).json({success: true, user: currentUser}))
                 .catch(err => next(err));
             }
         }).catch(err => next(err));
-
-    // res.send("update user")
 }
 
 const deleteUser = (req, res, next) => {

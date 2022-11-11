@@ -13,7 +13,7 @@ const sendDataToServer = (endpoint, dataObj, errorHandler, handleData) => {
             let data = resp.json();
             data
                 .then(respData => {
-                    alert("login successfull, will be redirected to home page")
+                    alert("login successfull")
                     handleData(respData)
                 })
                 .catch(err => console.error('error occured', err))
@@ -28,7 +28,7 @@ const sendDataToServer = (endpoint, dataObj, errorHandler, handleData) => {
     }).catch(err => console.error('post request is failed', err))
 }
 
-const updateUserInDatabase = (endpoint, dataObj, dataUpdater) => {
+const updateUserInDatabase = (endpoint, dataObj, dataUpdater, navigate) => {
     fetch(endpoint, {
         method: "put",
         headers: {
@@ -40,21 +40,14 @@ const updateUserInDatabase = (endpoint, dataObj, dataUpdater) => {
         let data = null
         if (resp.status >= 200 && resp.status <= 299) {
             data = resp.json();
-            data.then(result => {
+            data.then(() => {
                 alert("user data is updated, will be redirected to home page")
-                console.log(result, "result!!")
                 let key = Object.keys(dataObj)[0]
                 let value = Object.values(dataObj)[0]
                 dataUpdater(key, value)
+                navigate("/")
             }).catch(err=>console.log(err))
-        } 
-        // else {
-        //     data = resp.json();
-        //     data.then(result => {
-        //         alert("login successfull, will be redirected to home page")
-        //         dataUpdater(dataObj)
-        //     }).catch(err=>console.log(err))
-        // }
+        }
     }).catch(err=>console.log(err));
 }
 

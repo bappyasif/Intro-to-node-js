@@ -1,7 +1,7 @@
 import { Add, ArrowBackIosNewRounded, ArrowForwardIos, CloudDone, TaskAltRounded } from '@mui/icons-material'
 import { Box, Button, IconButton, Paper, Stack, Typography } from '@mui/material'
 import React, { useState, useEffect, useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AppContexts } from '../../App'
 import { updateUserInDatabase } from '../utils'
 
@@ -10,10 +10,11 @@ function ChooseTopics() {
 
     let appCtx = useContext(AppContexts);
 
+    let navigate = useNavigate()
+
     let handleClickAndSave = () => {
         let url = `${appCtx.baseUrl}/users/${appCtx.user._id}`
-        updateUserInDatabase(url, {topics: selectedTopics}, appCtx.updateData)
-        console.log(appCtx.user, "<><>")
+        updateUserInDatabase(url, {topics: selectedTopics}, appCtx.updateData, navigate)
     }
 
     console.log(selectedTopics, "selecrted topi ")
