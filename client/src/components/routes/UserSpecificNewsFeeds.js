@@ -12,27 +12,38 @@ function UserSpecificNewsFeeds() {
 
     let appCtx = useContext(AppContexts);
 
-    const getDuplicates = (arr, key) => {
-        let filteredIds = arr.map(item => item.postData.id)
-            .filter((value, index, self) => self.indexOf(value) !== index)
+    // const getDuplicates = (arr, key) => {
+    //     let filteredIds = arr.map(item => item.postData.id)
+    //         .filter((value, index, self) => self.indexOf(value) !== index)
 
-        let filtered = [];
+    //     let filtered = [];
 
-        postsDataset.forEach(item => {
-            let chk = filtered.findIndex(elem => elem.postData.id === item.postData.id)
-            if (filteredIds.includes(item.postData.id) && chk === -1) {
-                console.log(item, item.postData.id)
-                filtered.push(item)
-            }
-        })
-        // console.log(filtered, postsDataset, filteredIds)
-        setFilteredDataset(filtered)
-    }
+    //     postsDataset.forEach(item => {
+    //         let chk = filtered.findIndex(elem => elem.postData.id === item.postData.id)
+    //         if (filteredIds.includes(item.postData.id) && chk === -1) {
+    //             console.log(item, item.postData.id)
+    //             filtered.push(item)
+    //         }
+    //     })
+    //     // console.log(filtered, postsDataset, filteredIds)
+    //     setFilteredDataset(filtered)
+    // }
+
+    // let handleDataset = result => {
+    //     console.log(result, "result!!", ...result.data?.data, "<><>", postsDataset)
+
+    //     result?.data?.data && setPostsDataset(prev => ([...prev, ...result.data.data]))
+    // }
 
     let handleDataset = result => {
-        // console.log(result, "result!!", ...result.data?.data)
+        console.log(result, "result!!", ...result.data?.data, "<><>", postsDataset)
 
-        result?.data?.data && setPostsDataset(prev => ([...prev, ...result.data.data]))
+        result?.data?.data && setPostsDataset(prev => {
+            let findIdx = prev.findIndex(item => result.data.data.findIndex(elem => elem.postData.id === item.postData.id))
+            console.log(findIdx, "findIdx!!")
+            // return ([...prev, ...result.data.data])
+            return (findIdx === -1 ? [...prev, ...result.data.data] : [...prev])
+        })
     }
 
     let topics = appCtx?.user?.topics;
@@ -47,15 +58,17 @@ function UserSpecificNewsFeeds() {
         }
     }, [topics])
 
-    useEffect(() => getDuplicates(postsDataset), [postsDataset])
+    // useEffect(() => getDuplicates(postsDataset), [postsDataset])
 
     // useEffect(() => filteredDataset?.length && setPostsDataset(filteredDataset), [filteredDataset])
 
-    console.log(postsDataset, "postsDataset!!", filteredDataset)
+    // console.log(postsDataset, "postsDataset!!", filteredDataset)
+    console.log(postsDataset, "postsDataset!!")
 
-    useEffect(() => setDecidedDataset(filteredDataset.length ? filteredDataset : postsDataset), [postsDataset, filteredDataset])
+    // useEffect(() => setDecidedDataset(filteredDataset.length ? filteredDataset : postsDataset), [postsDataset, filteredDataset])
 
-    let renderPosts = () => (decidedDataset)?.map(dataset => <RenderPost key={dataset?.postData.id} item={dataset} baseUrl={appCtx.baseUrl} />)
+    // let renderPosts = () => (decidedDataset)?.map(dataset => <RenderPost key={dataset?.postData.id} item={dataset} baseUrl={appCtx.baseUrl} />)
+    let renderPosts = () => postsDataset?.map(dataset => <RenderPost key={dataset?.postData.id} item={dataset} baseUrl={appCtx.baseUrl} />)
 
     return (
         <Paper>
