@@ -19,7 +19,20 @@ const updateUser = (req, res, next) => {
     User.findOne({_id: req.params.userId})
         .then(currentUser => {
             if(currentUser) {
-                currentUser.topics = req.body.topics;
+                let dynamicKey = Object.keys(req.body)[0]
+                let dynamicValue = Object.values(req.body)[0]
+
+                if(Object.keys(req.body)[0] !== "topics") {
+                    // currentUser.frSent.push(Object.values(req.body)[0])
+                    currentUser[dynamicKey].push(dynamicValue)
+                } else {
+                    currentUser.topics = req.body.topics; 
+                }
+                // console.log(Object.keys(req.body)[0], "key!!")
+                // currentUser.frSent.push(currentUser._id.toString())
+                console.log(currentUser, "currentUser!!")
+                // currentUser.topics = req.body.topics;
+
                 // now updating with new user data
                 User.findByIdAndUpdate(currentUser._id, currentUser, {})
                 .then(() => res.status(200).json({success: true, user: currentUser}))

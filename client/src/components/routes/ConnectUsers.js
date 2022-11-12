@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AppContexts } from '../../App'
 import { WrapperDiv } from '../GeneralElements'
 import { BoxElement, ButtonElement, CardContentElement, CardElement, CardHeaderElement, MasonryElement, SkeletonBasicElement, StackElement, TypographyElement } from '../MuiElements'
-import { readDataFromServer } from '../utils'
+import { readDataFromServer, updateUserInDatabase } from '../utils'
 
 function ConnectUsers() {
   let [data, setData] = useState({})
@@ -55,6 +56,26 @@ let RenderUser = ({ userData }) => {
   let { fullName, email, friends, created, bio } = { ...userData }
   let test = "https://pbs.twimg.com/profile_images/877631054525472768/Xp5FAPD5_reasonably_small.jpg"
 
+  let [selectedTopics, setSelectedTopics] = useState([])
+
+    let appCtx = useContext(AppContexts);
+
+    let navigate = useNavigate()
+
+    let handleSend = (evt) => {
+      if(evt.target.textContent === "Send") {
+        // let data = {
+        //   frSent: userData._id,
+        //   frRecieved: appCtx.user._id
+        // }
+        // console.log(userData)
+        let url = `${appCtx.baseUrl}/users/${appCtx.user._id}`
+        updateUserInDatabase(url, {frSent: userData._id}, appCtx.updateData, navigate)
+        url = `${appCtx.baseUrl}/users/${userData._id}`
+        updateUserInDatabase(url, {frRecieved: appCtx.user._id}, appCtx.updateData, navigate)
+      }
+    }
+
   return (
     <CardElement
       className="card-wrapper"
@@ -72,8 +93,8 @@ let RenderUser = ({ userData }) => {
           <BoxElement className="fr">
             <TypographyElement text={"Friend Request"} type={"h4"} />
             <BoxElement className="all-btns">
-              <ButtonElement text={"Send"} type="contained" />
-              <ButtonElement text={"Undo"} type="contained" />
+              <ButtonElement text={"Send"} type="contained" action={handleSend} />
+              <ButtonElement text={"Undo"} type="contained" action={handleSend} />
             </BoxElement>
           </BoxElement>
         </StackElement>

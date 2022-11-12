@@ -95,8 +95,8 @@ const CardContentElement = (props) => {
     return <CardContent>{props.children}</CardContent>
 }
 
-const ButtonElement = ({text, type, fontSize, action = null}) => {
-    return <Button type={action} sx={{fontSize: fontSize || "20px", borderRadius: 4}} variant={type}>{text}</Button>
+const ButtonElement = ({text, type, fontSize, action}) => {
+    return <Button type={type} onClick={action} sx={{fontSize: fontSize || "20px", borderRadius: 4}} variant={type}>{text}</Button>
 }
 
 const BoxElement = (props) => {
