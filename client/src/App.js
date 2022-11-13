@@ -34,7 +34,18 @@ function App() {
   }
 
   // let updateData = (key, value) => setUser(prev => ({ ...prev, [key]: value }))
-  let updateData = (key, value) => setUser(prev => ({ ...prev, [key]: [...prev[key], value] }))
+  // let updateData = (key, value) => setUser(prev => ({ ...prev, [key]: [...prev[key], value] }))
+  let updateData = (key, value) => setUser(prev => {
+    let fIdx = prev[key].findIndex(val => val === value);
+    if(fIdx === -1) {
+      return ({ ...prev, [key]: [...prev[key], value] })
+    } else {
+      let filtered = prev[key].filter(val => val !== value);
+      return ({ ...prev, [key]: filtered })
+    }
+    
+    // return ({ ...prev, [key]: [...prev[key], value] })
+  })
 
   const contexts = {
     baseUrl: "http://localhost:3000",

@@ -71,21 +71,20 @@ let RenderUser = ({ userData }) => {
     }
 
     let handleSend = (evt) => {
+      
+      updatingUserDataInDatabase({frSent: userData._id}, appCtx.user._id)
+      updatingUserDataInDatabase({frRecieved: appCtx.user._id}, userData._id)
+
       if(evt.target.textContent === "Send") {
-        // let data = {
-        //   frSent: userData._id,
-        //   frRecieved: appCtx.user._id
-        // }
+
         // console.log(userData)
-        updatingUserDataInDatabase({frSent: userData._id}, appCtx.user._id)
-        // let url = `${appCtx.baseUrl}/users/${appCtx.user._id}`
-        // updateUserInDatabase(url, {frSent: userData._id}, appCtx.updateData, navigate)
+        // updatingUserDataInDatabase({frSent: userData._id}, appCtx.user._id)
         
         updatingUserDataInDatabase({frRecieved: appCtx.user._id}, userData._id)
-        // url = `${appCtx.baseUrl}/users/${userData._id}`
-        // updateUserInDatabase(url, {frRecieved: appCtx.user._id}, appCtx.updateData, navigate)
-      } else {
+        
+      } else if(evt.target.textContent === "Undo") {
         // todo undo
+
       }
     }
 

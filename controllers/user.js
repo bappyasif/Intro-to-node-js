@@ -22,16 +22,23 @@ const updateUser = (req, res, next) => {
                 let dynamicKey = Object.keys(req.body)[0]
                 let dynamicValue = Object.values(req.body)[0]
 
+                // checking if friends related values are already exists or not
+                // if so then we'll remove it, representing Undo action from client "connect" routes
+
+                let chkExists = currentUser[dynamicKey].includes(dynamicValue)
+
                 if(Object.keys(req.body)[0] !== "topics") {
-                    // currentUser.frSent.push(Object.values(req.body)[0])
-                    currentUser[dynamicKey].push(dynamicValue)
+                    if(chkExists) {
+                        let filtered = currentUser[dynamicKey].filter(val => val !== dynamicValue)
+                        currentUser[dynamicKey] = filtered;
+                        // console.log(filtered, "filtered!!")
+                    } else {
+                        currentUser[dynamicKey].push(dynamicValue)
+                    }
+                    // currentUser[dynamicKey].push(dynamicValue)
                 } else {
                     currentUser.topics = req.body.topics; 
                 }
-                // console.log(Object.keys(req.body)[0], "key!!")
-                // currentUser.frSent.push(currentUser._id.toString())
-                console.log(currentUser, "currentUser!!")
-                // currentUser.topics = req.body.topics;
 
                 // now updating with new user data
                 User.findByIdAndUpdate(currentUser._id, currentUser, {})
