@@ -15,6 +15,7 @@ import TopicCategory from './components/routes/TopicCategory';
 import LoginSuccess from './components/routes/LoginSuccess';
 import { getAuthenticatedUserDataFromServer } from './components/utils';
 import UserSpecificNewsFeeds from './components/routes/UserSpecificNewsFeeds';
+import FriendsRequests from './components/routes/FriendsRequests';
 
 // const contexts = {
 //   baseUrl: "http://localhost:3000"
@@ -36,15 +37,16 @@ function App() {
   // let updateData = (key, value) => setUser(prev => ({ ...prev, [key]: value }))
   // let updateData = (key, value) => setUser(prev => ({ ...prev, [key]: [...prev[key], value] }))
   let updateData = (key, value) => setUser(prev => {
+    // checking if data is already in list
     let fIdx = prev[key].findIndex(val => val === value);
     if(fIdx === -1) {
+      // adding to array list
       return ({ ...prev, [key]: [...prev[key], value] })
     } else {
+      // removing from array list
       let filtered = prev[key].filter(val => val !== value);
       return ({ ...prev, [key]: filtered })
     }
-    
-    // return ({ ...prev, [key]: [...prev[key], value] })
   })
 
   const contexts = {
@@ -84,6 +86,7 @@ function App() {
           <Route path='/login' element={<LoginForm handleData={handleData} />} />
           <Route path='/login/success' element={<LoginSuccess />} />
           <Route path='/register' element={<RegisterUser handleData={handleData} />} />
+          <Route path='/friend-requests' element={<FriendsRequests />} />
           <Route path='/choose-topics' element={<ChooseTopics />} />
           <Route path='/choose-topics/:category' element={<TopicCategory />} errorElement={<ErrorPage />} />
           <Route path='/connect' element={<ConnectUsers />} />
