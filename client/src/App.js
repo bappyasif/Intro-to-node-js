@@ -33,7 +33,8 @@ function App() {
     result?.user ? setJwtUser(result?.user) : setUser(result?.data?.data)
   }
 
-  let updateData = (key, value) => setUser(prev => ({ ...prev, [key]: value }))
+  // let updateData = (key, value) => setUser(prev => ({ ...prev, [key]: value }))
+  let updateData = (key, value) => setUser(prev => ({ ...prev, [key]: [...prev[key], value] }))
 
   const contexts = {
     baseUrl: "http://localhost:3000",
