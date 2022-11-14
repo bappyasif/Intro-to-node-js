@@ -17,10 +17,6 @@ import { getAuthenticatedUserDataFromServer } from './components/utils';
 import UserSpecificNewsFeeds from './components/routes/UserSpecificNewsFeeds';
 import FriendsRequests from './components/routes/FriendsRequests';
 
-// const contexts = {
-//   baseUrl: "http://localhost:3000"
-// }
-
 export const AppContexts = createContext()
 
 function App() {
@@ -29,17 +25,14 @@ function App() {
   let location = useLocation()
 
   let handleData = result => {
-    console.log(result, "result!!")
-    // setUser(result?.data?.data || result?.user)
+    // console.log(result, "result!!")
     result?.user ? setJwtUser(result?.user) : setUser(result?.data?.data)
   }
 
-  // let updateData = (key, value) => setUser(prev => ({ ...prev, [key]: value }))
-  // let updateData = (key, value) => setUser(prev => ({ ...prev, [key]: [...prev[key], value] }))
   let updateData = (key, value) => setUser(prev => {
     // checking if data is already in list
     let fIdx = prev[key].findIndex(val => val === value);
-    if(fIdx === -1) {
+    if(fIdx === -1 && key !== "frRecieved") {
       // adding to array list
       return ({ ...prev, [key]: [...prev[key], value] })
     } else {
@@ -50,18 +43,14 @@ function App() {
   })
 
   const acceptOrRejectFriendRequestUpdater = (action, friendId) => {
-    console.log(friendId, action, "appStateUpdate!!")
-    setUser(prev => {
-      let friends = []
-      
+    // console.log(friendId, action, "appStateUpdate!!")
+    setUser(prev => {      
       if(action === "accept") {
-        // friends = prev.friends.push(friendId)
         prev.friends.push(friendId)
       }
 
       let filtered = prev.frRecieved.filter(id => id !== friendId);
 
-      // return ({...prev, frRecieved: filtered, friends: friends})
       return ({...prev, frRecieved: filtered})
     })
   }
@@ -80,14 +69,12 @@ function App() {
   }
 
   useEffect(() => {
-    // location.pathname === "/" && console.log("running!!")
     // also making sure if oauth is not used and jwtToken is used then dont fetch data from server again on route changes
     Object.keys(jwtUser).length === 0 && location.pathname === "/" && getUser()
   }, [location.pathname === "/"])
 
   useEffect(() => {
     // when jwtUser data is present we'll deal with this, and for simplicity making userData empty
-    // if(Object.keys(jwtUser).length !== 0) {setUser({})}
     if (Object.keys(jwtUser).length !== 0) { setUser(jwtUser) }
   }, [jwtUser])
 

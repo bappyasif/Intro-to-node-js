@@ -7,7 +7,6 @@ import { readDataFromServer, updateUserInDatabase } from '../utils';
 
 function FriendsRequests() {
     let appCtx = useContext(AppContexts);
-    console.log(appCtx.user, "<<user>>")
 
     let renderFriendRequests = () => appCtx?.user?.frRecieved?.map(friendId => <ShowFriendRequest key={friendId} friendId={friendId} baseUrl={appCtx.baseUrl} />)
 
@@ -34,8 +33,6 @@ let ShowFriendRequest = ({ friendId, baseUrl }) => {
         readDataFromServer(url, dataHandler)
     }, [url])
 
-    console.log(data, "<<data>>")
-
     let renderListAssets = () => listAssets.map(elem => <RenderListIconElement key={elem.tooltip} elem={elem} friendId={friendId} />)
 
     return (
@@ -46,30 +43,11 @@ let ShowFriendRequest = ({ friendId, baseUrl }) => {
                     src={'https://random.imagecdn.app/76/56'}
                     sx={{ width: 76, height: 56 }}
                 />
-                {/* <ListItemText sx={{ ml: 2, fontSize: 11 }} primary={data.fullName} /> */}
+
                 <Typography sx={{ ml: 2, mr: 2 }} variant="h4">{data.fullName}</Typography>
+                
                 <ListItem>
                     {renderListAssets()}
-                    {/* <ListItemIcon
-                        sx={{
-                            // backgroundColor: 'primary.dark',
-                            // '&:hover': {
-                            //     backgroundColor: 'primary.main',
-                        }}
-                    >
-                        <Tooltip title='Accept' sx={{ p: 0 }}>
-                            <IconButton sx={{ backgroundColor: 'primary.dark', }}>
-                                <HowToRegRounded />
-                            </IconButton>
-                        </Tooltip>
-                    </ListItemIcon>
-                    <ListItemIcon>
-                        <Tooltip title='Reject' sx={{ p: 0 }} >
-                            <IconButton sx={{ backgroundColor: 'primary.dark', }}>
-                                <PersonOffRounded />
-                            </IconButton>
-                        </Tooltip>
-                    </ListItemIcon> */}
                 </ListItem>
             </List>
         </Stack>
@@ -82,15 +60,13 @@ let RenderListIconElement = ({ elem, friendId }) => {
     
     let handleClick = evt => {
         let url = `${appCtx.baseUrl}/users/${appCtx.user._id}`;
-        // let data = {friendId: friendId}
 
         if(elem.tooltip === "Accept") {
             let data = {accept: friendId}
             updateUserInDatabase(`${url}/accept`, data, appCtx.acceptOrRejectFriendRequestUpdater, navigate)
-            console.log("accept", evt.target.textContent)
+
         } else if(elem.tooltip === "Reject") {
             let data = {reject: friendId}
-            console.log("reject")
             updateUserInDatabase(`${url}/reject`, data, appCtx.acceptOrRejectFriendRequestUpdater, navigate)
         }
     }
