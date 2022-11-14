@@ -40,7 +40,8 @@ const MuiInputElement = ({ id, type, handleChange, text, required, color, error 
             id={id}
             name={id}
             type={type}
-            onChange={handleChange}
+            // onChange={handleChange}
+            onChange={(e) => handleChange(e, id)}
             placeholder={text}
             required={required}
             color={color}

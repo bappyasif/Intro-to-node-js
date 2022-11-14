@@ -4,6 +4,8 @@ const FormElement = (props) => {
     return <form className={props.className} method={"post"} onSubmit={props.handleSubmit}>{props.children}</form>
 }
 
+// const FormElementForwardedRef = React.forwardRef(FormElement)
+
 const LegendElement = ({text}) => {
     return <legend>{text}</legend>
 }
@@ -34,6 +36,7 @@ const InputElement = ({ id, name, value, type, handleChange, text, required }) =
 const SubmitButton = ({text}) => <button type="submit">{text}</button>
 
 export {
+    // FormElementForwardedRef,
     FormElement,
     LegendElement,
     FieldsetElement,

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { LoginTwoTone, AppRegistrationTwoTone, TimelineTwoTone, VerifiedUserSharp, DynamicFeedSharp, PeopleTwoTone } from "@mui/icons-material";
 import { H1Element, H4Element, NavElement, WrapperDiv } from './GeneralElements'
 import { MuiButtonElement, MuiInputElement, TabElement } from './MuiElements';
-import { FormElement } from './FormElements';
+import { FormElement, FormElementForwardedRef } from './FormElements';
 import { sendDataToServer } from './utils';
 import { AppContexts } from '../App';
+import { useNavigate } from 'react-router-dom';
 
 function MainNavigation() {
   return (
@@ -32,15 +33,24 @@ let FloatingLogin = () => {
   let [errors, setErrors] = useState([]);
   let [formData, setFormData] = useState({});
 
-  const enpoint = React.useContext(AppContexts)
+  const appCtx = React.useContext(AppContexts);
+  const navigate = useNavigate();
+  const ref = React.useRef(null);
 
   let handleChange = (evt, elm) => setFormData(prev => ({ ...prev, [elm]: evt.target.value }))
 
   let handleError = data => setErrors(data.errors)
 
+  let updateData = result => {
+    appCtx.handleData(result)
+    // console.log(result, "result!!")
+    ref.current?.reset();
+    result.user?.topics.length < 4 ? navigate("/choose-topics") : navigate("/");
+  }
+
   let handleSubmit = evt => {
     evt.preventDefault();
-    sendDataToServer(enpoint.baseUrl + "login", formData, handleError)
+    sendDataToServer(appCtx.baseUrl + "/login", formData, handleError, updateData)
   }
 
   useEffect(() => handleError([]), [formData])
@@ -48,7 +58,9 @@ let FloatingLogin = () => {
   return (
     <WrapperDiv className="fl-wrapper">
       <H4Element value={"Login to your profile"} />
-      <FormElement handleSubmit={handleSubmit}>
+      {/* <FormElement handleSubmit={handleSubmit} > */}
+      {/* <FormElementForwardedRef handleSubmit={handleSubmit} ref={ref}> */}
+      <form ref={ref} method={"post"} onSubmit={handleSubmit}>
         <MuiInputElement
           type={"email"}
           id={"email"}
@@ -68,7 +80,9 @@ let FloatingLogin = () => {
           error={errors?.length ? true : false}
         />
         <MuiButtonElement type={"submit"} text="Login" />
-      </FormElement>
+      </form>
+      {/* </FormElementForwardedRef> */}
+      {/* </FormElement> */}
     </WrapperDiv>
   )
 }

@@ -20,7 +20,7 @@ function RegisterUser({handleData}) {
 
     let updateData = result => {
         handleData(result)
-        navigate("/");
+        navigate(result.user?.topics.length < 4 ? "/choose-topics" : "/");
     }
 
     let handleSubmit = evt => {
