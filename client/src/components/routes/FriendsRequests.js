@@ -1,8 +1,9 @@
 import { HowToRegRounded, PersonOffRounded } from '@mui/icons-material';
 import { Avatar, Box, IconButton, List, ListItem, ListItemIcon, ListItemText, Paper, Stack, Tooltip, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { AppContexts } from '../../App'
-import { readDataFromServer } from '../utils';
+import { readDataFromServer, updateUserInDatabase } from '../utils';
 
 function FriendsRequests() {
     let appCtx = useContext(AppContexts);
@@ -35,34 +36,88 @@ let ShowFriendRequest = ({ friendId, baseUrl }) => {
 
     console.log(data, "<<data>>")
 
+    let renderListAssets = () => listAssets.map(elem => <RenderListIconElement key={elem.tooltip} elem={elem} friendId={friendId} />)
+
     return (
         <Stack>
             <List sx={{ display: "flex", alignItems: "center" }}>
                 <Avatar
                     alt='user pp'
-                    src={'https://random.imagecdn.app/56/56'}
-                    sx={{ width: 56, height: 56 }}
+                    src={'https://random.imagecdn.app/76/56'}
+                    sx={{ width: 76, height: 56 }}
                 />
-                <ListItemText sx={{ ml: 2 }} primary={data.fullName} />
+                {/* <ListItemText sx={{ ml: 2, fontSize: 11 }} primary={data.fullName} /> */}
+                <Typography sx={{ ml: 2, mr: 2 }} variant="h4">{data.fullName}</Typography>
                 <ListItem>
-                    <ListItemIcon>
-                        <Tooltip title='Accept'>
-                            <IconButton>
+                    {renderListAssets()}
+                    {/* <ListItemIcon
+                        sx={{
+                            // backgroundColor: 'primary.dark',
+                            // '&:hover': {
+                            //     backgroundColor: 'primary.main',
+                        }}
+                    >
+                        <Tooltip title='Accept' sx={{ p: 0 }}>
+                            <IconButton sx={{ backgroundColor: 'primary.dark', }}>
                                 <HowToRegRounded />
                             </IconButton>
                         </Tooltip>
                     </ListItemIcon>
                     <ListItemIcon>
-                        <Tooltip title='Reject'>
-                            <IconButton>
+                        <Tooltip title='Reject' sx={{ p: 0 }} >
+                            <IconButton sx={{ backgroundColor: 'primary.dark', }}>
                                 <PersonOffRounded />
                             </IconButton>
                         </Tooltip>
-                    </ListItemIcon>
+                    </ListItemIcon> */}
                 </ListItem>
             </List>
         </Stack>
     )
 }
+
+let RenderListIconElement = ({ elem, friendId }) => {
+    let appCtx = useContext(AppContexts);
+    let navigate = useNavigate()
+    
+    let handleClick = evt => {
+        let url = `${appCtx.baseUrl}/users/${appCtx.user._id}`;
+        // let data = {friendId: friendId}
+
+        if(elem.tooltip === "Accept") {
+            let data = {accept: friendId}
+            updateUserInDatabase(`${url}/accept`, data, appCtx.acceptOrRejectFriendRequestUpdater, navigate)
+            console.log("accept", evt.target.textContent)
+        } else if(elem.tooltip === "Reject") {
+            let data = {reject: friendId}
+            console.log("reject")
+            updateUserInDatabase(`${url}/reject`, data, appCtx.acceptOrRejectFriendRequestUpdater, navigate)
+        }
+    }
+
+    return (
+        <ListItemIcon>
+            <Tooltip title={elem.tooltip} sx={{ p: 0 }} >
+                <IconButton 
+                    onClick={handleClick}
+                    sx={{ backgroundColor: 'primary.dark'}}
+                >
+                    {elem.icon}
+                </IconButton>
+            </Tooltip>
+        </ListItemIcon>
+    )
+}
+
+let listAssets = [
+    {
+        tooltip: "Accept",
+        icon: <HowToRegRounded />
+    },
+    {
+        tooltip: "Reject",
+        icon: <PersonOffRounded />
+    }
+]
 
 export default FriendsRequests

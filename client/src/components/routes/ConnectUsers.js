@@ -105,7 +105,8 @@ let RenderUser = ({ userData }) => {
           <BoxElement className="fr">
             <TypographyElement text={"Friend Request"} type={"h4"} />
             <BoxElement className="all-btns">
-              <ButtonElement text={"Send"} type="contained" action={handleSend} disable={appCtx.user.frSent.includes(_id)} />
+              {/* <ButtonElement text={"Send"} type="contained" action={handleSend} disable={appCtx.user.frSent.includes(_id)} /> */}
+              <ButtonElement text={"Send"} type="contained" action={handleSend} disable={appCtx.user.frSent.includes(_id) || appCtx.user.friends.includes(_id)} />
               <ButtonElement text={"Undo"} type="contained" action={handleSend} />
             </BoxElement>
           </BoxElement>

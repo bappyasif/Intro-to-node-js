@@ -51,6 +51,10 @@ const updateUserInDatabase = (endpoint, dataObj, dataUpdater, navigate) => {
     }).catch(err=>console.log(err));
 }
 
+// const acceptOrRejectUserFriendRequest = () => {
+
+// }
+
 const readDataFromServer = (endpoint, dataUpdater) => {
     fetch(endpoint)
         .then(resp => resp.json())

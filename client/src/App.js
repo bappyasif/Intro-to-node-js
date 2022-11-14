@@ -49,11 +49,29 @@ function App() {
     }
   })
 
+  const acceptOrRejectFriendRequestUpdater = (action, friendId) => {
+    console.log(friendId, action, "appStateUpdate!!")
+    setUser(prev => {
+      let friends = []
+      
+      if(action === "accept") {
+        // friends = prev.friends.push(friendId)
+        prev.friends.push(friendId)
+      }
+
+      let filtered = prev.frRecieved.filter(id => id !== friendId);
+
+      // return ({...prev, frRecieved: filtered, friends: friends})
+      return ({...prev, frRecieved: filtered})
+    })
+  }
+
   const contexts = {
     baseUrl: "http://localhost:3000",
     user: user,
     handleData: handleData,
-    updateData: updateData
+    updateData: updateData,
+    acceptOrRejectFriendRequestUpdater: acceptOrRejectFriendRequestUpdater
   }
 
   let getUser = () => {
