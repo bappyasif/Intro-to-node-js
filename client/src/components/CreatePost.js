@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { GiphyFetch } from "@giphy/js-fetch-api"
 import { Gif, Grid } from "@giphy/react-components"
 import EmojiPicker from "emoji-picker-react"
@@ -7,13 +7,16 @@ import { FormElement } from './FormElements'
 import { BoxElement, ButtonElement, CardContentElement, CardElement, CardHeaderElement, ContainerElement, EmoticonElement, FormControlElement, GifElement, HelperTextElement, IconButtonElement, ImageElement, InputLabelElement, PaperElement, PollElement, PrivacyElement, SearchUserInputElement, TypographyElement, UserInputElement, VideoCameraFrontElement } from './MuiElements'
 import ChoosePrivacy from './ChoosePrivacy'
 import CreatePoll from './CreatePoll'
+import ShowUserPostMedias from './ShowUserPostMedias'
 
 function CreatePost() {
   let [addedOptions, setAddedOptions] = useState({})
 
   let handleAddedOptions = (evt, elm, val) => {
     if (elm) {
-      setAddedOptions(prev => ({ ...prev, [elm]: val, current: elm }))
+      val ? setAddedOptions(prev => ({ ...prev, [elm]: val, current: elm })) : setAddedOptions(prev => ({ ...prev, current: elm }))
+      // setAddedOptions(prev => ({ ...prev, [elm]: val, current: elm }))
+      // setAddedOptions(prev => ({ ...prev, [elm]: val, current: "elm" }))
     }
   }
 
@@ -28,6 +31,11 @@ function CreatePost() {
           <CardContentElement>
             <ShowRichTextEditor />
           </CardContentElement>
+
+          {/* showing user selected medias in post */}
+          <ShowUserPostMedias mediaContents={addedOptions} />
+          {/* <ShowUserPostMedias mediaType={"picture"} mediaContent={addedOptions.Image} /> */}
+          {/* <ShowUserPostMedias mediaType={"picture"} mediaContent={"https://random.imagecdn.app/500/150"} /> */}
 
           {iconsBtns.map(item => <ShowIconBtns key={item.name} item={item} handleAddedOptions={handleAddedOptions} />)}
 
@@ -46,7 +54,7 @@ let ShowRichTextEditor = () => {
         initialValue="This is the initial content of the editor"
         init={{
           selector: 'textarea',  // change this value according to your HTML
-          height: 300,
+          height: 200,
           branding: false,
           menubar: false,
           preview_styles: false,
@@ -66,13 +74,13 @@ let ShowClickActionsFunctionality = ({ currentElement, handleValue }) => {
   if (currentElement === "Image" || currentElement === "Video") {
     renderFunctionality = <ShowUrlGrabbingForm handleValue={handleValue} currentElement={currentElement} />
   } else if (currentElement === "Gif") {
-    renderFunctionality = <ShowGifSelectingElement />
+    renderFunctionality = <ShowGifSelectingElement handleValue={handleValue} currentElement={currentElement} />
   } else if (currentElement === "Emoji") {
     renderFunctionality = <ShowEmoJiPickerElement />
   } else if (currentElement === "Poll") {
-    renderFunctionality = <CreatePoll />
+    renderFunctionality = <CreatePoll handleValue={handleValue} currentElement={currentElement} />
   } else if (currentElement === "Privacy") {
-    renderFunctionality = <ChoosePrivacy />
+    renderFunctionality = <ChoosePrivacy handleValue={handleValue} currentElement={currentElement} />
   }
 
   return (
@@ -88,7 +96,7 @@ let ShowEmoJiPickerElement = () => {
   )
 }
 
-let ShowGifSelectingElement = () => {
+let ShowGifSelectingElement = ({handleValue, currentElement}) => {
   let [searchText, setSearchText] = useState(null);
   let [gifData, setGifData] = useState(null);
 
@@ -100,13 +108,14 @@ let ShowGifSelectingElement = () => {
     e.preventDefault();
     console.log(gif, "gif!!")
     setGifData(gif)
+    handleValue(e, currentElement, gif);
   }
 
   let handleSearchText = evt => setSearchText(evt.target.value)
 
   return (
     <BoxElement>
-      {gifData && <Gif gif={gifData} width={200} height={200} />}
+      {/* {gifData && <Gif gif={gifData} width={200} height={200} />} */}
 
       <ShowGifSearch handleSearchText={handleSearchText} />
 
@@ -134,13 +143,20 @@ let ShowGifSearch = ({ handleSearchText }) => {
 }
 
 let ShowUrlGrabbingForm = ({ handleValue, currentElement }) => {
-  let [value, setValue] = useState(null)
+  let [value, setValue] = useState(null);
+
+  // const ref = useRef();
 
   let handleChange = event => setValue(event.target.value)
 
   let handleSubmit = event => {
     event.preventDefault();
-    handleValue(event, currentElement, value)
+    // uploading url into state
+    handleValue(event, currentElement, value);
+    // changing current elemnt to something which has no actionable components attached to it
+    handleValue(event, "choose again", "");
+    // reseting form value, but didnt have to as we're closing this functionable components
+    // ref.current.reset();
   }
 
   return (

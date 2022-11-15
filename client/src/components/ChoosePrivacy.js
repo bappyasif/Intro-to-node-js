@@ -1,8 +1,8 @@
 import { MenuItem, Select } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BoxElement, EverybodyElement, FormControlElement, FriendsElement, InputLabelElement, MuiBoxElement, StackElement, TypographyElement } from './MuiElements'
 
-function ChoosePrivacy() {
+function ChoosePrivacy({ handleValue, currentElement }) {
     let [settingSelected, setSettingSelected] = useState('')
 
     let handleSettingSelected = event => {
@@ -10,6 +10,17 @@ function ChoosePrivacy() {
     }
 
     let renderSettings = () => privacyIcons.map(item => <MenuItem key={item.name} value={item.name}>{item.name}</MenuItem>)
+
+    let updatePrivacy = () => {
+         // uploading value into state
+         handleValue(null, currentElement, settingSelected);
+         // changing current elemnt to something which has no actionable components attached to it
+         handleValue(null, "choose again", "");
+    }
+
+    useEffect(() => {
+        settingSelected && updatePrivacy()
+    }, [settingSelected])
 
     return (
         <BoxElement>
@@ -31,11 +42,11 @@ function ChoosePrivacy() {
     )
 }
 
-let ShowRespectiveIcon = ({privacy}) => {
+export let ShowRespectiveIcon = ({ privacy }) => {
     let icon = null;
-    if(privacy === "Everybody") {
+    if (privacy === "Everybody") {
         icon = <EverybodyElement />
-    } else if(privacy === "Friends") {
+    } else if (privacy === "Friends") {
         icon = <FriendsElement />
     }
 

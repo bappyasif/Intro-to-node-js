@@ -2,6 +2,7 @@ import { Paper, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { TwitterTimelineEmbed, TwitterShareButton, TwitterFollowButton, TwitterHashtagButton, TwitterMentionButton, TwitterTweetEmbed, TwitterMomentShare, TwitterDMButton, TwitterVideoEmbed, TwitterOnAirButton } from 'react-twitter-embed';
 import { AppContexts } from '../../App'
+import CreatePost from '../CreatePost';
 import { RenderPost } from '../ShowPostsFromTwitter';
 import { readDataFromServer } from '../utils';
 
@@ -40,6 +41,7 @@ function UserSpecificNewsFeeds() {
     return (
         <Paper>
             <Typography variant='h1'>User Specific News Feeds</Typography>
+            <CreatePost />
             <TweetEmbed tweetsDataset={postsDataset} />
             {renderPosts()}
         </Paper>
