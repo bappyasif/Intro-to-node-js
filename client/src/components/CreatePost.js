@@ -29,7 +29,7 @@ function CreatePost() {
           <CardHeaderElement avatarUrl={null} altText={"fullname"} title={"User Name"} joined={null} />
 
           <CardContentElement>
-            <ShowRichTextEditor />
+            <ShowRichTextEditor handleChange={handleAddedOptions} />
           </CardContentElement>
 
           {/* showing user selected medias in post */}
@@ -47,7 +47,7 @@ function CreatePost() {
   )
 }
 
-let ShowRichTextEditor = () => {
+let ShowRichTextEditor = ({handleChange}) => {
   return (
     <>
       <Editor
@@ -62,7 +62,10 @@ let ShowRichTextEditor = () => {
           toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
         }}
         id="body"
-      // onChange={(e) => handleChange(e, 'body')}
+        onEditorChange={(content) => handleChange(null, 'body', content)}
+        // onEditorChange={(e) => handleChange(e, 'body', e.target.getContent())}
+        // onChange={(e) => handleChange(e, 'body', e.target.getContent())}
+        // onChange={(e) => console.log(e, 'body', e.target.getContent())}
       />
     </>
   )
@@ -96,7 +99,7 @@ let ShowEmoJiPickerElement = () => {
   )
 }
 
-let ShowGifSelectingElement = ({handleValue, currentElement}) => {
+let ShowGifSelectingElement = ({ handleValue, currentElement }) => {
   let [searchText, setSearchText] = useState(null);
   let [gifData, setGifData] = useState(null);
 

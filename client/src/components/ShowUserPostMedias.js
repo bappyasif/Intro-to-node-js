@@ -1,6 +1,6 @@
 import { Gif } from '@giphy/react-components';
 import { Box, Divider, ListItem, ListItemButton, ListItemText, Paper, Stack, Typography } from '@mui/material';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ShowRespectiveIcon } from './ChoosePrivacy';
 
 function ShowUserPostMedias({ mediaContents }) {
@@ -8,8 +8,6 @@ function ShowUserPostMedias({ mediaContents }) {
         let content = [];
 
         for (let key in mediaContents) {
-            // console.log(mediaContents[key])
-
             if (key === "Image" && mediaContents[key]?.includes("http")) {
                 content.push(<img src={mediaContents[key]} />)
             } else if (key === "Image" && !mediaContents[key]?.includes("http")) {
@@ -54,11 +52,11 @@ const ShowPoll = ({ pollData }) => {
     }
 
     return (
-        <Paper sx={{mb: 2}}>
+        <Paper sx={{ mb: 2 }}>
             <Typography variant='h4'>Poll Question: {question}</Typography>
             <Divider />
             <Stack
-                sx={{flexDirection: "row", gap: 1.1}}
+                sx={{ flexDirection: "row", gap: 1.1 }}
             >
                 {renderOptions()}
             </Stack>
@@ -67,12 +65,29 @@ const ShowPoll = ({ pollData }) => {
 }
 
 const RenderPollOption = ({ option }) => {
+    let [clickCount, setClickCount] = useState(0);
+
+    let handleCount = () => {
+        setClickCount(prev => prev < 20 ? prev + 1 : prev)
+    }
+
+    useEffect(() => setClickCount(option.count || 0), [])
+
     return (
         <ListItemButton
-            sx={{ m: 1, mb: 2, width: (window.innerWidth / 6) }}
+            sx={{ m: 1, mb: 2, width: (window.innerWidth / 6), flexDirection: "column" }}
+            onClick={handleCount}
         >
+            <Typography
+                class="slider"
+                sx={{
+                    textAlign: "left",
+                    height: 2.9,
+                    width: clickCount / 100 * 5,
+                    backgroundColor: "red"
+                }}></Typography>
             <ListItemText
-                primary={option.number}
+                primary={option.number + "<< count >>" + clickCount}
                 secondary={
                     <Typography
                         sx={{ display: 'inline' }}
@@ -98,26 +113,3 @@ export let handleMediaFileChecks = (mediaFile) => {
 }
 
 export default ShowUserPostMedias
-
-/**
- * 
- * 
- function ShowUserPostMedias({ mediaType, mediaContent }) {
-    let renderContent = () => {
-        let content = null;
-        if (mediaType === 'picture' && mediaContent.includes("http")) {
-            content = <img src={mediaContent} alt='what gives' />
-        } else if (mediaType === 'picture' && !mediaContent.includes("http")) {
-            content = <img src={handleMediaFileChecks(mediaContent)} alt='what gives' />
-        } else if (mediaType === 'video' && mediaContent.includes("http")) {
-            content = <img src={mediaContent} alt='what gives' />
-        }
-        return content;
-    }
-    return (
-        <Box>
-            {renderContent()}
-        </Box>
-    )
-}
- */
