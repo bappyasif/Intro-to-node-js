@@ -76,6 +76,7 @@ const CardElement = (props) => {
 const AvatarElement = ({ url, altText }) => {
     return (
         <Avatar
+            sx={{width: 110, height: 90}}
             alt={altText}
             src={url}
         />
@@ -86,8 +87,9 @@ const CardHeaderElement = ({ avatarUrl, title, joined, altText }) => {
     return (
         <CardHeader
             avatar={<AvatarElement url={avatarUrl} altText={altText} />}
-            title={title}
-            subheader={`Member Since: ${moment(joined).fromNow()}`}
+            title={<Typography variant="h2">{title}</Typography>}
+            subheader={<Typography sx={{color: "text.secondary"}} variant="h6">{`Member Since: ${moment(joined).fromNow()}`}</Typography>}
+            sx={{fontSize: "33px"}}
         />
     )
 }

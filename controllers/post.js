@@ -21,23 +21,15 @@ const createNewPost = [
     body("body", "post needs to be at least 4 characters long")
     .trim().isLength({min: 4}),
     body("Image", "image url needs to be a proper url")
-    // .trim().exists().isURL().escape(),
-    .trim().escape(),
+    .trim().isURL().optional().escape(),
+    // .trim().escape(),
     body("Video", "video url needs to be a proper url")
-    // .trim().isURL().escape(),
-    .trim().escape(),
+    .trim().isURL().optional().escape(),
+    // .trim().escape(),
     body("Gif", "gif needs to be an array of gif object")
-    .isObject(),
-    // .isObject().escape(),
-    // .trim().isObject().escape(),
-    // .trim().isArray().escape(),
-    // .trim().exists(),
+    .isObject().optional(),
     check("Poll", "poll needs to be an array of object")
-    .isObject(),
-    // .trim().isObject(),
-    // .trim().isObject().escape(),
-    // .trim().isArray().escape(),
-    // .trim().exists(),
+    .isObject().optional(),
     body("Privacy", "Privacy needs to be a string")
     .trim().isString().escape(),
 

@@ -8,12 +8,12 @@ import { BoxElement, ButtonElement, CardContentElement, CardElement, CardHeaderE
 import ChoosePrivacy from './ChoosePrivacy'
 import CreatePoll from './CreatePoll'
 import ShowUserPostMedias from './ShowUserPostMedias'
-import { Box, Button, IconButton, Stack } from '@mui/material'
+import { Box, Button, IconButton, Stack, Typography } from '@mui/material'
 import { PostAddTwoTone } from '@mui/icons-material'
 import { sendDataToServer } from './utils'
 import { AppContexts } from '../App'
 
-function CreatePost() {
+function CreatePost({setPostsDataset}) {
   let [addedOptions, setAddedOptions] = useState({})
   let [errors, setErrors] = useState([])
   let [postData, setPostData] = useState([])
@@ -22,7 +22,11 @@ function CreatePost() {
 
   let handleErrors = data => setErrors(data.errors);
 
-  let handlePostData = result => setPostData(result.post)
+  let handlePostData = result => {
+    setPostData(result.post)
+    setAddedOptions({})
+    setPostsDataset(prev => [...prev, result.post])
+  }
 
   let handleAddedOptions = (evt, elm, val) => {
     if (elm !== "body") {
@@ -45,13 +49,20 @@ function CreatePost() {
     }
   }
 
+  // useEffect(() => postData?.length && setAddedOptions({}), [postData])
+
   console.log(addedOptions, "addedOptions!!", errors, postData)
 
   return (
     <ContainerElement width={"md"}>
       <PaperElement>
         <CardElement>
-          <CardHeaderElement avatarUrl={null} altText={"fullname"} title={"User Name"} joined={null} />
+          <CardHeaderElement
+            avatarUrl={appCtx.user?.ppUrl || "https://random.imagecdn.app/500/150"}
+            altText={"fullname"}
+            title={appCtx.user?.fullName || "User Name"}
+            joined={appCtx.user?.created || Date.now()}
+          />
 
           <CardContentElement>
             <ShowRichTextEditor handleChange={handleAddedOptions} />
@@ -62,13 +73,20 @@ function CreatePost() {
           {/* <ShowUserPostMedias mediaType={"picture"} mediaContent={addedOptions.Image} /> */}
           {/* <ShowUserPostMedias mediaType={"picture"} mediaContent={"https://random.imagecdn.app/500/150"} /> */}
 
-          {iconsBtns.map(item => <ShowIconBtns key={item.name} item={item} handleAddedOptions={handleAddedOptions} />)}
+          <Stack 
+            flexDirection={"row"} 
+            alignItems={"baseline"} 
+            justifyContent= {"center"}
+            marginTop="2"
+          >
+            {iconsBtns.map(item => <ShowIconBtns key={item.name} item={item} handleAddedOptions={handleAddedOptions} />)}
+          </Stack>
 
           <ShowClickActionsFunctionality currentElement={addedOptions.current} handleValue={handleAddedOptions} />
 
           <Stack onClick={createPost}>
             <Button variant='contained' endIcon={<PostAddTwoTone />}>
-              Create Post
+              <Typography variant={"h6"}>Create Post</Typography>
             </Button>
           </Stack>
 
@@ -89,8 +107,8 @@ let ShowRichTextEditor = ({ handleChange }) => {
           branding: false,
           menubar: false,
           preview_styles: false,
-          plugins: 'link code',
-          toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+          plugins: 'link code emoticons autolink',
+          toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code | emoticons'
         }}
         id="body"
         onChange={(e) => handleChange(e, 'body')}
@@ -145,6 +163,7 @@ let ShowGifSelectingElement = ({ handleValue, currentElement }) => {
     console.log(gif, "gif!!")
     setGifData(gif)
     handleValue(e, currentElement, gif);
+    handleValue(e, "choose again", "");
   }
 
   let handleSearchText = evt => setSearchText(evt.target.value)
@@ -196,7 +215,7 @@ let ShowUrlGrabbingForm = ({ handleValue, currentElement }) => {
   }
 
   return (
-    <Box sx={{m: 2}}>
+    <Box sx={{ m: 2 }}>
       <FormElement handleSubmit={handleSubmit}>
         <FormControlElement>
           <InputLabelElement hFor={"url"} text={"Enter Url Of Media Resource Here"} />
@@ -214,14 +233,6 @@ let ShowIconBtns = ({ item, handleAddedOptions }) => {
     <Button onClick={e => handleAddedOptions(e, item.name, '')} variant='outlined' startIcon={item.elem} sx={{ m: 1.3, mt: 0 }}>
       <TypographyElement text={item.name} type={"span"} />
     </Button>
-    // <IconButtonElement className="icon-button" clickHandler={handleAddedOptions} elm={item.name}>
-    //   <IconButton>
-    //     <Button variant='contained' startIcon={item.elem}>
-    //       <TypographyElement text={item.name} type={"span"} />
-    //     </Button>
-    //   </IconButton>
-    //   <TypographyElement text={item.name} type={"span"} />
-    // </IconButtonElement>
   )
 }
 
@@ -230,7 +241,7 @@ let iconsBtns = [
   { name: "Image", elem: <ImageElement /> },
   { name: "Video", elem: <VideoCameraFrontElement /> },
   { name: "Gif", elem: <GifElement /> },
-  { name: "Emoji", elem: <EmoticonElement /> },
+  // { name: "Emoji", elem: <EmoticonElement /> },
   { name: "Poll", elem: <PollElement /> },
   { name: "Privacy", elem: <PrivacyElement /> }
 ];

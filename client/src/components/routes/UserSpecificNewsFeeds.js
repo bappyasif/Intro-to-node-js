@@ -4,17 +4,19 @@ import { TwitterTimelineEmbed, TwitterShareButton, TwitterFollowButton, TwitterH
 import { AppContexts } from '../../App'
 import CreatePost from '../CreatePost';
 import { RenderPost } from '../ShowPostsFromTwitter';
+import ShowUserCreatedPost from '../UserCreatedPost';
 import { readDataFromServer } from '../utils';
 
 function UserSpecificNewsFeeds() {
-    let [postsDataset, setPostsDataset] = useState([]);
+    let [tweetPostsDataset, setTweetPostsDataset] = useState([]);
+    let [userPostsDataset, setUserPostsDataset] = useState([])
 
     let appCtx = useContext(AppContexts);
 
     let handleDataset = result => {
-        console.log(result, "result!!", ...result.data?.data, "<><>", postsDataset)
+        console.log(result, "result!!", ...result?.data?.data, "<><>", tweetPostsDataset)
 
-        result?.data?.data && setPostsDataset(prev => {
+        result?.data?.data && setTweetPostsDataset(prev => {
             let findIdx = prev.findIndex(item => result.data.data.findIndex(elem => elem.postData.id === item.postData.id))
             console.log(findIdx, "findIdx!!")
             // return ([...prev, ...result.data.data])
@@ -25,7 +27,7 @@ function UserSpecificNewsFeeds() {
     let topics = appCtx?.user?.topics;
 
     useEffect(() => {
-        if (appCtx?.user?.friends?.length === 0) {
+        if (appCtx?.user?.friends?.length !== -1) {
 
             topics?.forEach(topic => {
                 let url = `${appCtx.baseUrl}/twitter/search/${topic}/${topic}`
@@ -34,22 +36,29 @@ function UserSpecificNewsFeeds() {
         }
     }, [topics])
 
-    console.log(postsDataset, "postsDataset!!")
+    console.log(userPostsDataset, "postsDataset!!")
 
-    let renderPosts = () => postsDataset?.map(dataset => <RenderPost key={dataset?.postData.id} item={dataset} baseUrl={appCtx.baseUrl} />)
+    let renderTweetPosts = () => tweetPostsDataset?.map(dataset => <RenderPost key={dataset?.postData._id} item={dataset} baseUrl={appCtx.baseUrl} />)
+    // let renderPosts = () => postsDataset?.map(dataset => <RenderPost key={dataset?._id} item={dataset} baseUrl={appCtx.baseUrl} />)
+    // let renderPosts = () => postsDataset?.map(dataset => <RenderBasicPost key={dataset?._id} data={dataset} />)
+
+    let renderUserPosts = () => userPostsDataset?.map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
 
     return (
         <Paper>
             <Typography variant='h1'>User Specific News Feeds</Typography>
-            <CreatePost />
-            <TweetEmbed tweetsDataset={postsDataset} />
-            {renderPosts()}
+            
+            <CreatePost setPostsDataset={setUserPostsDataset} />
+            {renderUserPosts()}
+            
+            <TweetEmbed tweetsDataset={tweetPostsDataset} />
+            {renderTweetPosts()}
         </Paper>
     )
 }
 
 const TweetEmbed = ({ tweetsDataset }) => {
-    let renderEmbeds = () => tweetsDataset?.map(tweetDataset => <TwitterTweetEmbed key={tweetDataset.postData.id} tweetId={tweetDataset.postData.id} onLoad={function noRefCheck(){}} placeholder="Loading" />)
+    let renderEmbeds = () => tweetsDataset?.map(tweetDataset => <TwitterTweetEmbed key={tweetDataset?.postData?.id} tweetId={tweetDataset?.postData?.id} onLoad={function noRefCheck(){}} placeholder="Loading" />)
     return (
         <Paper
             className='embeds-wrap'

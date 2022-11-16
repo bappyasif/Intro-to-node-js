@@ -34,7 +34,7 @@ function ShowUserPostMedias({ mediaContents }) {
 
     return (
         <Box
-            sx={{display: "flex", flexDirection: "column"}}
+            sx={{display: "flex", flexDirection: "column", mb: 2}}
         >
             {renderContents()}
         </Box>
