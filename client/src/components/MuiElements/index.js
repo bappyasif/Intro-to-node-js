@@ -96,8 +96,8 @@ const CardContentElement = (props) => {
     return <CardContent>{props.children}</CardContent>
 }
 
-const ButtonElement = ({text, type, fontSize, action, disable}) => {
-    return <Button type={type} disabled={disable} onClick={action} sx={{fontSize: fontSize || "20px", borderRadius: 4}} variant={type}>{text}</Button>
+const ButtonElement = ({text, type, fontSize, action, disable, variant}) => {
+    return <Button type={type} disabled={disable} onClick={action} sx={{fontSize: fontSize || "20px", borderRadius: 4, width: "100%"}} variant={variant}>{text}</Button>
 }
 
 const BoxElement = (props) => {
@@ -110,7 +110,7 @@ const MasonryElement = props => <Masonry columns={3} spacing={2} className={prop
 
 const SkeletonBasicElement = ({height, width, animation, variant}) => <Skeleton variant={variant || "circular"} animation={animation || "wave"} height={height || 10} width={width || "80%"} />
 
-const IconButtonElement = (props) => <IconButton onClick={e=>props.clickHandler(e, props.elm, '')}>{props.children}</IconButton>
+const IconButtonElement = (props) => <IconButtonElement onClick={e=>props.clickHandler(e, props.elm, '')}>{props.children}</IconButtonElement>
 
 const DeleteIconElement = ({fontSize}) => <DeleteOutlineRounded fontSize={fontSize || "medium"} />
 

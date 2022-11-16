@@ -4,7 +4,7 @@ const postRoutes = express();
 
 postRoutes.get("/", getAllPosts)
 postRoutes.get("/:postId", getSoloPost);
-postRoutes.post("/:postId", createNewPost);
+postRoutes.post("/post/create/:userId", createNewPost);
 postRoutes.put("/:postId", updateSoloPost);
 postRoutes.delete(":postId", deleteSoloPost);
 

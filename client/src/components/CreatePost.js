@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { GiphyFetch } from "@giphy/js-fetch-api"
 import { Gif, Grid } from "@giphy/react-components"
 import EmojiPicker from "emoji-picker-react"
@@ -8,19 +8,44 @@ import { BoxElement, ButtonElement, CardContentElement, CardElement, CardHeaderE
 import ChoosePrivacy from './ChoosePrivacy'
 import CreatePoll from './CreatePoll'
 import ShowUserPostMedias from './ShowUserPostMedias'
+import { Box, Button, IconButton, Stack } from '@mui/material'
+import { PostAddTwoTone } from '@mui/icons-material'
+import { sendDataToServer } from './utils'
+import { AppContexts } from '../App'
 
 function CreatePost() {
   let [addedOptions, setAddedOptions] = useState({})
+  let [errors, setErrors] = useState([])
+  let [postData, setPostData] = useState([])
+
+  let appCtx = useContext(AppContexts)
+
+  let handleErrors = data => setErrors(data.errors);
+
+  let handlePostData = result => setPostData(result.post)
 
   let handleAddedOptions = (evt, elm, val) => {
-    if (elm) {
-      val ? setAddedOptions(prev => ({ ...prev, [elm]: val, current: elm })) : setAddedOptions(prev => ({ ...prev, current: elm }))
-      // setAddedOptions(prev => ({ ...prev, [elm]: val, current: elm }))
-      // setAddedOptions(prev => ({ ...prev, [elm]: val, current: "elm" }))
+    if (elm !== "body") {
+      val
+        ? setAddedOptions(prev => ({ ...prev, [elm]: val, current: elm }))
+        : setAddedOptions(prev => ({ ...prev, current: elm }))
+    } else {
+      // console.log(evt.target)
+      setAddedOptions(prev => ({ ...prev, [elm]: evt.target.getContent(), current: elm }))
     }
   }
 
-  console.log(addedOptions, "addedOptions!!")
+  let createPost = () => {
+    if (addedOptions.body) {
+      console.log("create post")
+      let url = `${appCtx.baseUrl}/posts/post/create/${appCtx.user._id}`
+      sendDataToServer(url, addedOptions, handleErrors, handlePostData)
+    } else {
+      alert("at least post text needs to be there")
+    }
+  }
+
+  console.log(addedOptions, "addedOptions!!", errors, postData)
 
   return (
     <ContainerElement width={"md"}>
@@ -41,17 +66,23 @@ function CreatePost() {
 
           <ShowClickActionsFunctionality currentElement={addedOptions.current} handleValue={handleAddedOptions} />
 
+          <Stack onClick={createPost}>
+            <Button variant='contained' endIcon={<PostAddTwoTone />}>
+              Create Post
+            </Button>
+          </Stack>
+
         </CardElement>
       </PaperElement>
     </ContainerElement>
   )
 }
 
-let ShowRichTextEditor = ({handleChange}) => {
+let ShowRichTextEditor = ({ handleChange }) => {
   return (
     <>
       <Editor
-        initialValue="This is the initial content of the editor"
+        initialValue="!!REMOVE!! This is the initial content of the editor"
         init={{
           selector: 'textarea',  // change this value according to your HTML
           height: 200,
@@ -62,10 +93,12 @@ let ShowRichTextEditor = ({handleChange}) => {
           toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
         }}
         id="body"
-        onEditorChange={(content) => handleChange(null, 'body', content)}
-        // onEditorChange={(e) => handleChange(e, 'body', e.target.getContent())}
-        // onChange={(e) => handleChange(e, 'body', e.target.getContent())}
-        // onChange={(e) => console.log(e, 'body', e.target.getContent())}
+        onChange={(e) => handleChange(e, 'body')}
+      // onEditorChange={(e) => handleChange(e, 'body')}
+      // onEditorChange={(content) => handleChange(null, 'body', content)}
+      // onEditorChange={(e) => handleChange(e, 'body', e.target?.getContent())}
+      // onChange={(e) => handleChange(e, 'body', e.target.getContent())}
+      // onChange={(e) => console.log(e, 'body', e.target.getContent())}
       />
     </>
   )
@@ -163,25 +196,32 @@ let ShowUrlGrabbingForm = ({ handleValue, currentElement }) => {
   }
 
   return (
-    <FormElement handleSubmit={handleSubmit}>
-      <FormControlElement>
-        <InputLabelElement hFor={"url"} text={"Enter Url Of Media Resource Here"} />
-        <UserInputElement id={"url"} helperId="url-helper-text" type={"text"} handleChange={handleChange} />
-        <HelperTextElement id={"url-helper-text"} text={"Enter a valid a url of your media resource"} />
-      </FormControlElement>
-      <ButtonElement type={"submit"} text="Upload" />
-    </FormElement>
+    <Box sx={{m: 2}}>
+      <FormElement handleSubmit={handleSubmit}>
+        <FormControlElement>
+          <InputLabelElement hFor={"url"} text={"Enter Url Of Media Resource Here"} />
+          <UserInputElement id={"url"} helperId="url-helper-text" type={"text"} handleChange={handleChange} />
+          <HelperTextElement id={"url-helper-text"} text={"Enter a valid a url of your media resource"} />
+        </FormControlElement>
+        <ButtonElement type={"submit"} text="Upload" variant={"contained"} />
+      </FormElement>
+    </Box>
   )
 }
 
 let ShowIconBtns = ({ item, handleAddedOptions }) => {
   return (
-    <IconButtonElement className="icon-button" clickHandler={handleAddedOptions} elm={item.name}>
-      <BoxElement>
-        {item.elem}
-        <TypographyElement text={item.name} type={"span"} />
-      </BoxElement>
-    </IconButtonElement>
+    <Button onClick={e => handleAddedOptions(e, item.name, '')} variant='outlined' startIcon={item.elem} sx={{ m: 1.3, mt: 0 }}>
+      <TypographyElement text={item.name} type={"span"} />
+    </Button>
+    // <IconButtonElement className="icon-button" clickHandler={handleAddedOptions} elm={item.name}>
+    //   <IconButton>
+    //     <Button variant='contained' startIcon={item.elem}>
+    //       <TypographyElement text={item.name} type={"span"} />
+    //     </Button>
+    //   </IconButton>
+    //   <TypographyElement text={item.name} type={"span"} />
+    // </IconButtonElement>
   )
 }
 
