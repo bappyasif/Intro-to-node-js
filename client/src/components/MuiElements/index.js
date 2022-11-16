@@ -101,7 +101,7 @@ const ButtonElement = ({text, type, fontSize, action, disable}) => {
 }
 
 const BoxElement = (props) => {
-    return <Box sx={{width: "100%"}} className={props.className}>{props.children}</Box>
+    return <Box sx={{width: "100%", order: props.order}} className={props.className}>{props.children}</Box>
 }
 
 const StackElement = (props) => <Stack className={props.className}>{props.children}</Stack>

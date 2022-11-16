@@ -9,19 +9,19 @@ function ShowUserPostMedias({ mediaContents }) {
 
         for (let key in mediaContents) {
             if (key === "Image" && mediaContents[key]?.includes("http")) {
-                content.push(<img src={mediaContents[key]} />)
+                content.push(<img src={mediaContents[key]} style={{order: 1}} />)
             } else if (key === "Image" && !mediaContents[key]?.includes("http")) {
-                content.push(<img src={handleMediaFileChecks(mediaContents[key])} />)
+                content.push(<img src={handleMediaFileChecks(mediaContents[key])} style={{order: 1}} />)
             } else if (key === "Video" && mediaContents[key]?.includes("http")) {
-                content.push(<video height={200} src={mediaContents[key]} controls />)
+                content.push(<video height={200} src={mediaContents[key]} controls style={{order: 2}} />)
                 // content.push(<video controls><source src={mediaContents[key]} /></video>)
                 // content.push(<iframe src={mediaContents[key]} controls></iframe>)
             } else if (key === "Gif") {
-                content.push(<Gif gif={mediaContents[key]} height={200} />)
+                content.push(<Gif gif={mediaContents[key]} height={200}  style={{order: 3}} />)
             } else if (key === "Poll") {
-                content.push(<ShowPoll pollData={mediaContents[key]} />)
+                content.push(<ShowPoll pollData={mediaContents[key]} order={4} />)
             } else if (key === "Privacy") {
-                content.push(<ShowRespectiveIcon privacy={mediaContents[key]} />)
+                content.push(<ShowRespectiveIcon privacy={mediaContents[key]} order={5} />)
             }
 
         }
@@ -33,13 +33,15 @@ function ShowUserPostMedias({ mediaContents }) {
     // console.log(generateContents())
 
     return (
-        <Box>
+        <Box
+            sx={{display: "flex", flexDirection: "column"}}
+        >
             {renderContents()}
         </Box>
     )
 }
 
-const ShowPoll = ({ pollData }) => {
+const ShowPoll = ({ pollData, order }) => {
     let { question, ...options } = { ...pollData }
 
     let renderOptions = () => {
@@ -52,7 +54,7 @@ const ShowPoll = ({ pollData }) => {
     }
 
     return (
-        <Paper sx={{ mb: 2 }}>
+        <Paper sx={{ mb: 2, order: order }}>
             <Typography variant='h4'>Poll Question: {question}</Typography>
             <Divider />
             <Stack

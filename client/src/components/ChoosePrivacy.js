@@ -42,7 +42,7 @@ function ChoosePrivacy({ handleValue, currentElement }) {
     )
 }
 
-export let ShowRespectiveIcon = ({ privacy }) => {
+export let ShowRespectiveIcon = ({ privacy, order }) => {
     let icon = null;
     if (privacy === "Everybody") {
         icon = <EverybodyElement />
@@ -51,7 +51,7 @@ export let ShowRespectiveIcon = ({ privacy }) => {
     }
 
     return (
-        <BoxElement>
+        <BoxElement order={order}>
             <TypographyElement text={"Privacy Selected: "} type={"h4"} />
             <MuiBoxElement><TypographyElement text={privacy} type={"h6"} /> <span>{icon}</span></MuiBoxElement>
         </BoxElement>
