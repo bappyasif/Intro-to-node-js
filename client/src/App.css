@@ -24,6 +24,14 @@
   row-gap: 29px;
 } */
 
+p {padding: 0; margin: 0;}
+
+.MuiCardHeader-content.css-1qbkelo-MuiCardHeader-content {
+  margin-left: 17px !important;
+}
+
+.css-1rplq84 {margin-bottom: 6px !important;}
+
 .cards-wrapper {
   width: 92vw;
   margin: auto;

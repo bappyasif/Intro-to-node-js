@@ -60,7 +60,7 @@ const MuiButtonElement = ({ type, text }) => {
 const MuiBoxElement = (props) => {
     return (
         <Box
-            sx={{ border: 1.1, borderColor: props.color, alignItems: "center"}}
+            sx={{ border: 1.1, borderColor: props.color, alignItems: "center", display: "flex", flexDirection: props.direction, gap: 2, pl: 1.1, pr: 1.1, borderRadius: 1.1}}
             color={props.color || "teal"}>{props.children}</Box>
     )
 }
@@ -73,23 +73,23 @@ const CardElement = (props) => {
     return <Card className={props.className} sx={props.styles}>{props.children}</Card>
 }
 
-const AvatarElement = ({ url, altText }) => {
+const AvatarElement = ({ url, altText, forPost }) => {
     return (
         <Avatar
-            sx={{width: 110, height: 90}}
+            sx={{width: forPost ? 74 : 110, height: forPost ? 74 : 90, mr: 0}}
             alt={altText}
             src={url}
         />
     )
 }
 
-const CardHeaderElement = ({ avatarUrl, title, joined, altText }) => {
+const CardHeaderElement = ({ avatarUrl, title, joined, altText, forPost }) => {
     return (
         <CardHeader
-            avatar={<AvatarElement url={avatarUrl} altText={altText} />}
-            title={<Typography variant="h2">{title}</Typography>}
-            subheader={<Typography sx={{color: "text.secondary"}} variant="h6">{`Member Since: ${moment(joined).fromNow()}`}</Typography>}
-            sx={{fontSize: "33px"}}
+            avatar={<AvatarElement url={avatarUrl} altText={altText} forPost={forPost} />}
+            title={<Typography marginLeft={forPost ? 0 : 2} variant={forPost ? "h4" : "h2"}>{title}</Typography>}
+            subheader={<Typography sx={{color: "text.secondary"}} variant={forPost ? "subtitle1" : "h6"}>{`Member Since: ${moment(joined).fromNow()}`}</Typography>}
+            // sx={{fontSize: "33px"}}
         />
     )
 }
@@ -103,7 +103,7 @@ const ButtonElement = ({text, type, fontSize, action, disable, variant}) => {
 }
 
 const BoxElement = (props) => {
-    return <Box sx={{width: "100%", order: props.order}} className={props.className}>{props.children}</Box>
+    return <Box sx={{width: "100%", order: props.order, display: "flex", gap: 2, justifyContent: "center", mt: 2}} className={props.className}>{props.children}</Box>
 }
 
 const StackElement = (props) => <Stack className={props.className}>{props.children}</Stack>
