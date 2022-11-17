@@ -57,7 +57,7 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
     let focusedTopic = req.params.topic.toLowerCase();
     // let focusedTopicCapitalized = focusedTopic[0].toUpperCase()+focusedTopic.substr(1)
 
-    console.log(searchTerm, focusedTopic)
+    // console.log(searchTerm, focusedTopic)
 
     const params = {
         // "query": "Womens league",
@@ -80,10 +80,10 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
                 // console.log("chk3 here!!")
 
                 item?.context_annotations?.forEach((elem, idx) => {
-                    console.log("chk2 here!!", elem.domain.name, elem.domain.name.toLowerCase(), elem.domain.name.toLowerCase().includes(focusedTopic),  focusedTopic)
+                    // console.log("chk2 here!!", elem.domain.name, elem.domain.name.toLowerCase(), elem.domain.name.toLowerCase().includes(focusedTopic),  focusedTopic)
 
                     if(elem.domain.name.toLowerCase().includes(focusedTopic) || elem.entity.name.toLowerCase().includes(focusedTopic)) {
-                        console.log("chk1 here!!", elem.domain.name)
+                        // console.log("chk1 here!!", elem.domain.name)
                         let findIdx = filtered.findIndex(item2 => item2.postData.id === item.id)
                         let chkTxt = filtered.findIndex(item2 => item2.postData.text === item.text)
 
@@ -105,7 +105,7 @@ let searchRecentTweetsAboutTopic = (req, res, next) => {
                 }
             }
         })
-        console.log(filtered, "filtered!!")
+        // console.log(filtered, "filtered!!")
         res.status(200).json({success: true, data: filtered})
     }).catch(err=>console.error(err))
 }
@@ -129,7 +129,7 @@ let getUserAccountInfo = (req, res, next) => {
     
     getDataFromTwitter(endpoint, params, "v2UserLookupJS")
     .then(result => {
-        console.log(result, "result!!")
+        // console.log(result, "result!!")
         res.status(200).json({data: result.data, errors: []})
     }).catch(err => {
         console.error(err)

@@ -1,13 +1,14 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Button, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import moment from 'moment'
 import React, { useContext } from 'react'
+// import { DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement } from '../MuiElements';
 import { AppContexts } from '../App'
-import { CardHeaderElement } from './MuiElements'
+import { CardHeaderElement, DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement } from './MuiElements'
 import ShowUserPostMedias from './ShowUserPostMedias'
 
 function ShowUserCreatedPost({ postData }) {
   let { body, created, gif, poll, privacy, imageUrl, videoUrl, _id } = { ...postData }
-  
+
   const appCtx = useContext(AppContexts)
 
   let preparingAdditionalsForRendering = {
@@ -37,13 +38,42 @@ function ShowUserCreatedPost({ postData }) {
         forPost={true}
       />
 
-      <Typography sx={{color: "text.secondary", position: "absolute" , top: 29, right: 20}} variant="subtitle2">{`Live Since: ${moment(created).fromNow()}`}</Typography>
-      
-      <Typography variant='h4' sx={{backgroundColor: "honeydew", p: .2, mr: 6, ml: 15}} dangerouslySetInnerHTML={{__html: body}}></Typography>
-      
+      <Typography sx={{ color: "text.secondary", position: "absolute", top: 29, right: 20 }} variant="subtitle2">{`Live Since: ${moment(created).fromNow()}`}</Typography>
+
+      <Typography variant='h4' sx={{ backgroundColor: "honeydew", p: .2, mr: 6, ml: 15 }} dangerouslySetInnerHTML={{ __html: body }}></Typography>
+
       <ShowUserPostMedias mediaContents={preparingAdditionalsForRendering} />
+
+      <UserEngagementWithPost />
     </Box>
   )
 }
+
+let UserEngagementWithPost = () => {
+  return (
+    <Stack
+      className="post-actions-icons"
+      sx={{ flexDirection: "row", justifyContent: "center", backgroundColor: "lightblue" }}
+    >
+      {actions.map((item, idx) => (
+        <Tooltip title={item.name}>
+          <IconButton>
+            <Button className="icon-button">
+              {idx === 0 ? <LikeIconElement /> : idx === 1 ? <DislikeIconElement /> : idx === 2 ? <LoveIconElement /> : <ShareIconElement />}
+              <Typography variant={"span"}>{item.count ? item.count : null}</Typography>
+            </Button>
+          </IconButton>
+        </Tooltip>
+      ))}
+    </Stack>
+  )
+}
+
+let actions = [
+  {name: "Like", count: 0},
+  {name: "Dislike", count: 0},
+  {name: "Love", count: 0},
+  {name: "Share", count: 0},
+]
 
 export default ShowUserCreatedPost

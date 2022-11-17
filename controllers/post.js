@@ -2,8 +2,12 @@ const { body, validationResult, check } = require("express-validator");
 const Post = require("../models/post");
 
 const getAllPosts = (req, res, next) => {
-    Post.find({})
+    let userId = req.params.userId;
+    // console.log(userId, "userId!!")
+
+    Post.find({userId: userId})
         .then(results => {
+            // console.log(results, "!!<<results>>!!")
             res.status(200).json({success: true, data: results})
         }).catch(err => next(err))
 }
@@ -44,7 +48,7 @@ const createNewPost = [
         // data is sanitized and validated for to be saved in databse
         let newPost = new Post({
             body: req.body.body,
-            userId: req.body.userId,
+            userId: req.params.userId,
             created: new Date().toISOString(),
             privacy: req.body.Privacy,
             imageUrl: req.body.Image,
