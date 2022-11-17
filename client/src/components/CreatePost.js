@@ -13,10 +13,12 @@ import { PostAddTwoTone } from '@mui/icons-material'
 import { sendDataToServer } from './utils'
 import { AppContexts } from '../App'
 
-function CreatePost({setPostsDataset}) {
+function CreatePost({ setPostsDataset }) {
   let [addedOptions, setAddedOptions] = useState({})
   let [errors, setErrors] = useState([])
   let [postData, setPostData] = useState([])
+
+  let ref = useRef();
 
   let appCtx = useContext(AppContexts)
 
@@ -26,6 +28,7 @@ function CreatePost({setPostsDataset}) {
     setPostData(result.post)
     setAddedOptions({})
     setPostsDataset(prev => [...prev, result.post])
+    ref.current.reset()
   }
 
   let handleAddedOptions = (evt, elm, val) => {
@@ -64,19 +67,21 @@ function CreatePost({setPostsDataset}) {
             joined={appCtx.user?.created || Date.now()}
           />
 
-          <CardContentElement>
-            <ShowRichTextEditor handleChange={handleAddedOptions} />
-          </CardContentElement>
+          <form ref={ref}>
+            <CardContentElement>
+              <ShowRichTextEditor handleChange={handleAddedOptions} />
+            </CardContentElement>
+          </form>
 
           {/* showing user selected medias in post */}
           <ShowUserPostMedias mediaContents={addedOptions} />
           {/* <ShowUserPostMedias mediaType={"picture"} mediaContent={addedOptions.Image} /> */}
           {/* <ShowUserPostMedias mediaType={"picture"} mediaContent={"https://random.imagecdn.app/500/150"} /> */}
 
-          <Stack 
-            flexDirection={"row"} 
-            alignItems={"baseline"} 
-            justifyContent= {"center"}
+          <Stack
+            flexDirection={"row"}
+            alignItems={"baseline"}
+            justifyContent={"center"}
             marginTop="2"
           >
             {iconsBtns.map(item => <ShowIconBtns key={item.name} item={item} handleAddedOptions={handleAddedOptions} />)}
@@ -100,7 +105,8 @@ let ShowRichTextEditor = ({ handleChange }) => {
   return (
     <>
       <Editor
-        initialValue="!!REMOVE!! This is the initial content of the editor"
+        // initialValue="!!REMOVE!! This is the initial content of the editor"
+        initialValue=" "
         init={{
           selector: 'textarea',  // change this value according to your HTML
           height: 200,

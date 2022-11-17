@@ -7,6 +7,7 @@ const Post = new Schema({
     userId: {type: Schema.Types.ObjectId, ref: "user"},
     privacy: Schema.Types.String,
     imageUrl: Schema.Types.String,
+    videoUrl: Schema.Types.String,
     poll: Schema.Types.Array,
     gif:  Schema.Types.Array,
     likesCount: Schema.Types.Number,

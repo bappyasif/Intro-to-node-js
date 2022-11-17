@@ -48,12 +48,14 @@ export let ShowRespectiveIcon = ({ privacy, order }) => {
         icon = <EverybodyElement />
     } else if (privacy === "Friends") {
         icon = <FriendsElement />
+    } else if (privacy === "") {
+        icon = <EverybodyElement />
     }
 
     return (
         <BoxElement order={order}>
             <TypographyElement text={"Privacy Selected: "} type={"h4"} />
-            <MuiBoxElement><TypographyElement text={privacy} type={"h6"} /> <span>{icon}</span></MuiBoxElement>
+            <MuiBoxElement><TypographyElement text={privacy || "Everybody"} type={"h6"} /> <span>{icon}</span></MuiBoxElement>
         </BoxElement>
     )
 }

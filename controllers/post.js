@@ -21,10 +21,10 @@ const createNewPost = [
     body("body", "post needs to be at least 4 characters long")
     .trim().isLength({min: 4}),
     body("Image", "image url needs to be a proper url")
-    .trim().isURL().optional().escape(),
+    .isURL().optional(),
     // .trim().escape(),
     body("Video", "video url needs to be a proper url")
-    .trim().isURL().optional().escape(),
+    .isURL().optional(),
     // .trim().escape(),
     body("Gif", "gif needs to be an array of gif object")
     .isObject().optional(),
