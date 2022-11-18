@@ -58,7 +58,8 @@ let UserEngagementWithPost = ({postData, appCtx}) => {
   
   let handleCounts = (elem, addFlag) => {
     // setCounts(prev => ({...prev, [elem]: prev[elem] ? prev[elem] + 1 : 1}))
-    setCounts(prev => ({...prev, [elem]: (prev[elem] && addFlag) ? prev[elem] + 1 : prev[elem] - 1}))
+    // setCounts(prev => ({...prev, [elem]: (prev[elem] && addFlag) ? prev[elem] + 1 : prev[elem] - 1}))
+    setCounts(prev => ({...prev, [elem]: (prev[elem] >= 0 && addFlag) ? prev[elem] + 1 : prev[elem] - 1}))
     
     // clearing out previously existing timeout element
     clearTimeout(session);
@@ -102,10 +103,10 @@ let UserEngagementWithPost = ({postData, appCtx}) => {
   useEffect(() => {
     // making initial counts setup if any
     setCounts({
-      Like: postData?.likesCount,
-      Love: postData?.loveCount,
-      Dislike: postData?.dislikesCount,
-      Share: postData?.shareCount,
+      Like: (postData?.likesCount || 0),
+      Love: postData?.loveCount || 0,
+      Dislike: postData?.dislikesCount || 0,
+      Share: postData?.shareCount || 0,
     })
   }, [])
 
@@ -125,8 +126,6 @@ let RenderActionableIcon = ({item, handleCounts, counts}) => {
   let [flag, setFlag] = useState(false);
 
   let handleClick = () => {
-    // handleCounts(item.name);
-    // setFlag(true);
     setFlag(!flag);
   }
 
@@ -137,8 +136,8 @@ let RenderActionableIcon = ({item, handleCounts, counts}) => {
 
   return (
     <Tooltip title={flag ? `${item.name}ed already` : item.name}>
-      <IconButton onClick={handleClick} sx={{backgroundColor: "lightgrey", ":disabled": flag }}>
-        <Button className="icon-button" startIcon={item.icon}>
+      <IconButton onClick={handleClick} sx={{backgroundColor: flag ? "beige" :"lightgrey"}}>
+        <Button startIcon={item.icon}>
           <Typography variant={"subtitle2"}>{counts[item.name] ? counts[item.name] : null}</Typography>
         </Button>
       </IconButton>
