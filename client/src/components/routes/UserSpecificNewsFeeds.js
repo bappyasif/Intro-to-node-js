@@ -51,24 +51,6 @@ function UserSpecificNewsFeeds() {
 
     let renderTweetPosts = () => tweetPostsDataset?.map(dataset => <RenderPost key={dataset?.postData._id} item={dataset} baseUrl={appCtx.baseUrl} />)
 
-    // userPostsDataset?.sort((a, b) => console.log(a.created, b.created, a.created >b.created, a.created < b.created))
-    // console.log(userPostsDataset?.sort((a, b) => new Date(a.created) - new Date(b.created)), "sorted!!!!")
-    // console.log(userPostsDataset?.sort(), "sorted!!!!")
-    // console.log(userPostsDataset?.sort((a, b) => console.log(new Date(a.created) - new Date(b.created), new Date(a.created), new Date(b.created))), "sorted!!!!")
-    // console.log(userPostsDataset?.sort((a, b) => console.log(new Date(a.created) > new Date(b.created), new Date(a.created), new Date(b.created))), "sorted!!!!")
-    // let test = userPostsDataset?.sort((a, b) => new Date(a.created) > new Date(b.created))
-    // let test = userPostsDataset?.reverse();
-    // let test = userPostsDataset?.sort((a, b) => new Date(a.created).getTime() - new Date(b.created).getTime())
-
-    // userPostsDataset?.sort((a, b) => {
-    //     a = new Date(a.created);
-    //     b = new Date(b.created);
-    //     return a < b ? -1 : a > b ? 1 : 0;
-    // })
-
-    // let test = userPostsDataset?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1)
-    // console.log(test, "sorted!!!!")
-
     // let renderUserPosts = () => userPostsDataset?.map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
     let renderUserPosts = () => userPostsDataset?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
     // let renderUserPosts = () => userPostsDataset?.sort((a, b) => Math.sign(new Date(a.created) - new Date(b.created))).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)

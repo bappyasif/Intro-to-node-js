@@ -69,23 +69,18 @@ const createNewPost = [
 
 const updateSoloPost = (req, res, next) => {
     let data = req.body;
-    console.log(data, "!!", req.params.postId);
-
-    let orientingData = new Post({
-        likesCount: data.Like,
-        dislikesCount: data.Dislike,
-        loveCount: data.Love,
-        shareCount: data.Share
-    })
 
     Post.findOne({ _id: req.params.postId })
         .then(currentPost => {
+            // updating post with data sent to server from client
             currentPost.likesCount = data.Like,
-                currentPost.dislikesCount = data.Dislike,
-                currentPost.loveCount = data.Love,
-                currentPost.shareCount = data.Share
+            currentPost.dislikesCount = data.Dislike,
+            currentPost.loveCount = data.Love,
+            currentPost.shareCount = data.Share
+            console.log(currentPost, "currentPost!!")
 
-            Post.findByIdAndUpdate({ _id: req.params.postId }, currentPost, {})
+            // updating post with latest post data
+            Post.findByIdAndUpdate(currentPost._id, currentPost, {})
                 .then((currPost) => {
                     console.log("data updated!!", currPost)
                     res.status(200).json({ success: true, posts: [] })

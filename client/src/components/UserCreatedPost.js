@@ -45,34 +45,28 @@ function ShowUserCreatedPost({ postData }) {
 
       <ShowUserPostMedias mediaContents={preparingAdditionalsForRendering} />
 
-      <UserEngagementWithPost postId={_id} appCtx={appCtx} />
+      <UserEngagementWithPost postData={postData} appCtx={appCtx} />
     </Box>
   )
 }
 
-let UserEngagementWithPost = ({postId, appCtx}) => {
+let UserEngagementWithPost = ({postData, appCtx}) => {
   let [counts, setCounts] = useState({})
   let [time, setTime] = useState(null);
   let [session, setSession] = useState(null);
   let [dataReady, setDataReady] = useState(false)
   
-  let handleCounts = (elem) => {
-    setCounts(prev => ({...prev, [elem]: prev[elem] ? prev[elem] + 1 : 1}))
-    // time ? setTime(0) : setTime(2000);
-    // if(time) {
-    //   console.log("reset time")
-    //   // setTime(0);
-    //   clearTimeout(session)
-    //   setSession(null)
-    //   setTime(time + 2000);
-    // } else {
-    //   console.log("time")
-    //   setTime(2000)
-    // }
-    // setTime(2000)
+  let handleCounts = (elem, addFlag) => {
+    // setCounts(prev => ({...prev, [elem]: prev[elem] ? prev[elem] + 1 : 1}))
+    setCounts(prev => ({...prev, [elem]: (prev[elem] && addFlag) ? prev[elem] + 1 : prev[elem] - 1}))
+    
+    // clearing out previously existing timeout element
     clearTimeout(session);
+    // clearing out previously existing session element
     setSession(null)
+    // setting a new timer with 2000ms, so that timer can take effect after that time
     setTime(2000);
+    // calling up timer to kick start timer function
     timer();
   }
   
@@ -80,30 +74,23 @@ let UserEngagementWithPost = ({postId, appCtx}) => {
     console.log("begin timer")
     let sesn = setTimeout(() => {
       // this gets to run only when user is not interacting
-      console.log("ended timer", time, counts)
-      // setTime(0);
-
-      // setData(counts);
-
-      // updateThisPostCountsInDatabase()
-
       if(time === 2000) {
         setDataReady(true);
         clearTimeout(sesn);
       }
 
-      // if(time === 2000) clearTimeout(sesn);
-
     }, [time])
     
+    // session with a timer is now in place, if not changed due to any user interaction through actionables
+    // session setTimeout function will kick in and do a server call to update data in database
     setSession(sesn)
     console.log("begin session")
   }
 
   let updateThisPostCountsInDatabase = () => {
-    let url = `${appCtx.baseUrl}/posts/${postId}`
+    let url = `${appCtx.baseUrl}/posts/${postData._id}`
     console.log(url, "url!!", counts)
-    // console.log(url, "url!!", counts, data)
+
     updateDataInDatabase(url, counts)
   }
 
@@ -112,48 +99,47 @@ let UserEngagementWithPost = ({postId, appCtx}) => {
     dataReady && setDataReady(false);
   }, [dataReady])
 
-  // useEffect(() => {
-  //   time && timer()
-  //   time === 0 && updateThisPostCountsInDatabase();
-  // }, [time])
-
-  // useEffect(() => setCounts({postId: postId}), [])
-
-  // useEffect(() => {
-  //   time && timer()
-  //   // time === 0 && setSession(null)
-  //   time === 0 && clearTimeout(session)
-  //   // time && clearTimeout(session)
-  // }, [time, session])
-
-  // console.log(counts, "counts!!", postId)
+  useEffect(() => {
+    // making initial counts setup if any
+    setCounts({
+      Like: postData?.likesCount,
+      Love: postData?.loveCount,
+      Dislike: postData?.dislikesCount,
+      Share: postData?.shareCount,
+    })
+  }, [])
 
   return (
     <Stack
       className="post-actions-icons"
-      sx={{ flexDirection: "row", justifyContent: "center", backgroundColor: "lightblue" }}
+      sx={{ flexDirection: "row", justifyContent: "center", backgroundColor: "lightblue", gap: 2 }}
     >
       {actions.map(item => (
-        <RenderActionableIcon item={item} handleCounts={handleCounts} />
+        <RenderActionableIcon item={item} counts={counts} handleCounts={handleCounts} />
       ))}
     </Stack>
   )
 }
 
-let RenderActionableIcon = ({item, handleCounts}) => {
-  let [count, setCount] = useState(0);
+let RenderActionableIcon = ({item, handleCounts, counts}) => {
+  let [flag, setFlag] = useState(false);
 
   let handleClick = () => {
-    handleCounts(item.name)
-    setCount(prev => prev + 1)
+    // handleCounts(item.name);
+    // setFlag(true);
+    setFlag(!flag);
   }
 
+  useEffect(() => {
+    // toggling through +1 or -1 value for specefic count, based on flag current value for that item
+    handleCounts(item.name, flag);
+  }, [flag])
+
   return (
-    <Tooltip title={item.name}>
-      <IconButton onClick={handleClick}>
-        <Button className="icon-button">
-          {item.icon}
-          <Typography variant={"span"}>{count ? count : null}</Typography>
+    <Tooltip title={flag ? `${item.name}ed already` : item.name}>
+      <IconButton onClick={handleClick} sx={{backgroundColor: "lightgrey", ":disabled": flag }}>
+        <Button className="icon-button" startIcon={item.icon}>
+          <Typography variant={"subtitle2"}>{counts[item.name] ? counts[item.name] : null}</Typography>
         </Button>
       </IconButton>
     </Tooltip>
