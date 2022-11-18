@@ -71,6 +71,8 @@ function UserSpecificNewsFeeds() {
 
     // let renderUserPosts = () => userPostsDataset?.map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
     let renderUserPosts = () => userPostsDataset?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
+    // let renderUserPosts = () => userPostsDataset?.sort((a, b) => Math.sign(new Date(a.created) - new Date(b.created))).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
+    // let renderUserPosts = () => userPostsDataset?.sort((a, b) => Math.sign(new Date(a.created) - new Date(b.created) ? 1 : -1)).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
 
     return (
         <Paper>

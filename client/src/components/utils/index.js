@@ -55,6 +55,21 @@ const updateUserInDatabase = (endpoint, dataObj, dataUpdater, navigate) => {
 
 // }
 
+const updateDataInDatabase = (endpoint, dataObj, dataUpdater) => {
+    // console.log(dataObj, "dataObj")
+    fetch(endpoint, {
+        method: "put",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataObj)
+    }).then(resp => resp.json())
+    .catch(err => console.error(err, "request responded with error"))
+    .then(data => console.log(data))
+    .catch(err => console.error(err, "something's wrong!!"))
+}
+
 const readDataFromServer = (endpoint, dataUpdater) => {
     fetch(endpoint)
         .then(resp => resp.json())
@@ -95,5 +110,6 @@ export {
     sendDataToServer,
     readDataFromServer,
     getAuthenticatedUserDataFromServer,
-    updateUserInDatabase
+    updateUserInDatabase,
+    updateDataInDatabase
 }
