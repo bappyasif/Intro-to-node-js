@@ -51,17 +51,17 @@ function ShowUserCreatedPost({ postData }) {
   )
 }
 
-let UserEngagementWithPost = ({postData, appCtx}) => {
+let UserEngagementWithPost = ({ postData, appCtx }) => {
   let [counts, setCounts] = useState({})
   let [time, setTime] = useState(null);
   let [session, setSession] = useState(null);
   let [dataReady, setDataReady] = useState(false)
-  
+
   let handleCounts = (elem, addFlag) => {
     // setCounts(prev => ({...prev, [elem]: prev[elem] ? prev[elem] + 1 : 1}))
     // setCounts(prev => ({...prev, [elem]: (prev[elem] && addFlag) ? prev[elem] + 1 : prev[elem] - 1}))
-    setCounts(prev => ({...prev, [elem]: (prev[elem] >= 0 && addFlag) ? prev[elem] + 1 : prev[elem] - 1}))
-    
+    setCounts(prev => ({ ...prev, [elem]: (prev[elem] >= 0 && addFlag) ? prev[elem] + 1 : prev[elem] - 1 }))
+
     // clearing out previously existing timeout element
     clearTimeout(session);
     // clearing out previously existing session element
@@ -69,20 +69,22 @@ let UserEngagementWithPost = ({postData, appCtx}) => {
     // setting a new timer with 2000ms, so that timer can take effect after that time
     setTime(2000);
     // calling up timer to kick start timer function
-    timer();
+    // timer(); // timer isn't working properly!!
+    updateThisPostCountsInDatabase() // without it data update runs just fine
   }
-  
+
   let timer = () => {
     console.log("begin timer")
     let sesn = setTimeout(() => {
       // this gets to run only when user is not interacting
-      if(time === 2000) {
+      if (time === 2000) {
         setDataReady(true);
+        console.log("!!")
         clearTimeout(sesn);
       }
 
     }, [time])
-    
+
     // session with a timer is now in place, if not changed due to any user interaction through actionables
     // session setTimeout function will kick in and do a server call to update data in database
     setSession(sesn)
@@ -103,14 +105,27 @@ let UserEngagementWithPost = ({postData, appCtx}) => {
   }, [dataReady])
 
   useEffect(() => {
+    // also checking if current user exists in this post "engagedUsers" list or not
+    // let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
+    // console.log(findIdx, "foundIndex!!", postData, postData?.usersEngagged[findIdx], Object.values(postData?.usersEngagged[findIdx])[0])
     // making initial counts setup if any
     setCounts({
       Like: (postData?.likesCount || 0),
       Love: postData?.loveCount || 0,
       Dislike: postData?.dislikesCount || 0,
       Share: postData?.shareCount || 0,
+      // engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0] || []
     })
   }, [])
+
+  useEffect(() => {
+    if (postData) {
+      let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
+      // console.log(findIdx, "foundIndex!!", postData, postData?.usersEngagged[findIdx], Object.values(postData?.usersEngagged[findIdx])[0])
+      // console.log(findIdx, "foundIndex!!", Object.values(postData?.usersEngagged[findIdx])[0])
+      setCounts(prev => ({...prev, engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0]}))
+    }
+  }, [postData])
 
   return (
     <Stack
@@ -124,22 +139,39 @@ let UserEngagementWithPost = ({postData, appCtx}) => {
   )
 }
 
-let RenderActionableIcon = ({item, handleCounts, counts}) => {
+let RenderActionableIcon = ({ item, handleCounts, counts }) => {
   let [flag, setFlag] = useState(false);
+  // let [initFlag, setInitFlag] = useState(false);
 
   let handleClick = () => {
     setFlag(!flag);
+    handleCounts(item.name, !flag);
   }
 
+  // its causing all rendered posts to be updated on page load, as it get to run on "flag=false" as well
   useEffect(() => {
     // toggling through +1 or -1 value for specefic count, based on flag current value for that item
-    handleCounts(item.name, flag);
+    // initFlag && handleCounts(item.name, flag);
   }, [flag])
 
+  // useEffect(() => setInitFlag(true), [])
+
+  // if user already had interacted with this post then turning flag on for indication for those
+  // useEffect(() => {
+  //   if (counts?.engaggedUser && counts?.engaggedUser[item.name]) {
+  //     setFlag(true)
+  //     console.log(flag, "flag inside")
+  //   }
+  // }, [counts])
+
+  // console.log(counts?.engaggedUser, counts?.engaggedUser[item.name])
+  console.log(flag, "flag outside")
+
   return (
-    <Tooltip title={flag ? `${item.name}ed already` : item.name}>
-      <IconButton onClick={handleClick} sx={{backgroundColor: flag ? "beige" :"lightgrey"}}>
+    <Tooltip title={(flag) ? `${item.name}ed already` : item.name}>
+      <IconButton onClick={handleClick} sx={{ backgroundColor: flag ? "beige" : "lightgrey" }}>
         <Button startIcon={item.icon}>
+          {/* <Typography variant={"subtitle2"}>{counts[item.name] ? counts[item.name] : counts?.engaggedUser[item.name] ? counts?.engaggedUser[item.name] : null}</Typography> */}
           <Typography variant={"subtitle2"}>{counts[item.name] ? counts[item.name] : null}</Typography>
         </Button>
       </IconButton>
@@ -149,9 +181,9 @@ let RenderActionableIcon = ({item, handleCounts, counts}) => {
 
 let actions = [
   { name: "Like", count: 0, icon: <LikeIconElement /> },
-  { name: "Dislike", count: 0, icon: <DislikeIconElement />  },
-  { name: "Love", count: 0, icon: <LoveIconElement />  },
-  { name: "Share", count: 0, icon: <ShareIconElement />  },
+  { name: "Dislike", count: 0, icon: <DislikeIconElement /> },
+  { name: "Love", count: 0, icon: <LoveIconElement /> },
+  { name: "Share", count: 0, icon: <ShareIconElement /> },
 ]
 
 export default ShowUserCreatedPost
