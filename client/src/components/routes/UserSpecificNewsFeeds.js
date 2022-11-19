@@ -10,6 +10,7 @@ import { readDataFromServer } from '../utils';
 function UserSpecificNewsFeeds() {
     let [tweetPostsDataset, setTweetPostsDataset] = useState([]);
     let [userPostsDataset, setUserPostsDataset] = useState([])
+    let [allAccessiblePosts, setAllAccessiblePosts] = useState([]);
 
     let appCtx = useContext(AppContexts);
 
@@ -25,6 +26,8 @@ function UserSpecificNewsFeeds() {
     }
 
     let handleUserPostsDataset = (result) => setUserPostsDataset(result.data.data)
+
+    let handleAllAccessiblePosts = result => setAllAccessiblePosts(result.data.data)
 
     let topics = appCtx?.user?.topics;
 
@@ -43,16 +46,25 @@ function UserSpecificNewsFeeds() {
         readDataFromServer(url, handleUserPostsDataset)
     }
 
+    let getAllAccessiblePosts = () => {
+        let url = `${appCtx.baseUrl}/posts/`
+        readDataFromServer(url, handleAllAccessiblePosts)
+    }
+
     useEffect(() => {
-        appCtx.user._id && getAllUserPosts()
+        // appCtx.user._id && getAllUserPosts()
+        appCtx.user._id && getAllAccessiblePosts()
     }, [appCtx.user?._id])
 
-    console.log(userPostsDataset, "postsDataset!!")
+    console.log(userPostsDataset, "postsDataset!!", allAccessiblePosts)
 
     let renderTweetPosts = () => tweetPostsDataset?.map(dataset => <RenderPost key={dataset?.postData._id} item={dataset} baseUrl={appCtx.baseUrl} />)
 
-    // let renderUserPosts = () => userPostsDataset?.map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
+    let renderAllAccessiblePosts = () => allAccessiblePosts?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
+    
     let renderUserPosts = () => userPostsDataset?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
+    
+    // let renderUserPosts = () => userPostsDataset?.map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
     // let renderUserPosts = () => userPostsDataset?.sort((a, b) => Math.sign(new Date(a.created) - new Date(b.created))).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
     // let renderUserPosts = () => userPostsDataset?.sort((a, b) => Math.sign(new Date(a.created) - new Date(b.created) ? 1 : -1)).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
 
@@ -61,7 +73,8 @@ function UserSpecificNewsFeeds() {
             <Typography variant='h1'>User Specific News Feeds</Typography>
 
             <CreatePost setPostsDataset={setUserPostsDataset} />
-            {renderUserPosts()}
+            {/* {renderUserPosts()} */}
+            {renderAllAccessiblePosts()}
 
             <TweetEmbed tweetsDataset={tweetPostsDataset} />
             {/* {renderTweetPosts()} */}

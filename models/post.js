@@ -10,6 +10,7 @@ const Post = new Schema({
     videoUrl: Schema.Types.String,
     poll: Schema.Types.Array,
     gif:  Schema.Types.Array,
+    usersEngagged: Schema.Types.Array,
     likesCount: Schema.Types.Number,
     loveCount: Schema.Types.Number,
     dislikesCount: Schema.Types.Number,

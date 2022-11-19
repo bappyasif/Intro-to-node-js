@@ -23,6 +23,7 @@ function ShowUserCreatedPost({ postData }) {
 
   return (
     <Box
+      // id={_id}
       width={990}
       margin="auto"
       border={"dotted .4px blue"}
@@ -89,7 +90,8 @@ let UserEngagementWithPost = ({postData, appCtx}) => {
   }
 
   let updateThisPostCountsInDatabase = () => {
-    let url = `${appCtx.baseUrl}/posts/${postData._id}`
+    // let url = `${appCtx.baseUrl}/posts/${postData._id}`
+    let url = `${appCtx.baseUrl}/posts/${postData._id}/${appCtx.user._id}`
     console.log(url, "url!!", counts)
 
     updateDataInDatabase(url, counts)
