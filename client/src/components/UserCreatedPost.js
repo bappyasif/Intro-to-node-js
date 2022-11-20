@@ -59,21 +59,16 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
   let [dataReady, setDataReady] = useState(false)
 
   let handleCounts = (elem, addFlag) => {
-    // setCounts(prev => ({...prev, [elem]: prev[elem] ? prev[elem] + 1 : 1}))
-    // setCounts(prev => ({...prev, [elem]: (prev[elem] && addFlag) ? prev[elem] + 1 : prev[elem] - 1}))
     setCounts(prev => ({ ...prev, [elem]: (prev[elem] >= 0 && addFlag) ? prev[elem] + 1 : prev[elem] - 1 }))
-    // setCounts(prev => ({ ...prev, [elem]: (prev[elem] >= 0 && addFlag) ? prev[elem] + 1 : prev[elem] - 1 }))
+
     setOnlyUserCounts(prev => ({...prev, [elem]: prev[elem] ? 0 : 1}))
 
     // clearing out previously existing timeout element
-    session && clearTimeout(session);
+    // session && clearTimeout(session);
     // clearing out previously existing session element
-    // setSession(null)
+    // session && setSession(null)
     // setting a new timer with 2000ms, so that timer can take effect after that time
     setTime(2000);
-    // calling up timer to kick start timer function
-    // timer(); // timer isn't working properly!!
-    // updateThisPostCountsInDatabase() // without it data update runs just fine
   }
 
   let timer = () => {
@@ -85,6 +80,7 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
         setDataReady(true);
         console.log("!!")
         clearTimeout(sesn);
+        setTime(0);
       }
 
     }, [time])
@@ -96,7 +92,7 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
   }
 
   useEffect(() => {
-    time && timer()
+    time && timer();
   }, [time])
 
   let updateThisPostCountsInDatabase = () => {
@@ -116,7 +112,7 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
 
   useEffect(() => {
     // also checking if current user exists in this post "engagedUsers" list or not
-    // let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
+    let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
     // console.log(findIdx, "foundIndex!!", postData, postData?.usersEngagged[findIdx], Object.values(postData?.usersEngagged[findIdx])[0])
     // making initial counts setup if any
     setCounts({
@@ -124,7 +120,7 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
       Love: postData?.loveCount || 0,
       Dislike: postData?.dislikesCount || 0,
       Share: postData?.shareCount || 0,
-      // engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0] || []
+      engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0] || []
     })
 
     // initializing user specific counts
@@ -156,30 +152,20 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
 
 let RenderActionableIcon = ({ item, handleCounts, counts }) => {
   let [flag, setFlag] = useState(false);
-  // let [initFlag, setInitFlag] = useState(false);
 
   let handleClick = () => {
     setFlag(!flag);
-    console.log(flag, "flag", !flag, !!flag)
+    // console.log(flag, "flag", !flag, !!flag)
     handleCounts(item.name, !flag);
   }
 
-  // its causing all rendered posts to be updated on page load, as it get to run on "flag=false" as well
-  useEffect(() => {
-    // toggling through +1 or -1 value for specefic count, based on flag current value for that item
-    // initFlag && handleCounts(item.name, flag);
-    // handleCounts(item.name, flag);
-  }, [flag])
-
-  // useEffect(() => setInitFlag(true), [])
-
   // if user already had interacted with this post then turning flag on for indication for those
-  // useEffect(() => {
-  //   if (counts?.engaggedUser && counts?.engaggedUser[item.name]) {
-  //     setFlag(true)
-  //     console.log(flag, "flag inside")
-  //   }
-  // }, [counts])
+  useEffect(() => {
+    if (counts?.engaggedUser && counts?.engaggedUser[item.name]) {
+      setFlag(true)
+      console.log(flag, "flag inside")
+    }
+  }, [counts])
 
   // console.log(counts?.engaggedUser, counts?.engaggedUser[item.name])
   // console.log(flag, "flag outside")

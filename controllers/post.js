@@ -118,72 +118,27 @@ const updateSoloPostWithUserEngagements = (req, res, next) => {
     Post.findOne({ _id: req.params.postId })
         .then(currentPost => {
             // updating post with data sent to server from client
-            // console.log(data.Like ? currentPost.likesCount + 1 : 1, data.Like, currentPost.likesCount + 1 )
-            // currentPost.likesCount = data.Like ? currentPost.likesCount + 1 : 1;
+            
             currentPost.likesCount = data.Like;
-            // currentPost.likesCount = 0;
 
-            // (currentPost.likesCount && data.Like)
-            //     ? currentPost.likesCount + 1
-            // : (!currentPost.likesCount && data.Like)
-            // data.Like
-            //     ? currentPost.likesCount + 1
-            //     : 1;
-
-            // currentPost.dislikesCount = 0;
             currentPost.dislikesCount = data.Dislike;
-            // currentPost.dislikesCount = data.Dislike ? currentPost.dislikesCount + 1 : 1;
-            // console.log(data.Dislike ? currentPost.dislikesCount + 1 : 1, data.Dislike, currentPost.dislikesCount + 1)
 
-            // (currentPost.dislikesCount && data.Dislike)
-            //     ? currentPost.dislikesCount + 1
-            // : (!currentPost.dislikesCount && data.Dislike)
-            // data.Dislike
-            //     ? currentPost.dislikesCount + 1
-            //     : 1;
-
-            // currentPost.loveCount = 0
             currentPost.loveCount = data.Love
-            // currentPost.loveCount = data.Love ? currentPost.loveCount + 1 : 1;
-            // console.log(data.Love ? currentPost.loveCount + 1 : 1, data.Love, currentPost.loveCount + 1)
 
-            // (currentPost.loveCount && data.Love)
-            //     ? currentPost.loveCount + 1
-            // : (!currentPost.loveCount && data.Love)
-            // data.Love
-            //     ? currentPost.loveCount + 1
-            //     : 1;
-
-            // currentPost.shareCount = 0
             currentPost.shareCount = data.Share
-            // currentPost.shareCount = data.Share ? currentPost.shareCount + 1 : 1
-            // console.log(data.Share ? currentPost.shareCount + 1 : 1, data.Share , currentPost.shareCount + 1)
-
-            // (currentPost.shareCount && data.Share)
-            //     ? currentPost.shareCount + 1
-            // : (!currentPost.shareCount && data.Share)
-            //     ? data.Share
-            // data.share
-            //     ? currentPost.shareCount + 1
-            //     : 1
 
             let findIdx = currentPost.usersEngagged?.findIndex(item => Object.keys(item)[0] === req.params.interactingUserId)
 
             if (findIdx === -1) {
                 console.log("check notfound!!")
                 currentPost.usersEngagged.push({ [req.params.interactingUserId]: data.currentUserCounts })
-                // currentPost.usersEngagged.push({ [req.params.interactingUserId]: { Like: 0, Love: 0, Dislikes: 0, Share: 0 } })
-                // currentPost.usersEngagged.push({ [req.params.interactingUserId]: { Like: data.Like, Love: data.Love, Dislikes: data.Dislike, Share: data.Share } })
             } else {
                 console.log("check found!!")
-                // currentPost.usersEngagged[findIdx] = { [req.params.interactingUserId]: { Like: data.Like, Love: data.Love, Dislikes: data.Dislike, Share: data.Share } }
-                // currentPost.usersEngagged[findIdx] = { [req.params.interactingUserId]: { Like: 0, Love: 0, Dislikes: 0, Share: 0 } }
-                
                 currentPost.usersEngagged[findIdx] = { [req.params.interactingUserId]: data.currentUserCounts }
             }
 
             console.log(currentPost, "currentPost!!")
-            // res.status(200).json({ success: true, posts: [] })
+
             // updating post with latest post data
             Post.findByIdAndUpdate(currentPost._id, currentPost, {})
                 .then((currPost) => {
