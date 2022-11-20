@@ -59,14 +59,12 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
   let [dataReady, setDataReady] = useState(false)
 
   let handleCounts = (elem, addFlag) => {
-    setCounts(prev => ({ ...prev, [elem]: (prev[elem] >= 0 && addFlag) ? prev[elem] + 1 : prev[elem] - 1 }))
+    setCounts(prev => ({ ...prev, [elem]: (prev[elem] >= 0 && addFlag) ? prev[elem] + 1 : prev[elem] - 1 < 0 ? 0 : prev[elem] - 1 }))
 
     setOnlyUserCounts(prev => ({...prev, [elem]: prev[elem] ? 0 : 1}))
 
-    // clearing out previously existing timeout element
-    // session && clearTimeout(session);
     // clearing out previously existing session element
-    // session && setSession(null)
+    session && setSession(null)
     // setting a new timer with 2000ms, so that timer can take effect after that time
     setTime(2000);
   }
@@ -75,10 +73,9 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
     console.log("begin timer")
     let sesn = setTimeout(() => {
       // this gets to run only when user is not interacting
-      console.log("running!!", time)
+      // console.log("running!!", time)
       if (time >= 2000) {
         setDataReady(true);
-        console.log("!!")
         clearTimeout(sesn);
         setTime(0);
       }
@@ -96,11 +93,10 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
   }, [time])
 
   let updateThisPostCountsInDatabase = () => {
-    // let url = `${appCtx.baseUrl}/posts/${postData._id}`
     let url = `${appCtx.baseUrl}/posts/${postData._id}/${appCtx.user._id}`
     
     counts.currentUserCounts = onlyUserCounts;
-    console.log(url, "url!!", counts, onlyUserCounts)
+    // console.log(url, "url!!", counts, onlyUserCounts)
 
     updateDataInDatabase(url, counts)
   }
@@ -113,7 +109,7 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
   useEffect(() => {
     // also checking if current user exists in this post "engagedUsers" list or not
     let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
-    // console.log(findIdx, "foundIndex!!", postData, postData?.usersEngagged[findIdx], Object.values(postData?.usersEngagged[findIdx])[0])
+
     // making initial counts setup if any
     setCounts({
       Like: (postData?.likesCount || 0),
@@ -130,13 +126,12 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
   useEffect(() => {
     if (postData) {
       let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
-      // console.log(findIdx, "foundIndex!!", postData, postData?.usersEngagged[findIdx], Object.values(postData?.usersEngagged[findIdx])[0])
-      // console.log(findIdx, "foundIndex!!", Object.values(postData?.usersEngagged[findIdx])[0])
+
       setCounts(prev => ({...prev, engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0]}))
     }
   }, [postData])
 
-  console.log(session, "session!!", dataReady, counts, time)
+  // console.log(session, "session!!", dataReady, counts, time)
 
   return (
     <Stack
@@ -155,7 +150,6 @@ let RenderActionableIcon = ({ item, handleCounts, counts }) => {
 
   let handleClick = () => {
     setFlag(!flag);
-    // console.log(flag, "flag", !flag, !!flag)
     handleCounts(item.name, !flag);
   }
 
@@ -163,18 +157,13 @@ let RenderActionableIcon = ({ item, handleCounts, counts }) => {
   useEffect(() => {
     if (counts?.engaggedUser && counts?.engaggedUser[item.name]) {
       setFlag(true)
-      console.log(flag, "flag inside")
     }
-  }, [counts])
-
-  // console.log(counts?.engaggedUser, counts?.engaggedUser[item.name])
-  // console.log(flag, "flag outside")
+  }, [])
 
   return (
     <Tooltip title={(flag) ? `${item.name}ed already` : item.name}>
       <IconButton onClick={handleClick} sx={{ backgroundColor: flag ? "beige" : "lightgrey" }}>
         <Button startIcon={item.icon}>
-          {/* <Typography variant={"subtitle2"}>{counts[item.name] ? counts[item.name] : counts?.engaggedUser[item.name] ? counts?.engaggedUser[item.name] : null}</Typography> */}
           <Typography variant={"subtitle2"}>{counts[item.name] ? counts[item.name] : null}</Typography>
         </Button>
       </IconButton>
