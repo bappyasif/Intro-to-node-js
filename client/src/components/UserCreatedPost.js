@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from 'react'
 // import { DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement } from '../MuiElements';
 import { AppContexts } from '../App'
 import { CardHeaderElement, DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement } from './MuiElements'
+import SharePostModal from './SharePostModal'
 import ShowUserPostMedias from './ShowUserPostMedias'
 import { updateDataInDatabase } from './utils'
 
@@ -147,10 +148,12 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
 
 let RenderActionableIcon = ({ item, handleCounts, counts }) => {
   let [flag, setFlag] = useState(false);
+  let [showModal, setShowModal] = useState(false);
 
   let handleClick = () => {
     setFlag(!flag);
     handleCounts(item.name, !flag);
+    if(item.name === "Share") setShowModal(!showModal);
   }
 
   // if user already had interacted with this post then turning flag on for indication for those
@@ -162,10 +165,11 @@ let RenderActionableIcon = ({ item, handleCounts, counts }) => {
 
   return (
     <Tooltip title={(flag) ? `${item.name}ed already` : item.name}>
-      <IconButton onClick={handleClick} sx={{ backgroundColor: flag ? "beige" : "lightgrey" }}>
+      <IconButton onClick={handleClick} sx={{ backgroundColor: flag ? "beige" : "lightgrey", position: "relative" }}>
         <Button startIcon={item.icon}>
           <Typography variant={"subtitle2"}>{counts[item.name] ? counts[item.name] : null}</Typography>
         </Button>
+        {showModal ? <SharePostModal showModal={showModal} setShowModal={setShowModal} /> : null}
       </IconButton>
     </Tooltip>
   )
