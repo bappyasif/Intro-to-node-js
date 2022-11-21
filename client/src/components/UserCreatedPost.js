@@ -58,25 +58,20 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
   let [time, setTime] = useState(null);
   let [session, setSession] = useState(null);
   let [dataReady, setDataReady] = useState(false)
+  let [showModal, setShowModal] = useState(false);
 
   let handleCounts = (elem, addFlag) => {
-    setCounts(prev => ({ ...prev, 
-      [elem]: 
-      (prev[elem] >= 0 && addFlag) 
-      ? prev[elem] + 1 
-      : prev[elem] - 1 < 0 
-      ? 0 
-      : prev[elem] - 1,
-      // engaggedUser:
-      // (prev.engaggedUser[elem] >= 0 && addFlag) 
-      // ? prev.engaggedUser[elem] + 1 
-      // : prev.engaggedUser[elem] - 1 < 0 
-      // ? 0 
-      // : prev.engaggedUser[elem] - 1
+    setCounts(prev => ({
+      ...prev,
+      [elem]:
+        (prev[elem] >= 0 && addFlag)
+          ? prev[elem] + 1
+          : prev[elem] - 1 < 0
+            ? 0
+            : prev[elem] - 1,
     }))
 
-    console.log(counts, onlyUserCounts)
-    setOnlyUserCounts(prev => ({...prev, [elem]: prev[elem] ? 0 : 1}))
+    setOnlyUserCounts(prev => ({ ...prev, [elem]: prev[elem] ? 0 : 1 }))
 
     // clearing out previously existing session element
     session && setSession(null)
@@ -109,7 +104,7 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
 
   let updateThisPostCountsInDatabase = () => {
     let url = `${appCtx.baseUrl}/posts/${postData._id}/${appCtx.user._id}`
-    
+
     console.log(counts, onlyUserCounts, "server")
     counts.currentUserCounts = onlyUserCounts;
 
@@ -129,33 +124,24 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
       Dislike: postData?.dislikesCount || 0,
       Share: postData?.shareCount || 0,
       // engaggedUser: {Like: 0, Love: 0, Dislike: 0, Share: 0}
-      engaggedUser: postData?.usersEngagged.length ? Object.values(postData?.usersEngagged[0])[0] : {Like: 0, Love: 0, Dislike: 0, Share: 0}
+      engaggedUser: postData?.usersEngagged.length ? Object.values(postData?.usersEngagged[0])[0] : { Like: 0, Love: 0, Dislike: 0, Share: 0 }
     })
 
     // initializing user specific counts
-    // setOnlyUserCounts({Like: 0, Love: 0, Dislike: 0, Share: 0})
-    setOnlyUserCounts(postData?.usersEngagged.length ? Object.values(postData?.usersEngagged[0])[0] : {Like: 0, Love: 0, Dislike: 0, Share: 0})
-
-    // if (postData && postData?.usersEngagged.length) {
-    //   let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
-
-    //   // setCounts(prev => ({...prev, engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0]}))
-
-    //   // updating user count with previously found count from server to have a synchronize count
-    //   findIdx && setOnlyUserCounts(Object.values(postData?.usersEngagged)[0])
-    // }
+    // console.log(postData, postData?.usersEngagged.length ? Object.values(postData?.usersEngagged[0])[0] : {Like: 0, Love: 0, Dislike: 0, Share: 0}, "<><>")
+    setOnlyUserCounts(postData?.usersEngagged.length ? Object.values(postData?.usersEngagged[0])[0] : { Like: 0, Love: 0, Dislike: 0, Share: 0 })
   }, [])
 
   useEffect(() => {
     if (postData && postData?.usersEngagged.length) {
       let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
 
-      setCounts(prev => ({...prev, engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0]}))
-      console.log(findIdx, "findIdx!!", Object.values(postData?.usersEngagged[findIdx])[0])
+      setCounts(prev => ({ ...prev, engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0] }))
+      // console.log(postData, findIdx, "findIdx!!", Object.values(postData?.usersEngagged[findIdx])[0])
 
       // updating user count with previously found count from server to have a synchronize count
       findIdx && setOnlyUserCounts(Object.values(postData?.usersEngagged[findIdx])[0])
-    } 
+    }
   }, [postData])
 
   // console.log(session, "session!!", dataReady, counts, time)
@@ -166,24 +152,23 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
       className="post-actions-icons"
       sx={{ flexDirection: "row", justifyContent: "center", backgroundColor: "lightblue", gap: 2, position: "relative" }}
     >
-      { counts?.engaggedUser && actions.map(item => (
-        <RenderActionableIcon item={item} counts={counts} handleCounts={handleCounts} />
+      {counts?.engaggedUser && actions.map(item => (
+        <RenderActionableIcon setShowModal={setShowModal} item={item} counts={counts} handleCounts={handleCounts} />
       ))}
-      {/* {actions.map(item => (
-        <RenderActionableIcon item={item} counts={counts} handleCounts={handleCounts} />
-      ))} */}
+
+      {showModal ? <SharePostModal showModal={showModal} setShowModal={setShowModal} /> : null}
     </Stack>
   )
 }
 
-let RenderActionableIcon = ({ item, handleCounts, counts }) => {
+let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal }) => {
   let [flag, setFlag] = useState(false);
-  let [showModal, setShowModal] = useState(false);
 
   let handleClick = () => {
     setFlag(!flag);
     item.name !== "Share" && handleCounts(item.name, !flag);
-    if(item.name === "Share") setShowModal(!showModal);
+    // if(item.name === "Share") setShowModal(!showModal);
+    if (item.name === "Share") setShowModal(true);
   }
 
   // if user already had interacted with this post then turning flag on for indication for those
@@ -198,19 +183,20 @@ let RenderActionableIcon = ({ item, handleCounts, counts }) => {
   // console.log(counts, "flag", flag)
 
   return (
-    <Tooltip title={(flag) ? `${item.name}ed already` : item.name}>
-      <IconButton 
+    <Tooltip title={(flag) ? `${item.name}d already` : item.name}>
+      <IconButton
         onClick={handleClick}
         // onClick={item.name !== "Share" ? handleClick : null} 
-        sx={{ backgroundColor: flag ? "beige" : "lightgrey", 
-        // position: "relative", 
-        pointerEvents: showModal ? "none" : "auto" 
+        sx={{
+          backgroundColor: flag ? "beige" : "lightgrey",
+          // position: "relative", 
+          // pointerEvents: showModal ? "none" : "auto" 
         }}>
         <Button startIcon={item.icon}>
           <Typography variant={"subtitle2"}>{counts[item.name] ? counts[item.name] : null}</Typography>
           {/* <Typography variant={"subtitle2"}>{counts[item.name] ? counts[item.name] : counts?.engaggedUser[item.name]}</Typography> */}
         </Button>
-        {showModal ? <SharePostModal showModal={showModal} setShowModal={setShowModal} /> : null}
+        {/* {showModal ? <SharePostModal showModal={showModal} setShowModal={setShowModal} /> : null} */}
       </IconButton>
     </Tooltip>
   )

@@ -13,7 +13,7 @@ import { PostAddTwoTone } from '@mui/icons-material'
 import { sendDataToServer } from './utils'
 import { AppContexts } from '../App'
 
-function CreatePost({ setPostsDataset, setAllAccessiblePosts }) {
+function CreatePost() {
   let [addedOptions, setAddedOptions] = useState({})
   let [errors, setErrors] = useState([])
   let [postData, setPostData] = useState([])
@@ -27,10 +27,7 @@ function CreatePost({ setPostsDataset, setAllAccessiblePosts }) {
   let handlePostData = result => {
     setPostData(result.post)
     setAddedOptions({})
-    // setPostsDataset(prev => [...prev, result.post])
-    // appCtx.handleAvailablePostsFeeds(result.post)
     appCtx.updateAvailablePostsFeeds(result.post)
-    // setAllAccessiblePosts(prev => [...prev, result.post])
     ref.current.reset()
   }
 

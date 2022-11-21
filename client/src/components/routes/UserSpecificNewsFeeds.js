@@ -11,7 +11,6 @@ import { readDataFromServer } from '../utils';
 function UserSpecificNewsFeeds() {
     let [tweetPostsDataset, setTweetPostsDataset] = useState([]);
     // let [userPostsDataset, setUserPostsDataset] = useState([])
-    let [allAccessiblePosts, setAllAccessiblePosts] = useState([]);
 
     let appCtx = useContext(AppContexts);
 
@@ -28,15 +27,7 @@ function UserSpecificNewsFeeds() {
         })
     }
 
-    // let handleUserPostsDataset = (result) => setUserPostsDataset(result.data.data)
-    // let handleUserPostsDataset = (result) => appCtx.handleCurrentUserCreatedPosts(result.data.data)
-
-    // let handleAllAccessiblePosts = result => setAllAccessiblePosts(result.data.data)
-    let handleAllAccessiblePosts = result => {
-        appCtx.handleAvailablePostsFeeds(result.data.data)
-        // appCtx.handleAvailablePostsFeeds(result.data.data)
-        // setAllAccessiblePosts(result.data.data)
-    }
+    let handleAllAccessiblePosts = result => appCtx.handleAvailablePostsFeeds(result.data.data)
 
     let topics = appCtx?.user?.topics;
 
@@ -67,25 +58,23 @@ function UserSpecificNewsFeeds() {
         location.pathname && console.log(location.pathname === "/", location.pathname)
     }, [appCtx.user?._id, location.pathname])
 
+    // making sure each time route changes existing posts gets removed so that state variable changes dont become unstable
+    useEffect(() => appCtx.handleAvailablePostsFeeds([]), [location.pathname])
+
     // console.log(userPostsDataset, "postsDataset!!", allAccessiblePosts)
-    console.log("postsDataset!!", allAccessiblePosts)
+    // console.log("postsDataset!!", allAccessiblePosts)
 
     let renderTweetPosts = () => tweetPostsDataset?.map(dataset => <RenderPost key={dataset?.postData._id} item={dataset} baseUrl={appCtx.baseUrl} />)
 
     let renderAllAccessiblePosts = () => appCtx.availablePostsFeeds?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
-    // let renderAllAccessiblePosts = () => allAccessiblePosts?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
     
     // let renderUserPosts = () => userPostsDataset?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
-    
-    // let renderUserPosts = () => userPostsDataset?.map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
-    // let renderUserPosts = () => userPostsDataset?.sort((a, b) => Math.sign(new Date(a.created) - new Date(b.created))).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
-    // let renderUserPosts = () => userPostsDataset?.sort((a, b) => Math.sign(new Date(a.created) - new Date(b.created) ? 1 : -1)).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
 
     return (
         <Paper>
             <Typography variant='h1'>User Specific News Feeds</Typography>
 
-            <CreatePost setAllAccessiblePosts={setAllAccessiblePosts} />
+            <CreatePost />
             {/* <CreatePost setPostsDataset={setUserPostsDataset} /> */}
             {/* {renderUserPosts()} */}
             {/* {renderAllAccessiblePosts()} */}
