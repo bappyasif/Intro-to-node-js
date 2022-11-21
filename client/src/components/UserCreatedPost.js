@@ -96,6 +96,7 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
   let updateThisPostCountsInDatabase = () => {
     let url = `${appCtx.baseUrl}/posts/${postData._id}/${appCtx.user._id}`
     
+    console.log(onlyUserCounts, counts.engaggedUser)
     counts.currentUserCounts = onlyUserCounts;
     // console.log(url, "url!!", counts, onlyUserCounts)
 
@@ -109,7 +110,7 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
 
   useEffect(() => {
     // also checking if current user exists in this post "engagedUsers" list or not
-    let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
+    // let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
 
     // making initial counts setup if any
     setCounts({
@@ -117,7 +118,7 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
       Love: postData?.loveCount || 0,
       Dislike: postData?.dislikesCount || 0,
       Share: postData?.shareCount || 0,
-      engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0] || []
+      // engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0] || []
     })
 
     // initializing user specific counts
@@ -128,20 +129,27 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
     if (postData) {
       let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
 
+      console.log(findIdx, "findIdx!!")
+
       setCounts(prev => ({...prev, engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0]}))
+      setOnlyUserCounts(Object.values(postData?.usersEngagged[findIdx])[0])
     }
   }, [postData])
 
   // console.log(session, "session!!", dataReady, counts, time)
+  // console.log(counts, "counts!!")
 
   return (
     <Stack
       className="post-actions-icons"
       sx={{ flexDirection: "row", justifyContent: "center", backgroundColor: "lightblue", gap: 2 }}
     >
-      {actions.map(item => (
+      { counts?.engaggedUser && actions.map(item => (
         <RenderActionableIcon item={item} counts={counts} handleCounts={handleCounts} />
       ))}
+      {/* {actions.map(item => (
+        <RenderActionableIcon item={item} counts={counts} handleCounts={handleCounts} />
+      ))} */}
     </Stack>
   )
 }
@@ -158,8 +166,10 @@ let RenderActionableIcon = ({ item, handleCounts, counts }) => {
 
   // if user already had interacted with this post then turning flag on for indication for those
   useEffect(() => {
+    console.log(counts?.engaggedUser, "counts?.engaggedUser", counts)
     if (counts?.engaggedUser && counts?.engaggedUser[item.name]) {
       setFlag(true)
+      console.log("flag", flag)
     }
   }, [])
 
