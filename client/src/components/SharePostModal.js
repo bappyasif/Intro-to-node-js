@@ -1,7 +1,9 @@
-import { Box, Modal, Typography } from '@mui/material'
+import { DoneAllTwoTone } from '@mui/icons-material';
+import { Box, Button, Modal, Typography } from '@mui/material'
 import React from 'react'
 
 function SharePostModal({ showModal, setShowModal }) {
+    console.log(showModal, "showModal!!")
     const style = {
         position: 'absolute',
         top: '50%',
@@ -12,6 +14,8 @@ function SharePostModal({ showModal, setShowModal }) {
         border: '2px solid #000',
         boxShadow: 24,
         p: 4,
+        zIndex: 2,
+        pointerEvents: "auto"
     };
 
     return (
@@ -19,6 +23,12 @@ function SharePostModal({ showModal, setShowModal }) {
             <Typography variant={"h6"}>"Modal Text"</Typography>
             <Typography variant={"h6"} sx={{ mt: 2 }}>
                 Duis mollis, est non commodo luctus, nisi erat porttitor ligula</Typography>
+            <Button
+                // onClick={() => setShowModal(false)}
+                onClick={() => console.log("clicked!!")}
+                startIcon={<DoneAllTwoTone />}>
+                <Typography variant='body2'>Done</Typography>
+            </Button>
         </Box>
         // <Modal
         //     open={showModal}

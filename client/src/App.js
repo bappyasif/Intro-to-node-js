@@ -22,6 +22,7 @@ export const AppContexts = createContext()
 function App() {
   let [user, setUser] = useState([]);
   let [jwtUser, setJwtUser] = useState({});
+  let [userAccessiblePostsDataset, setUserAccessiblePostsDataset] = useState([])
   let location = useLocation()
 
   let handleData = result => {
@@ -55,12 +56,20 @@ function App() {
     })
   }
 
+  // let handleAvailablePostsFeeds = dataset => setUserAccessiblePostsDataset(prev => [...prev, dataset])
+  let handleAvailablePostsFeeds = dataset => setUserAccessiblePostsDataset(dataset)
+  let updateAvailablePostsFeeds = dataset => setUserAccessiblePostsDataset(prev => [...prev, dataset])
+  console.log(userAccessiblePostsDataset, "userPostsDataset!!")
+
   const contexts = {
     baseUrl: "http://localhost:3000",
     user: user,
     handleData: handleData,
     updateData: updateData,
-    acceptOrRejectFriendRequestUpdater: acceptOrRejectFriendRequestUpdater
+    acceptOrRejectFriendRequestUpdater: acceptOrRejectFriendRequestUpdater,
+    handleAvailablePostsFeeds: handleAvailablePostsFeeds,
+    availablePostsFeeds: userAccessiblePostsDataset,
+    updateAvailablePostsFeeds: updateAvailablePostsFeeds
   }
 
   let getUser = () => {
