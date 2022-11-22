@@ -11,6 +11,7 @@ import { readDataFromServer } from '../utils';
 function UserSpecificNewsFeeds() {
     let [tweetPostsDataset, setTweetPostsDataset] = useState([]);
     // let [userPostsDataset, setUserPostsDataset] = useState([])
+    let [showCreatePost, setShowCreatePost] = useState(true);
 
     let appCtx = useContext(AppContexts);
 
@@ -66,7 +67,7 @@ function UserSpecificNewsFeeds() {
 
     let renderTweetPosts = () => tweetPostsDataset?.map(dataset => <RenderPost key={dataset?.postData._id} item={dataset} baseUrl={appCtx.baseUrl} />)
 
-    let renderAllAccessiblePosts = () => appCtx.availablePostsFeeds?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
+    let renderAllAccessiblePosts = () => appCtx.availablePostsFeeds?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={setShowCreatePost} />)
     
     // let renderUserPosts = () => userPostsDataset?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
 
@@ -74,7 +75,7 @@ function UserSpecificNewsFeeds() {
         <Paper>
             <Typography variant='h1'>User Specific News Feeds</Typography>
 
-            <CreatePost />
+            { showCreatePost ? <CreatePost /> : null}
             {/* <CreatePost setPostsDataset={setUserPostsDataset} /> */}
             {/* {renderUserPosts()} */}
             {/* {renderAllAccessiblePosts()} */}

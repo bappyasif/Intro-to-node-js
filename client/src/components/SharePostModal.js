@@ -1,10 +1,12 @@
 import { DoneAllTwoTone } from '@mui/icons-material';
 import { Box, Button, Modal, Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import CreatePost from './CreatePost';
 
-function SharePostModal({ showModal, setShowModal }) {
+function SharePostModal({ showModal, setShowModal, setShowCreatePost, handleCounts, setShareFlag, shareFlag }) {
     // console.log(showModal, "showModal!!")
+    // let [flag, setFlag] = useState(false);
+
     const style = {
         position: 'absolute',
         top: '50%',
@@ -20,14 +22,22 @@ function SharePostModal({ showModal, setShowModal }) {
         // pointerEvents: showModal ? "none" : "auto" 
     };
 
+    let handleModalsVisibility = () => {
+        setShowCreatePost(true)
+        setShowModal(false)
+        handleCounts("Share", !shareFlag)
+        setShareFlag(!shareFlag)
+        // console.log(flag, "!!")
+    }
+    console.log(shareFlag, "!!from share")
     return (
         <Box sx={style}>
                 {/* <Typography id={"modal-modal-title"} variant={"h6"}>"Modal Text"</Typography>
                 <Typography id={"modal-modal-description"} variant={"h6"} sx={{ mt: 2 }}>
                     Duis mollis, est non commodo luctus, nisi erat porttitor ligula</Typography> */}
-                <CreatePost />
+                <CreatePost handleModalsVisibility={handleModalsVisibility} />
                 <Button
-                    onClick={() => setShowModal(false)}
+                    onClick={handleModalsVisibility}
                     // onClick={() => console.log("clicked!!")}
                     startIcon={<DoneAllTwoTone />}>
                     <Typography variant='body2'>Done</Typography>

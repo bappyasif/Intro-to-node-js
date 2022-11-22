@@ -8,7 +8,7 @@ import SharePostModal from './SharePostModal'
 import ShowUserPostMedias from './ShowUserPostMedias'
 import { updateDataInDatabase } from './utils'
 
-function ShowUserCreatedPost({ postData }) {
+function ShowUserCreatedPost({ postData, setShowCreatePost }) {
   let { body, created, gif, poll, privacy, imageUrl, videoUrl, _id } = { ...postData }
 
   const appCtx = useContext(AppContexts)
@@ -47,18 +47,19 @@ function ShowUserCreatedPost({ postData }) {
 
       <ShowUserPostMedias mediaContents={preparingAdditionalsForRendering} />
 
-      <UserEngagementWithPost postData={postData} appCtx={appCtx} />
+      <UserEngagementWithPost postData={postData} appCtx={appCtx} setShowCreatePost={setShowCreatePost} />
     </Box>
   )
 }
 
-let UserEngagementWithPost = ({ postData, appCtx }) => {
+let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost }) => {
   let [counts, setCounts] = useState({})
   let [onlyUserCounts, setOnlyUserCounts] = useState({})
   let [time, setTime] = useState(null);
   let [session, setSession] = useState(null);
   let [dataReady, setDataReady] = useState(false)
   let [showModal, setShowModal] = useState(false);
+  let [shareFlag, setShareFlag] = useState(false);
 
   let handleCounts = (elem, addFlag) => {
     setCounts(prev => ({
@@ -153,22 +154,25 @@ let UserEngagementWithPost = ({ postData, appCtx }) => {
       sx={{ flexDirection: "row", justifyContent: "center", backgroundColor: "lightblue", gap: 2, position: "relative" }}
     >
       {counts?.engaggedUser && actions.map(item => (
-        <RenderActionableIcon setShowModal={setShowModal} item={item} counts={counts} handleCounts={handleCounts} />
+        <RenderActionableIcon setShowModal={setShowModal} item={item} counts={counts} handleCounts={handleCounts} setShowCreatePost={setShowCreatePost} />
       ))}
 
-      {showModal ? <SharePostModal showModal={showModal} setShowModal={setShowModal} /> : null}
+      {showModal ? <SharePostModal setShareFlag={setShareFlag} shareFlag={shareFlag} showModal={showModal} setShowModal={setShowModal} setShowCreatePost={setShowCreatePost} handleCounts={handleCounts} /> : null}
     </Stack>
   )
 }
 
-let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal }) => {
+let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal, setShowCreatePost }) => {
   let [flag, setFlag] = useState(false);
 
   let handleClick = () => {
     setFlag(!flag);
     item.name !== "Share" && handleCounts(item.name, !flag);
     // if(item.name === "Share") setShowModal(!showModal);
-    if (item.name === "Share") setShowModal(true);
+    if (item.name === "Share") {
+      setShowModal(true);
+      setShowCreatePost(false);
+    }
   }
 
   // if user already had interacted with this post then turning flag on for indication for those
