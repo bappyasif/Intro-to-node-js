@@ -4,23 +4,24 @@ import React, { useContext, useEffect, useState } from 'react'
 // import { DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement } from '../MuiElements';
 import { AppContexts } from '../App'
 import { CardHeaderElement, DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement } from './MuiElements'
+import RenderPostDataEssentials from './RenderPostData'
 import SharePostModal from './SharePostModal'
 import ShowUserPostMedias from './ShowUserPostMedias'
 import { updateDataInDatabase } from './utils'
 
 function ShowUserCreatedPost({ postData, setShowCreatePost }) {
-  let { body, created, gif, poll, privacy, imageUrl, videoUrl, _id } = { ...postData }
+  // let { body, created, gif, poll, privacy, imageUrl, videoUrl, _id } = { ...postData }
 
   const appCtx = useContext(AppContexts)
 
-  let preparingAdditionalsForRendering = {
-    Id: _id,
-    Image: imageUrl,
-    Video: videoUrl,
-    Gif: gif[0],
-    Poll: poll[0],
-    Privacy: privacy
-  }
+  // let preparingAdditionalsForRendering = {
+  //   Id: _id,
+  //   Image: imageUrl,
+  //   Video: videoUrl,
+  //   Gif: gif[0],
+  //   Poll: poll[0],
+  //   Privacy: privacy
+  // }
 
   return (
     <Box
@@ -33,7 +34,7 @@ function ShowUserCreatedPost({ postData, setShowCreatePost }) {
       borderRadius={1.1}
       position={"relative"}
     >
-      <CardHeaderElement
+      {/* <CardHeaderElement
         avatarUrl={appCtx.user?.ppUrl || "https://random.imagecdn.app/500/150"}
         altText={"fullname"}
         title={appCtx.user?.fullName || "User Name"}
@@ -45,7 +46,8 @@ function ShowUserCreatedPost({ postData, setShowCreatePost }) {
 
       <Typography variant='h4' sx={{ backgroundColor: "honeydew", p: .2, mr: 6, ml: 15 }} dangerouslySetInnerHTML={{ __html: body }}></Typography>
 
-      <ShowUserPostMedias mediaContents={preparingAdditionalsForRendering} />
+      <ShowUserPostMedias mediaContents={preparingAdditionalsForRendering} /> */}
+      <RenderPostDataEssentials postData={postData} />
 
       <UserEngagementWithPost postData={postData} appCtx={appCtx} setShowCreatePost={setShowCreatePost} />
     </Box>
@@ -157,7 +159,7 @@ let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost }) => {
         <RenderActionableIcon setShowModal={setShowModal} item={item} counts={counts} handleCounts={handleCounts} setShowCreatePost={setShowCreatePost} />
       ))}
 
-      {showModal ? <SharePostModal setShareFlag={setShareFlag} shareFlag={shareFlag} showModal={showModal} setShowModal={setShowModal} setShowCreatePost={setShowCreatePost} handleCounts={handleCounts} /> : null}
+      {showModal ? <SharePostModal postData={postData} setShareFlag={setShareFlag} shareFlag={shareFlag} showModal={showModal} setShowModal={setShowModal} setShowCreatePost={setShowCreatePost} handleCounts={handleCounts} /> : null}
     </Stack>
   )
 }
@@ -206,7 +208,7 @@ let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal, setShowC
   )
 }
 
-let actions = [
+export let actions = [
   { name: "Like", count: 0, icon: <LikeIconElement /> },
   { name: "Dislike", count: 0, icon: <DislikeIconElement /> },
   { name: "Love", count: 0, icon: <LoveIconElement /> },
