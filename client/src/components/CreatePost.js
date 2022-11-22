@@ -13,7 +13,7 @@ import { PostAddTwoTone } from '@mui/icons-material'
 import { sendDataToServer } from './utils'
 import { AppContexts } from '../App'
 
-function CreatePost({handleModalsVisibility}) {
+function CreatePost({handleSuccessfullPostShared}) {
   let [addedOptions, setAddedOptions] = useState({})
   let [errors, setErrors] = useState([])
   let [postData, setPostData] = useState([])
@@ -29,7 +29,7 @@ function CreatePost({handleModalsVisibility}) {
     setAddedOptions({})
     appCtx.updateAvailablePostsFeeds(result.post)
     ref.current.reset()
-    handleModalsVisibility && handleModalsVisibility()
+    handleSuccessfullPostShared && handleSuccessfullPostShared(result.post._id)
   }
 
   let handleAddedOptions = (evt, elm, val) => {

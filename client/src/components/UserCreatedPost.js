@@ -1,31 +1,18 @@
 import { Box, Button, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import moment from 'moment'
 import React, { useContext, useEffect, useState } from 'react'
-// import { DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement } from '../MuiElements';
 import { AppContexts } from '../App'
-import { CardHeaderElement, DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement } from './MuiElements'
+import { DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement } from './MuiElements'
 import RenderPostDataEssentials from './RenderPostData'
 import SharePostModal from './SharePostModal'
-import ShowUserPostMedias from './ShowUserPostMedias'
 import { updateDataInDatabase } from './utils'
 
 function ShowUserCreatedPost({ postData, setShowCreatePost }) {
-  // let { body, created, gif, poll, privacy, imageUrl, videoUrl, _id } = { ...postData }
 
   const appCtx = useContext(AppContexts)
 
-  // let preparingAdditionalsForRendering = {
-  //   Id: _id,
-  //   Image: imageUrl,
-  //   Video: videoUrl,
-  //   Gif: gif[0],
-  //   Poll: poll[0],
-  //   Privacy: privacy
-  // }
-
   return (
     <Box
-      // id={_id}
       width={990}
       margin="auto"
       border={"dotted .4px blue"}
@@ -34,19 +21,6 @@ function ShowUserCreatedPost({ postData, setShowCreatePost }) {
       borderRadius={1.1}
       position={"relative"}
     >
-      {/* <CardHeaderElement
-        avatarUrl={appCtx.user?.ppUrl || "https://random.imagecdn.app/500/150"}
-        altText={"fullname"}
-        title={appCtx.user?.fullName || "User Name"}
-        joined={appCtx.user?.created || Date.now()}
-        forPost={true}
-      />
-
-      <Typography sx={{ color: "text.secondary", position: "absolute", top: 29, right: 20 }} variant="subtitle2">{`Live Since: ${moment(created).fromNow()}`}</Typography>
-
-      <Typography variant='h4' sx={{ backgroundColor: "honeydew", p: .2, mr: 6, ml: 15 }} dangerouslySetInnerHTML={{ __html: body }}></Typography>
-
-      <ShowUserPostMedias mediaContents={preparingAdditionalsForRendering} /> */}
       <RenderPostDataEssentials postData={postData} />
 
       <UserEngagementWithPost postData={postData} appCtx={appCtx} setShowCreatePost={setShowCreatePost} />
@@ -139,10 +113,12 @@ let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost }) => {
     if (postData && postData?.usersEngagged.length) {
       let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
 
+      // setCounts(prev => ({ ...prev, engaggedUser: postData?.usersEngagged[findIdx] ? Object.values(postData?.usersEngagged[findIdx])[0] : { Like: 0, Love: 0, Dislike: 0, Share: 0 } }))
       setCounts(prev => ({ ...prev, engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0] }))
       // console.log(postData, findIdx, "findIdx!!", Object.values(postData?.usersEngagged[findIdx])[0])
 
       // updating user count with previously found count from server to have a synchronize count
+      // findIdx && postData?.usersEngagged[findIdx] && setOnlyUserCounts(Object.values(postData?.usersEngagged[findIdx])[0])
       findIdx && setOnlyUserCounts(Object.values(postData?.usersEngagged[findIdx])[0])
     }
   }, [postData])
@@ -159,7 +135,7 @@ let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost }) => {
         <RenderActionableIcon setShowModal={setShowModal} item={item} counts={counts} handleCounts={handleCounts} setShowCreatePost={setShowCreatePost} />
       ))}
 
-      {showModal ? <SharePostModal postData={postData} setShareFlag={setShareFlag} shareFlag={shareFlag} showModal={showModal} setShowModal={setShowModal} setShowCreatePost={setShowCreatePost} handleCounts={handleCounts} /> : null}
+      {showModal ? <SharePostModal counts={counts} postData={postData} setShareFlag={setShareFlag} shareFlag={shareFlag} showModal={showModal} setShowModal={setShowModal} setShowCreatePost={setShowCreatePost} handleCounts={handleCounts} /> : null}
     </Stack>
   )
 }
@@ -192,17 +168,12 @@ let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal, setShowC
     <Tooltip title={(flag) ? `${item.name}d already` : item.name}>
       <IconButton
         onClick={handleClick}
-        // onClick={item.name !== "Share" ? handleClick : null} 
         sx={{
           backgroundColor: flag ? "beige" : "lightgrey",
-          // position: "relative", 
-          // pointerEvents: showModal ? "none" : "auto" 
         }}>
         <Button startIcon={item.icon}>
           <Typography variant={"subtitle2"}>{counts[item.name] ? counts[item.name] : null}</Typography>
-          {/* <Typography variant={"subtitle2"}>{counts[item.name] ? counts[item.name] : counts?.engaggedUser[item.name]}</Typography> */}
         </Button>
-        {/* {showModal ? <SharePostModal showModal={showModal} setShowModal={setShowModal} /> : null} */}
       </IconButton>
     </Tooltip>
   )

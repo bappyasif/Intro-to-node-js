@@ -111,6 +111,21 @@ const updateSoloPost = (req, res, next) => {
         }).catch(err => next(err))
 }
 
+const updateSoloPostWithSpecificData = (req, res, next) => {
+    let dataBody = req.body;
+    let postId = req.params.postId;
+    console.log(dataBody, "dataBody!!")
+    Post.findOne({_id: postId})
+        .then(currentPost => {
+            currentPost[dataBody.propKey] = dataBody.propValue
+            Post.findByIdAndUpdate(currentPost._id, currentPost, {})
+                .then(updatedPost => {
+                    console.log(updatedPost, "updatedPost!!", postId, dataBody.propValue, dataBody.propKey)
+                    res.status(200).json({ success: true, posts: [] })
+                }).catch(err=>next(err))
+        }).catch(err=>next(err))
+}
+
 const updateSoloPostWithUserEngagements = (req, res, next) => {
     let data = req.body;
     console.log(data, "!!", req.params.postId, req.params.interactingUserId, data.currentUserCounts)
@@ -136,6 +151,10 @@ const updateSoloPostWithUserEngagements = (req, res, next) => {
                 console.log("check found!!")
                 currentPost.usersEngagged[findIdx] = { [req.params.interactingUserId]: data.currentUserCounts }
             }
+
+            // if(data.Share) {
+            //     currentPost.includedSharedPostId = req.params.postId;
+            // }
 
             console.log(currentPost, "currentPost!!")
 
@@ -165,5 +184,6 @@ module.exports = {
     updateSoloPost,
     deleteSoloPost,
     updateSoloPostWithUserEngagements,
-    getAllPostsWithPublicPrivacy
+    getAllPostsWithPublicPrivacy,
+    updateSoloPostWithSpecificData
 }
