@@ -1,8 +1,10 @@
+import { CommentTwoTone } from '@mui/icons-material'
 import { Box, Button, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import moment from 'moment'
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContexts } from '../App'
 import { DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement } from './MuiElements'
+import PostCommentModal from './PostCommentModal'
 import RenderPostDataEssentials from './RenderPostData'
 import SharePostModal, { ShowPostUserEngagementsDetails } from './SharePostModal'
 import { readDataFromServer, updateDataInDatabase } from './utils'
@@ -36,6 +38,7 @@ let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost }) => {
   let [dataReady, setDataReady] = useState(false)
   let [showModal, setShowModal] = useState(false);
   let [shareFlag, setShareFlag] = useState(false);
+  let [showCommentModal, setShowCommentModal] =  useState(false);
 
   let handleCounts = (elem, addFlag) => {
     setCounts(prev => ({
@@ -126,21 +129,25 @@ let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost }) => {
   // console.log(session, "session!!", dataReady, counts, time)
   // console.log(counts, "counts!!")
 
+  let handleShowCommentModal = () => setShowCommentModal(!showCommentModal)
+
   return (
     <Stack
       className="post-actions-icons"
       sx={{ flexDirection: "row", justifyContent: "center", backgroundColor: "lightblue", gap: 2, position: "relative" }}
     >
       {counts?.engaggedUser && actions.map(item => (
-        <RenderActionableIcon setShowModal={setShowModal} item={item} counts={counts} handleCounts={handleCounts} setShowCreatePost={setShowCreatePost} />
+        <RenderActionableIcon handleShowCommentModal={handleShowCommentModal} setShowModal={setShowModal} item={item} counts={counts} handleCounts={handleCounts} setShowCreatePost={setShowCreatePost} />
       ))}
 
       {showModal ? <SharePostModal counts={counts} postData={postData} setShareFlag={setShareFlag} shareFlag={shareFlag} showModal={showModal} setShowModal={setShowModal} setShowCreatePost={setShowCreatePost} handleCounts={handleCounts} /> : null}
+
+      {showCommentModal ? <PostCommentModal handleShowCommentModal={handleShowCommentModal} /> : null}
     </Stack>
   )
 }
 
-let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal, setShowCreatePost }) => {
+let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal, setShowCreatePost, handleShowCommentModal }) => {
   let [flag, setFlag] = useState(false);
 
   let handleClick = () => {
@@ -150,6 +157,8 @@ let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal, setShowC
     if (item.name === "Share") {
       setShowModal(true);
       setShowCreatePost(false);
+    } else if(item.name === "Comment") {
+      handleShowCommentModal()
     }
   }
 
@@ -171,7 +180,8 @@ let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal, setShowC
         sx={{
           backgroundColor: flag ? "beige" : "lightgrey",
         }}>
-        <Button startIcon={item.icon}>
+        <Button startIcon={counts[item.name] ? item.icon : null}>
+          {counts[item.name] ? null : item.icon}
           <Typography variant={"subtitle2"}>{counts[item.name] ? counts[item.name] : null}</Typography>
         </Button>
       </IconButton>
@@ -222,6 +232,7 @@ let ShowIncludedSharedPost = ({ includedPostId, appCtx }) => {
 }
 
 export let actions = [
+  { name: "Comment", count: 0, icon: <CommentTwoTone /> },
   { name: "Like", count: 0, icon: <LikeIconElement /> },
   { name: "Dislike", count: 0, icon: <DislikeIconElement /> },
   { name: "Love", count: 0, icon: <LoveIconElement /> },
