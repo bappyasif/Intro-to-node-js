@@ -34,6 +34,7 @@ const getAllPostsWithPublicPrivacy = (req, res, next) => {
 }
 
 const getSoloPost = (req, res, next) => {
+    // console.log(req.params.postId, "req.params.postId")
     Post.findById({ _id: req.params.postId })
         .then(result => {
             res.status(200).json({ success: true, data: result })

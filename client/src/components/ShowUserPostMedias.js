@@ -9,19 +9,19 @@ function ShowUserPostMedias({ mediaContents }) {
 
         for (let key in mediaContents) {
             if (key === "Image" && mediaContents[key]?.includes("http")) {
-                content.push(<img src={mediaContents[key]} style={{order: 1}} />)
+                content.push(<img key={"Image"} src={mediaContents[key]} style={{order: 1}} />)
             } else if (key === "Image" && !mediaContents[key]?.includes("http")) {
-                content.push(<img src={handleMediaFileChecks(mediaContents[key])} style={{order: 1}} />)
+                content.push(<img key={"Image"} src={handleMediaFileChecks(mediaContents[key])} style={{order: 1}} />)
             } else if (key === "Video" && mediaContents[key]?.includes("http")) {
-                content.push(<video height={200} src={mediaContents[key]} controls style={{order: 2}} />)
+                content.push(<video key={"Video"} height={200} src={mediaContents[key]} controls style={{order: 2}} />)
                 // content.push(<video controls><source src={mediaContents[key]} /></video>)
                 // content.push(<iframe src={mediaContents[key]} controls></iframe>)
             } else if (key === "Gif" && mediaContents[key]) {
-                content.push(<Gif gif={mediaContents[key]} height={200}  style={{order: 3}} />)
+                content.push(<Gif key={"Gif"} gif={mediaContents[key]} height={200}  style={{order: 3}} />)
             } else if (key === "Poll" && mediaContents[key]) {
-                content.push(<ShowPoll pollData={mediaContents[key]} order={4} />)
+                content.push(<ShowPoll key={"Poll"} pollData={mediaContents[key]} order={4} />)
             } else if (key === "Privacy") {
-                content.push(<ShowRespectiveIcon privacy={mediaContents[key]} order={5} />)
+                content.push(<ShowRespectiveIcon key={"Privacy"} privacy={mediaContents[key]} order={5} />)
             }
 
         }

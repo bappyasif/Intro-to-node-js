@@ -72,7 +72,7 @@ function SharePostModal({ counts, postData, showModal, setShowModal, setShowCrea
     )
 }
 
-let ShowPostUserEngagementsDetails = ({ counts }) => {
+export let ShowPostUserEngagementsDetails = ({ counts }) => {
     // console.log(counts, "!!from share")
     return (
         <Stack

@@ -4,7 +4,7 @@ const postRoutes = express();
 
 postRoutes.get("/", getAllPostsWithPublicPrivacy)
 postRoutes.get("/:userId", getAllPosts)
-postRoutes.get("/:postId", getSoloPost);
+postRoutes.get("/solo/:postId", getSoloPost);
 postRoutes.post("/post/create/:userId", createNewPost);
 postRoutes.put("/:postId", updateSoloPost);
 postRoutes.put("/:postId/:interactingUserId", updateSoloPostWithUserEngagements);

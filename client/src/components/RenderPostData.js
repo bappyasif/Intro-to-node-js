@@ -33,7 +33,7 @@ function RenderPostDataEssentials({ postData, shareMode }) {
 
             <Typography variant='h4' sx={{ backgroundColor: "honeydew", p: .2, mr: 6, ml: 15 }} dangerouslySetInnerHTML={{ __html: body }}></Typography>
 
-            <ShowUserPostMedias mediaContents={preparingAdditionalsForRendering} />
+            {preparingAdditionalsForRendering.Id ? <ShowUserPostMedias mediaContents={preparingAdditionalsForRendering} /> : null}
         </>
     )
 }

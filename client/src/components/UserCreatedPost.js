@@ -4,8 +4,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AppContexts } from '../App'
 import { DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement } from './MuiElements'
 import RenderPostDataEssentials from './RenderPostData'
-import SharePostModal from './SharePostModal'
-import { updateDataInDatabase } from './utils'
+import SharePostModal, { ShowPostUserEngagementsDetails } from './SharePostModal'
+import { readDataFromServer, updateDataInDatabase } from './utils'
 
 function ShowUserCreatedPost({ postData, setShowCreatePost }) {
 
@@ -22,7 +22,7 @@ function ShowUserCreatedPost({ postData, setShowCreatePost }) {
       position={"relative"}
     >
       <RenderPostDataEssentials postData={postData} />
-
+      {postData?.includedSharedPostId ? <ShowIncludedSharedPost appCtx={appCtx} includedPostId={postData.includedSharedPostId} /> : null}
       <UserEngagementWithPost postData={postData} appCtx={appCtx} setShowCreatePost={setShowCreatePost} />
     </Box>
   )
@@ -176,6 +176,48 @@ let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal, setShowC
         </Button>
       </IconButton>
     </Tooltip>
+  )
+}
+
+let ShowIncludedSharedPost = ({ includedPostId, appCtx }) => {
+  let [sharedPostData, setSharedPostData] = useState({})
+
+  let handleSharedPostData = result => {
+    setSharedPostData(result.data.data)
+  }
+
+  let getSharedPostData = () => {
+    let url = `${appCtx.baseUrl}/posts/solo/${includedPostId}/`;
+    readDataFromServer(url, handleSharedPostData)
+  }
+
+  useEffect(() => {
+    includedPostId && getSharedPostData();
+  }, [includedPostId])
+
+  // console.log(sharedPostData, "sharedPostData!!")
+
+  let { likesCount, loveCount, dislikesCount, shareCount, _id } = { ...sharedPostData }
+
+  let counts = {
+    Like: likesCount,
+    Love: loveCount,
+    Dislike: dislikesCount,
+    Share: shareCount
+  }
+
+  return (
+    <Box
+      sx={{
+        p: 2,
+        transform: "scale(.6, 0.8)",
+        outline: "solid .4px red"
+      }}
+    >
+      <Typography>Shared Post</Typography>
+      {_id ? <RenderPostDataEssentials postData={sharedPostData} shareMode={true} /> : null}
+      {_id ? <ShowPostUserEngagementsDetails counts={counts} /> : null}
+    </Box>
   )
 }
 
