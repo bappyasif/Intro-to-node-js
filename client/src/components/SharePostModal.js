@@ -80,7 +80,7 @@ export let ShowPostUserEngagementsDetails = ({ counts }) => {
             sx={{ flexDirection: "row", justifyContent: "center", backgroundColor: "lightblue", gap: 2, position: "relative" }}
         >
             {actions.map(item => (
-                <Tooltip sx={{ cursor: "help" }} title={`${item.name}d by`}>
+                <Tooltip key={item.name} sx={{ cursor: "help" }} title={`${item.name}d by`}>
                     <IconButton
                         sx={{
                             backgroundColor: counts[item.name] ? "beige" : "lightgrey",

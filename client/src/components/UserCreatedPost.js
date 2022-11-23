@@ -7,7 +7,7 @@ import { DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement 
 import PostCommentModal from './PostCommentModal'
 import RenderPostDataEssentials from './RenderPostData'
 import SharePostModal, { ShowPostUserEngagementsDetails } from './SharePostModal'
-import { readDataFromServer, updateDataInDatabase } from './utils'
+import { readDataFromServer, sendDataToServer, updateDataInDatabase } from './utils'
 
 function ShowUserCreatedPost({ postData, setShowCreatePost }) {
 
@@ -39,6 +39,18 @@ let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost }) => {
   let [showModal, setShowModal] = useState(false);
   let [shareFlag, setShareFlag] = useState(false);
   let [showCommentModal, setShowCommentModal] =  useState(false);
+  let [commentText, setCommentText] = useState(null)
+
+  let handleCommentText = evt => setCommentText(evt.target.value);
+
+  let handleCommentCounts = () => {
+    setCounts(prev => ({...prev, "Comment": prev["Comment"] ? prev["Comment"] + 1 : 1}))
+    setOnlyUserCounts(prev => ({...prev, Comment: prev["Comment"] ? prev["Comment"] + 1 : 1}))
+    // clearing out previously existing session element
+    session && setSession(null)
+    // setting a new timer with 2000ms, so that timer can take effect after that time
+    setTime(2000);
+  }
 
   let handleCounts = (elem, addFlag) => {
     setCounts(prev => ({
@@ -91,20 +103,40 @@ let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost }) => {
     updateDataInDatabase(url, counts)
   }
 
+  let handleCreateNewComment = () => {
+    let url = `${appCtx.baseUrl}/comments/create/new`
+    
+    let data = {
+      text: commentText,
+      userId: appCtx.user._id,
+      postId: postData._id
+    }
+
+    let handleSuccess = (result) => {
+      console.log(result, "Result!!")
+      setCommentText(null)
+    }
+
+    sendDataToServer(url, data, ()=>null, handleSuccess)
+  }
+
   useEffect(() => {
     dataReady && updateThisPostCountsInDatabase()
+    dataReady && commentText && handleCreateNewComment();
     dataReady && setDataReady(false);
   }, [dataReady])
 
   useEffect(() => {
     // making initial counts setup if any
+    // console.log(postData, "postData!!")
     setCounts({
       Like: (postData?.likesCount || 0),
       Love: postData?.loveCount || 0,
       Dislike: postData?.dislikesCount || 0,
       Share: postData?.shareCount || 0,
+      Comment: postData?.commentsCount || 0,
       // engaggedUser: {Like: 0, Love: 0, Dislike: 0, Share: 0}
-      engaggedUser: postData?.usersEngagged.length ? Object.values(postData?.usersEngagged[0])[0] : { Like: 0, Love: 0, Dislike: 0, Share: 0 }
+      engaggedUser: postData?.usersEngagged.length ? Object.values(postData?.usersEngagged[0])[0] : { Like: 0, Love: 0, Dislike: 0, Share: 0, Comment: 0 }
     })
 
     // initializing user specific counts
@@ -137,12 +169,12 @@ let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost }) => {
       sx={{ flexDirection: "row", justifyContent: "center", backgroundColor: "lightblue", gap: 2, position: "relative" }}
     >
       {counts?.engaggedUser && actions.map(item => (
-        <RenderActionableIcon handleShowCommentModal={handleShowCommentModal} setShowModal={setShowModal} item={item} counts={counts} handleCounts={handleCounts} setShowCreatePost={setShowCreatePost} />
+        <RenderActionableIcon key={item.name} handleShowCommentModal={handleShowCommentModal} setShowModal={setShowModal} item={item} counts={counts} handleCounts={handleCounts} setShowCreatePost={setShowCreatePost} />
       ))}
 
       {showModal ? <SharePostModal counts={counts} postData={postData} setShareFlag={setShareFlag} shareFlag={shareFlag} showModal={showModal} setShowModal={setShowModal} setShowCreatePost={setShowCreatePost} handleCounts={handleCounts} /> : null}
 
-      {showCommentModal ? <PostCommentModal handleShowCommentModal={handleShowCommentModal} /> : null}
+      {showCommentModal ? <PostCommentModal handleCommentText={handleCommentText} handleCommentCounts={handleCommentCounts} handleShowCommentModal={handleShowCommentModal} /> : null}
     </Stack>
   )
 }
@@ -152,13 +184,17 @@ let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal, setShowC
 
   let handleClick = () => {
     setFlag(!flag);
-    item.name !== "Share" && handleCounts(item.name, !flag);
+    // if (item.name === "Comment") return
+    // (item.name !== "Share") && handleCounts(item.name, !flag);
+    // item.name !== "Share" && handleCounts(item.name, !flag);
     // if(item.name === "Share") setShowModal(!showModal);
     if (item.name === "Share") {
       setShowModal(true);
       setShowCreatePost(false);
     } else if(item.name === "Comment") {
       handleShowCommentModal()
+    } else if(item.name !== "Share" || item.name !== "Comment") {
+      handleCounts(item.name, !flag);
     }
   }
 
@@ -172,6 +208,7 @@ let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal, setShowC
   }, [])
 
   // console.log(counts, "flag", flag)
+  // item.name === "Comment" && console.log(counts[item.name], item.name, counts)
 
   return (
     <Tooltip title={(flag) ? `${item.name}d already` : item.name}>

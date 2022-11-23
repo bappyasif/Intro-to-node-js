@@ -2,7 +2,7 @@ import { CancelTwoTone, Send } from '@mui/icons-material'
 import { Box, Button, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
-function PostCommentModal({handleShowCommentModal}) {
+function PostCommentModal({handleShowCommentModal, handleCommentText, handleCommentCounts}) {
     return (
         <Box
             sx={{
@@ -16,16 +16,16 @@ function PostCommentModal({handleShowCommentModal}) {
         >
             <Typography>PostCommentModal</Typography>
 
-            <ShowTextarea />
+            <ShowTextarea handleCommentText={handleCommentText} />
 
-            <ShowButtons handleShowCommentModal={handleShowCommentModal} />
+            <ShowButtons handleCommentCounts={handleCommentCounts} handleShowCommentModal={handleShowCommentModal} />
 
         </Box>
     )
 }
 
-const ShowButtons = ({handleShowCommentModal}) => {
-    let renderButtons = () => actionsBtns.map(item => <ShowButton key={item.name} item={item} handleShowCommentModal={handleShowCommentModal} />)
+const ShowButtons = ({handleShowCommentModal, handleCommentCounts}) => {
+    let renderButtons = () => actionsBtns.map(item => <ShowButton key={item.name} item={item} handleShowCommentModal={handleShowCommentModal} handleCommentCounts={handleCommentCounts} />)
     
     return (
         <Stack
@@ -41,8 +41,16 @@ const ShowButtons = ({handleShowCommentModal}) => {
     )
 }
 
-const ShowButton = ({ item, handleShowCommentModal }) => {
-    let handleClick = () => handleShowCommentModal()
+const ShowButton = ({ item, handleShowCommentModal, handleCommentCounts }) => {
+    let handleSend = () => {
+        console.log("send!!")
+        handleCommentCounts()
+    }
+
+    let handleClick = () => {
+        item.name === "Send" && handleSend()
+        handleShowCommentModal()
+    }
 
     return (
         <Tooltip
@@ -64,7 +72,7 @@ const ShowButton = ({ item, handleShowCommentModal }) => {
     )
 }
 
-const ShowTextarea = () => {
+const ShowTextarea = ({handleCommentText}) => {
     let [text, setText] = useState(null);
     
     let handleTextChange = evt => setText(evt.target.value)
@@ -72,7 +80,8 @@ const ShowTextarea = () => {
 
     return (
         <textarea 
-            onChange={handleTextChange}
+            // onChange={handleTextChange}
+            onChange={handleCommentText}
             rows="9" 
             cols="69" 
             placeholder='type in your comment text here....'

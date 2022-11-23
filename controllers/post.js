@@ -143,6 +143,8 @@ const updateSoloPostWithUserEngagements = (req, res, next) => {
 
             currentPost.shareCount = data.Share
 
+            currentPost.commentsCount = data.Comment
+
             let findIdx = currentPost.usersEngagged?.findIndex(item => Object.keys(item)[0] === req.params.interactingUserId)
 
             if (findIdx === -1) {

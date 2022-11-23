@@ -27,7 +27,7 @@ const updateSoloComment = (req, res, next) => {
 }
 
 const createNewComment = [
-    body("post", "post can not be left empty")
+    body("text", "comment body can not be left empty")
     .trim().isLength({min: 1}),
 
     (req, res, next) => {
@@ -39,7 +39,7 @@ const createNewComment = [
         // ready to be saved into database
         if(req.body.userId) {
             let newComment = new Comment({
-                body: req.body.post,
+                body: req.body.text,
                 userId: req.body.userId,
                 postId: req.body.postId,
                 created: new Date().toISOString()
@@ -48,6 +48,7 @@ const createNewComment = [
             newComment.save((err, comment) => {
                 if(err) return next(err)
                 // successfully added this comment
+                console.log("comment saved!!")
                 res.status(200).json({success: true, comment: comment})
             })
         } else {

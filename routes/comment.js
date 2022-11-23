@@ -6,6 +6,6 @@ commentRoutes.get("/", getAllComments);
 commentRoutes.get("/:commentId", getSoloComment);
 commentRoutes.delete("/:commentId", deleteSoloComment);
 commentRoutes.put("/:commentId", updateSoloComment);
-commentRoutes.post("/:commentId", createNewComment);
+commentRoutes.post("/create/new", createNewComment);
 
 module.exports = commentRoutes

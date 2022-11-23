@@ -16,6 +16,7 @@ const Post = new Schema({
     loveCount: Schema.Types.Number,
     dislikesCount: Schema.Types.Number,
     shareCount: Schema.Types.Number,
+    commentsCount: Schema.Types.Number,
     othersCount: Schema.Types.Number,
     mfBuffer: Schema.Types.Buffer,
     mfUrl: Schema.Types.String,
