@@ -5,13 +5,27 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AppContexts } from '../App'
 import { DislikeIconElement, LikeIconElement, LoveIconElement, ShareIconElement } from './MuiElements'
 import PostCommentModal from './PostCommentModal'
+import RenderPostComments from './RenderPostComments'
 import RenderPostDataEssentials from './RenderPostData'
 import SharePostModal, { ShowPostUserEngagementsDetails } from './SharePostModal'
 import { readDataFromServer, sendDataToServer, updateDataInDatabase } from './utils'
 
 function ShowUserCreatedPost({ postData, setShowCreatePost }) {
+  // let [newComment, setNewComment] = useState(false);
+  let [commentsData, setCommentsData] = useState([])
 
   const appCtx = useContext(AppContexts)
+
+  // let showComments = () => <RenderPostComments postId={postData._id} commentCounts={postData.commentsCount} />
+  // let handleNewComments = () => setNewComment(true)
+
+  // useEffect(() => {
+  //   // postData?.commentsCount && showComments()
+  //   postData?.commentsCount && handleNewComments()
+
+  //   return () => setNewComment(false)
+  // }, [postData?.commentsCount])
+  console.log(commentsData, "!!commentsData!!")
 
   return (
     <Box
@@ -25,12 +39,14 @@ function ShowUserCreatedPost({ postData, setShowCreatePost }) {
     >
       <RenderPostDataEssentials postData={postData} />
       {postData?.includedSharedPostId ? <ShowIncludedSharedPost appCtx={appCtx} includedPostId={postData.includedSharedPostId} /> : null}
-      <UserEngagementWithPost postData={postData} appCtx={appCtx} setShowCreatePost={setShowCreatePost} />
+      <UserEngagementWithPost postData={postData} appCtx={appCtx} setShowCreatePost={setShowCreatePost} setCommentsData={setCommentsData} />
+      {(postData?.commentsCount || commentsData.length) ? <RenderPostComments postId={postData._id} commentsData={commentsData} setCommentsData={setCommentsData} /> : null}
+      {/* {postData?.commentsCount ? showComments() : null} */}
     </Box>
   )
 }
 
-let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost }) => {
+let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost, setCommentsData }) => {
   let [counts, setCounts] = useState({})
   let [onlyUserCounts, setOnlyUserCounts] = useState({})
   let [time, setTime] = useState(null);
@@ -113,7 +129,9 @@ let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost }) => {
     }
 
     let handleSuccess = (result) => {
-      console.log(result, "Result!!")
+      // console.log(result.comment, "Result!!", result)
+      // setCommentsData(prev => prev.push(result.comment))
+      setCommentsData(prev => [...prev, result.comment])
       setCommentText(null)
     }
 
