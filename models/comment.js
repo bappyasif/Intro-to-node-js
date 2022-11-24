@@ -6,6 +6,7 @@ const Comment = new Schema({
     created: {type: Schema.Types.Date, required: true},
     userId: {type: Schema.Types.ObjectId, ref: "user"},
     postId: {type: Schema.Types.ObjectId, ref: "post"},
+    engaggedUsers: Schema.Types.Array,
     mfBuffer: Schema.Types.Buffer,
     mfUrl: Schema.Types.String,
     likesCount: Schema.Types.Number,

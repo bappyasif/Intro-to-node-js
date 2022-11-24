@@ -31,7 +31,42 @@ const deleteSoloComment = (req, res, next) => {
 }
 
 const updateSoloComment = (req, res, next) => {
-    res.send("update comment")
+    let data = req.body;
+    let commentId = req.params.commentId;
+
+    Comment.findOne({_id: commentId})
+        .then(currentComment => {
+            console.log(currentComment, "!!", data, commentId)
+            let setCounts = (countType) => currentComment[countType] = currentComment[countType] ? currentComment[countType] : 1
+            
+            if(data.Like !== undefined) {
+                setCounts("likesCount")
+            } 
+            if(data.Dislike !== undefined) {
+                setCounts("dislikesCount")
+            } 
+            if(data.Love !== undefined) {
+                setCounts("loveCount")
+            }
+
+            let findIdx = currentComment?.engaggedUsers.findIndex(item => data.userId === Object.keys(item)[0])
+
+            if(findIdx !== -1) {
+                currentComment.engaggedUsers[findIdx] = {[data.userId]: data.userCounts}
+            } else {
+                currentComment?.engaggedUsers.push({[data.userId]: data.userCounts})
+            }
+
+            console.log(currentComment, "currentComment!!")
+
+            Comment.findByIdAndUpdate(currentComment._id, currentComment, {})
+                .then((updatedComment) => {
+                    console.log("comment updated!!");
+                    res.status(200).json({success: true, result: updatedComment})
+                })
+                .catch(err => next(err))
+
+        }).catch(err=>next(err))
 }
 
 const createNewComment = [

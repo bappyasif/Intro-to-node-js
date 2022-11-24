@@ -73,22 +73,22 @@ const CardElement = (props) => {
     return <Card className={props.className} sx={props.styles}>{props.children}</Card>
 }
 
-const AvatarElement = ({ url, altText, forPost }) => {
+const AvatarElement = ({ url, altText, forPost, forComment }) => {
     return (
         <Avatar
-            sx={{width: forPost ? 74 : 110, height: forPost ? 74 : 90, mr: 0}}
+            sx={{width: forPost ? 74 : forComment ? 42 : 110, height: forPost ? 74 : forComment ? 42 :  90, mr: 0}}
             alt={altText}
             src={url}
         />
     )
 }
 
-const CardHeaderElement = ({ avatarUrl, title, joined, altText, forPost }) => {
+const CardHeaderElement = ({ avatarUrl, title, joined, altText, forPost, forComment }) => {
     return (
         <CardHeader
-            avatar={<AvatarElement url={avatarUrl} altText={altText} forPost={forPost} />}
-            title={<Typography marginLeft={forPost ? 0 : 2} variant={forPost ? "h4" : "h2"}>{title}</Typography>}
-            subheader={<Typography sx={{color: "text.secondary"}} variant={forPost ? "subtitle1" : "h6"}>{`Member Since: ${moment(joined).fromNow()}`}</Typography>}
+            avatar={<AvatarElement url={avatarUrl} altText={altText} forPost={forPost} forComment={forComment} />}
+            title={<Typography marginLeft={forPost ? 0 : 2} variant={forPost ? "h4" : forComment ? "subtitle2" : "h2"}>{title}</Typography>}
+            subheader={<Typography sx={{color: "text.secondary"}} variant={forPost ? "subtitle1" : forComment ? "subtitle2" : "h6"}>{`Member Since: ${moment(joined).fromNow()}`}</Typography>}
             // sx={{fontSize: "33px"}}
         />
     )
