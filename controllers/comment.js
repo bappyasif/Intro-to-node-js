@@ -36,7 +36,7 @@ const updateSoloComment = (req, res, next) => {
 
     Comment.findOne({_id: commentId})
         .then(currentComment => {
-            console.log(currentComment, "!!", data, commentId)
+            // console.log(currentComment, "!!", data, commentId)
             let setCounts = (countType) => currentComment[countType] = currentComment[countType] ? currentComment[countType] : 1
             
             if(data.Like !== undefined) {
@@ -57,7 +57,7 @@ const updateSoloComment = (req, res, next) => {
                 currentComment?.engaggedUsers.push({[data.userId]: data.userCounts})
             }
 
-            console.log(currentComment, "currentComment!!")
+            // console.log(currentComment, "currentComment!!")
 
             Comment.findByIdAndUpdate(currentComment._id, currentComment, {})
                 .then((updatedComment) => {

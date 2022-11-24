@@ -7,7 +7,6 @@ import { ShowPostUserEngagementsDetails } from './SharePostModal';
 import { readDataFromServer, updateDataInDatabase } from './utils'
 
 function RenderPostComments({ postId, commentsData, setCommentsData }) {
-    // let [commentsData, setCommentsData] = useState([])
 
     let appCtx = useContext(AppContexts);
 
@@ -22,7 +21,7 @@ function RenderPostComments({ postId, commentsData, setCommentsData }) {
         getCommentsFromServer()
     }, [])
 
-    console.log(commentsData, "CommentsData!!", postId)
+    // console.log(commentsData, "CommentsData!!", postId)
 
     let renderComments = () => commentsData.sort((a, b) => a.created < b.created ? 1 : -1)?.map((commentData, idx) => idx < 4 && <RenderComment key={commentData._id} commentData={commentData} />)
 
@@ -44,20 +43,10 @@ const RenderComment = ({ commentData }) => {
     let appCtx = useContext(AppContexts);
 
     let handleCounts = (elem, flag) => setCounts(prev => ({...prev, [elem]: (prev[elem] && !flag) ? prev[elem] + 1 : (prev[elem] && flag) ? prev[elem] - 1 : 1}))
-    // let handleCounts = elem => setCounts(prev => ({...prev, [elem]: prev[elem] ? prev[elem] + 1 : 1}))
-    // let handleCounts = elem => setCounts(prev => ({...prev, [elem]: 1}))
-    // let handleCounts = elem => setCounts(prev => ({
-    //     ...prev,
-    //     [elem]: (prev[elem] && !countsForCurrentUser[elem]) ? prev[elem] + 1 : 1
-    // }))
-
-    // let handleCountsForCurrentUser = elem => setCountsForCurrentUser(prev => ({ ...prev, [elem]: prev[elem] ? prev[elem] : 1 }))
+    
     let handleCountsForCurrentUser = (elem, flag) => setCountsForCurrentUser(prev => ({ ...prev, [elem]: (prev[elem] && !flag) ? prev[elem] : (prev[elem] && flag) ? prev[elem] - 1: 1 }))
 
-    // let clickHandler = evt => console.log(evt.target.textContent, evt.target)
     let clickHandler = elem => {
-        console.log(elem)
-        // !countsForCurrentUser[elem] && handleCounts(elem)
         !countsForCurrentUser[elem] && handleCounts(elem)
         countsForCurrentUser[elem] && handleCounts(elem, "deduct")
         !countsForCurrentUser[elem] && handleCountsForCurrentUser(elem)
@@ -67,7 +56,6 @@ const RenderComment = ({ commentData }) => {
     let updateCommentCountsData = () => {
         let url = `${appCtx.baseUrl}/comments/${_id}`
         let data = {...counts, userCounts: {...countsForCurrentUser}, userId: appCtx.user._id}
-        console.log(data, "data!!", _id)
         updateDataInDatabase(url, data)
     }
 
@@ -81,12 +69,11 @@ const RenderComment = ({ commentData }) => {
 
             }, [2000])
         }
-        // counts && updateCommentCountsData()
 
         return () => clearTimeout(timer)
     }, [counts])
 
-    console.log(counts, "counts@!", countsForCurrentUser)
+    // console.log(counts, "counts@!", countsForCurrentUser)
 
     return (
         <Box
