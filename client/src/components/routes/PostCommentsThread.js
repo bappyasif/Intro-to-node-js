@@ -1,4 +1,5 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { KeyboardArrowUp } from '@mui/icons-material'
+import { Box, Container, Fab, Fade, Stack, Toolbar, Typography, useScrollTrigger } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { AppContexts } from '../../App'
@@ -19,7 +20,7 @@ function PostCommentsThread() {
     let handleCommentsData = result => setData(prev => ({ ...prev, commentsData: result.data.data }))
 
     let updateCommentsData = (data) => {
-        setData(prev => ({...prev, commentsData: [...prev.commentsData, data]}))
+        setData(prev => ({ ...prev, commentsData: [...prev.commentsData, data] }))
     }
 
     let getPostData = () => {
@@ -41,33 +42,156 @@ function PostCommentsThread() {
 
     return (
         data.postData
-        ?
-        <Box
-            width={990}
-            margin="auto"
-            border={"dotted .4px blue"}
-            marginBottom={1.5}
-            marginTop={1.3}
-            borderRadius={1.1}
-            position={"relative"}
-        >
-            <RenderPostDataEssentials postData={data.postData} />
-            {data?.postData?.includedSharedPostId ? <ShowIncludedSharedPost appCtx={appCtx} includedPostId={data.postData.includedSharedPostId} /> : null}
-            <UserEngagementWithPost postData={data.postData} appCtx={appCtx} setShowCreatePost={() => null} handleCommentsDataUpdate={updateCommentsData} />
-            <RenderThisPostComments commentsData={data.commentsData} />
-        </Box>
-        : null
+            ?
+            <Box
+                width={990}
+                margin="auto"
+                border={"dotted .4px blue"}
+                marginBottom={1.5}
+                marginTop={1.3}
+                borderRadius={1.1}
+                position={"relative"}
+            >
+                <RenderPostDataEssentials postData={data.postData} />
+                {data?.postData?.includedSharedPostId ? <ShowIncludedSharedPost appCtx={appCtx} includedPostId={data.postData.includedSharedPostId} /> : null}
+                <UserEngagementWithPost postData={data.postData} appCtx={appCtx} setShowCreatePost={() => null} handleCommentsDataUpdate={updateCommentsData} />
+                <RenderThisPostComments commentsData={data.commentsData} />
+            </Box>
+            : null
     )
 }
 
-let RenderThisPostComments = ({commentsData}) => {
-    let renderComments = () => commentsData.sort((a, b) => a.created < b.created ? 1 : -1)?.map((commentData, idx) => <RenderComment key={commentData._id} commentData={commentData} />)
+let RenderThisPostComments = (props) => {
+    let [showFab, setShowFab] = useState(false);
+
+    // let [scroll, setScroll] = useState(0);
+
+    // let openShowFab = () => setShowFab(true)
+
+    // let closeShowFab = () => setShowFab(false);
+
+    const container = document.querySelector("#top-marker-container")
+
+    const topMarker = document.querySelector("#top-marker")
+
+    // let handleScroll = (evt) => {
+    //     // let show = container.scrollHeight >= 400
+    //     // console.log(container, "!!")
+    //     let show = window.scrollHeight >= 400
+    //     if(show) {
+    //         openShowFab()
+    //     } else {
+    //         closeShowFab()
+    //     }
+    //     // console.log(evt, "!!")
+    //     // setScroll(evt.clientY)
+    // }
+
+    // useEffect(() => {
+    //     // container?.addEventListener("scroll", handleScroll)
+    //     window.addEventListener("scroll", handleScroll)
+
+    //     return () => window.removeEventListener("scroll", handleScroll)
+    //     // return () => container?.removeEventListener("scroll", handleScroll)
+    // }, [scroll])
+
+    let onClickHandler = () => {
+        topMarker.scrollIntoView();
+        setShowFab(false);
+    }
+
+    // let handleScroll = evt => console.log(evt.target, evt.target.clientHeight)
+    let handleScroll = evt => console.log(evt.target.clientY, evt.target.clientHeight)
+
+    // container.addEventListener("wheel", handleScroll)
+    container?.addEventListener("scroll", handleScroll)
+    // window.addEventListener("scroll", handleScroll)
+
+    let renderComments = () => props.commentsData.sort((a, b) => a.created < b.created ? 1 : -1)?.map((commentData, idx) => <RenderComment key={commentData._id} commentData={commentData} />)
+
+    // console.log(scroll, "scroll!!")
 
     return (
-        <Stack sx={{ alignItems: "center", gap: .6 }}>
-            <Typography variant="h6">Post Comments</Typography>
-            {commentsData ? renderComments() : null}
+        <Stack
+            sx={{
+                alignItems: "center",
+                // gap: .6 
+                maxHeight: "400px",
+                overflowY: "scroll"
+            }}
+        >
+            <Toolbar id="top-marker">
+                <Typography variant="h6">Post Comments</Typography>
+            </Toolbar>
+            {/* <Toolbar id="top-marker" /> */}
+            {/* {commentsData ? renderComments() : null} */}
+            <Container
+                id="top-marker-container"
+                sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: .6, position: "relative" }}
+            >
+                {props.commentsData ? renderComments() : null}
+            </Container>
+
+            <Fab 
+                onClick={onClickHandler}
+                sx={{position: "absolute", right: 20, bottom: 20}}
+                size="small" 
+                aria-label="scroll back to top"
+            >
+                <KeyboardArrowUp />
+            </Fab>
+
+            {/* <ScrollToTop {...props}>
+                <Fab size="small" aria-label="scroll back to top">
+                    <KeyboardArrowUp />
+                </Fab>
+            </ScrollToTop> */}
+
+            {/* {showFab ? <ScrollToTop {...props}>
+                <Fab size="small" aria-label="scroll back to top">
+                    <KeyboardArrowUp />
+                </Fab>
+            </ScrollToTop> : null} */}
         </Stack>
+    )
+}
+
+let ScrollToTop = (props) => {
+    const { children, window } = props;
+
+    // const window = document.querySelector("#top-marker-container")
+
+    const trigger = useScrollTrigger({
+        target: window ? window() : undefined,
+        // target: window || undefined,
+        disableHysteresis: true,
+        threshold: 200
+    })
+
+    const handleClick = (event) => {
+        const anchor = (event.target.ownerDocument || document).querySelector("#top-marker");
+
+        if (anchor) {
+            anchor.scrollIntoView({
+                block: "center"
+            })
+        }
+    }
+
+    return (
+        <Fade in={trigger}>
+            <Box
+                onClick={handleClick}
+                role="presentation"
+                sx={{
+                    position: "fixed",
+                    bottom: 29,
+                    right: "26%"
+                }}
+            >
+                {children}
+            </Box>
+        </Fade>
     )
 }
 
