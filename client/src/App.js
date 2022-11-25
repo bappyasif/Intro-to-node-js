@@ -16,6 +16,7 @@ import LoginSuccess from './components/routes/LoginSuccess';
 import { getAuthenticatedUserDataFromServer } from './components/utils';
 import UserSpecificNewsFeeds from './components/routes/UserSpecificNewsFeeds';
 import FriendsRequests from './components/routes/FriendsRequests';
+import PostCommentsThread from './components/routes/PostCommentsThread';
 
 export const AppContexts = createContext()
 
@@ -105,6 +106,7 @@ function App() {
           <Route path='/choose-topics/:category' element={<TopicCategory />} errorElement={<ErrorPage />} />
           <Route path='/connect' element={<ConnectUsers />} />
           <Route path='/news-feeds' element={<NewsFeeds />} />
+          <Route path='posts/:postId/comments' element={<PostCommentsThread />} />
           <Route path='/edit-user-profile' element={<EditUserProfile />} />
           <Route path='*' element={<ErrorPage />} />
         </Routes>

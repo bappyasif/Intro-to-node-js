@@ -11,20 +11,12 @@ import SharePostModal, { ShowPostUserEngagementsDetails } from './SharePostModal
 import { readDataFromServer, sendDataToServer, updateDataInDatabase } from './utils'
 
 function ShowUserCreatedPost({ postData, setShowCreatePost }) {
-  // let [newComment, setNewComment] = useState(false);
   let [commentsData, setCommentsData] = useState([])
 
   const appCtx = useContext(AppContexts)
 
-  // let showComments = () => <RenderPostComments postId={postData._id} commentCounts={postData.commentsCount} />
-  // let handleNewComments = () => setNewComment(true)
+  let handleCommentsDataUpdate = data => setCommentsData(prev => [...prev, data])
 
-  // useEffect(() => {
-  //   // postData?.commentsCount && showComments()
-  //   postData?.commentsCount && handleNewComments()
-
-  //   return () => setNewComment(false)
-  // }, [postData?.commentsCount])
   console.log(commentsData, "!!commentsData!!")
 
   return (
@@ -39,14 +31,14 @@ function ShowUserCreatedPost({ postData, setShowCreatePost }) {
     >
       <RenderPostDataEssentials postData={postData} />
       {postData?.includedSharedPostId ? <ShowIncludedSharedPost appCtx={appCtx} includedPostId={postData.includedSharedPostId} /> : null}
-      <UserEngagementWithPost postData={postData} appCtx={appCtx} setShowCreatePost={setShowCreatePost} setCommentsData={setCommentsData} />
+      <UserEngagementWithPost postData={postData} appCtx={appCtx} setShowCreatePost={setShowCreatePost} handleCommentsDataUpdate={handleCommentsDataUpdate} />
       {(postData?.commentsCount || commentsData.length) ? <RenderPostComments postId={postData._id} commentsData={commentsData} setCommentsData={setCommentsData} /> : null}
       {/* {postData?.commentsCount ? showComments() : null} */}
     </Box>
   )
 }
 
-let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost, setCommentsData }) => {
+export let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost, handleCommentsDataUpdate }) => {
   let [counts, setCounts] = useState({})
   let [onlyUserCounts, setOnlyUserCounts] = useState({})
   let [time, setTime] = useState(null);
@@ -131,7 +123,8 @@ let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost, setComments
     let handleSuccess = (result) => {
       // console.log(result.comment, "Result!!", result)
       // setCommentsData(prev => prev.push(result.comment))
-      setCommentsData(prev => [...prev, result.comment])
+      // setCommentsData(prev => [...prev, result.comment])
+      handleCommentsDataUpdate(result.comment)
       setCommentText(null)
     }
 
@@ -244,7 +237,7 @@ let RenderActionableIcon = ({ item, handleCounts, counts, setShowModal, setShowC
   )
 }
 
-let ShowIncludedSharedPost = ({ includedPostId, appCtx }) => {
+export let ShowIncludedSharedPost = ({ includedPostId, appCtx }) => {
   let [sharedPostData, setSharedPostData] = useState({})
 
   let handleSharedPostData = result => {

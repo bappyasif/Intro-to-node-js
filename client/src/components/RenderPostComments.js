@@ -1,12 +1,14 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Button, Stack, Typography } from '@mui/material'
 import moment from 'moment';
 import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { AppContexts } from '../App'
 import { CardHeaderElement } from './MuiElements';
 import { ShowPostUserEngagementsDetails } from './SharePostModal';
 import { readDataFromServer, updateDataInDatabase } from './utils'
 
 function RenderPostComments({ postId, commentsData, setCommentsData }) {
+    let navigate = useNavigate()
 
     let appCtx = useContext(AppContexts);
 
@@ -22,18 +24,23 @@ function RenderPostComments({ postId, commentsData, setCommentsData }) {
     }, [])
 
     // console.log(commentsData, "CommentsData!!", postId)
+    
+    let handleShowThread = () => {
+        navigate(`posts/${postId}/comments/`)
+    }
 
-    let renderComments = () => commentsData.sort((a, b) => a.created < b.created ? 1 : -1)?.map((commentData, idx) => idx < 4 && <RenderComment key={commentData._id} commentData={commentData} />)
+    let renderComments = () => commentsData.sort((a, b) => a.created < b.created ? 1 : -1)?.map((commentData, idx) => (idx < 4) && <RenderComment key={commentData._id} commentData={commentData} />)
 
     return (
         <Stack sx={{ alignItems: "center", gap: .6 }}>
             <Typography variant="h6">Post Comments</Typography>
             {commentsData ? renderComments() : null}
+            <Button onClick={handleShowThread}>Show Thread</Button>
         </Stack>
     )
 }
 
-const RenderComment = ({ commentData }) => {
+export const RenderComment = ({ commentData }) => {
     let { body, created, _id } = { ...commentData }
 
     let [counts, setCounts] = useState({})
