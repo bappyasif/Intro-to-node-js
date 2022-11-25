@@ -8,8 +8,6 @@ import { ShowIncludedSharedPost, UserEngagementWithPost } from '../UserCreatedPo
 import { readDataFromServer } from '../utils'
 
 function PostCommentsThread() {
-    // let [postData, setPostData] = useState()
-    // let [commentsData, setCommentsData] = useState()
     let [data, setData] = useState({})
 
     let params = useParams();
@@ -21,13 +19,8 @@ function PostCommentsThread() {
     let handleCommentsData = result => setData(prev => ({ ...prev, commentsData: result.data.data }))
 
     let updateCommentsData = (data) => {
-        console.log(data, "comemntDataAdded!!")
-        // setData(prev => ({...prev, commentsData: prev.commentsData.push(data)}))
         setData(prev => ({...prev, commentsData: [...prev.commentsData, data]}))
     }
-    
-    // let postId = 
-    // console.log(params, "!!")
 
     let getPostData = () => {
         let url = `${appCtx.baseUrl}/posts/solo/${params.postId}`
@@ -58,7 +51,6 @@ function PostCommentsThread() {
             borderRadius={1.1}
             position={"relative"}
         >
-            {/* <Typography variant="h2">PostCommentsThread</Typography> */}
             <RenderPostDataEssentials postData={data.postData} />
             {data?.postData?.includedSharedPostId ? <ShowIncludedSharedPost appCtx={appCtx} includedPostId={data.postData.includedSharedPostId} /> : null}
             <UserEngagementWithPost postData={data.postData} appCtx={appCtx} setShowCreatePost={() => null} handleCommentsDataUpdate={updateCommentsData} />
@@ -75,7 +67,6 @@ let RenderThisPostComments = ({commentsData}) => {
         <Stack sx={{ alignItems: "center", gap: .6 }}>
             <Typography variant="h6">Post Comments</Typography>
             {commentsData ? renderComments() : null}
-            {/* <Button onClick={handleShowThread}>Show Thread</Button> */}
         </Stack>
     )
 }

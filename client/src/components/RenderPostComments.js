@@ -41,9 +41,11 @@ function RenderPostComments({ postId, commentsData, setCommentsData }) {
 }
 
 export const RenderComment = ({ commentData }) => {
-    let { body, created, _id } = { ...commentData }
+    let { body, created, _id, likesCount, dislikesCount, loveCount } = { ...commentData }
 
     let [counts, setCounts] = useState({})
+
+    let [fetchReady, setFetchReady] = useState(false)
 
     let [countsForCurrentUser, setCountsForCurrentUser] = useState({})
 
@@ -54,6 +56,7 @@ export const RenderComment = ({ commentData }) => {
     let handleCountsForCurrentUser = (elem, flag) => setCountsForCurrentUser(prev => ({ ...prev, [elem]: (prev[elem] && !flag) ? prev[elem] : (prev[elem] && flag) ? prev[elem] - 1: 1 }))
 
     let clickHandler = elem => {
+        setFetchReady(true);
         !countsForCurrentUser[elem] && handleCounts(elem)
         countsForCurrentUser[elem] && handleCounts(elem, "deduct")
         !countsForCurrentUser[elem] && handleCountsForCurrentUser(elem)
@@ -68,19 +71,41 @@ export const RenderComment = ({ commentData }) => {
 
     useEffect(() => {
         let timer;
-        if(counts) {
+        if(fetchReady) {
             timer = setTimeout(() => {
                 updateCommentCountsData()
 
-                if(timer >= 2000) clearTimeout(timer)
+                if(timer >= 2000) {
+                    clearTimeout(timer)
+                    setFetchReady(false)
+                }
 
             }, [2000])
         }
 
         return () => clearTimeout(timer)
-    }, [counts])
+    }, [fetchReady, counts])
 
-    // console.log(counts, "counts@!", countsForCurrentUser)
+    useEffect(() => {
+        setCounts({
+            Like: likesCount || 0,
+            Dislike: dislikesCount || 0,
+            Love: loveCount || 0
+        })
+        
+        let findIdx = commentData.engaggedUsers.findIndex(engaggedUser => engaggedUser && (appCtx.user._id === Object.keys(engaggedUser)[0]?.toString()))
+        
+        if(findIdx !== -1) {
+            console.log(findIdx, "findIDx", commentData.engaggedUsers[findIdx])
+            setCountsForCurrentUser({
+                Like: Object.values(commentData.engaggedUsers[findIdx])[0].Like,
+                Love: Object.values(commentData.engaggedUsers[findIdx])[0].Love,
+                Dislike: Object.values(commentData.engaggedUsers[findIdx])[0].Dislike,
+            })
+        }
+    }, [])
+
+    console.log(counts, "counts@!", countsForCurrentUser, commentData)
 
     return (
         <Box
@@ -103,7 +128,7 @@ export const RenderComment = ({ commentData }) => {
             />
             <Typography sx={{ color: "text.secondary", position: "absolute", top: 29, right: 20 }} variant="subtitle2">{`Live Since: ${moment(created).fromNow()}`}</Typography>
             <Typography variant='subtitle1' sx={{ backgroundColor: "honeydew", p: .1, mr: 6, ml: 15 }} dangerouslySetInnerHTML={{ __html: body }}></Typography>
-            <ShowPostUserEngagementsDetails counts={counts} forComment={true} clickHandler={clickHandler} />
+            <ShowPostUserEngagementsDetails counts={counts} countsForCurrentUser={countsForCurrentUser} forComment={true} clickHandler={clickHandler} />
         </Box>
     )
 }

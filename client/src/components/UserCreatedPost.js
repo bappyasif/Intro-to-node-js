@@ -17,7 +17,7 @@ function ShowUserCreatedPost({ postData, setShowCreatePost }) {
 
   let handleCommentsDataUpdate = data => setCommentsData(prev => [...prev, data])
 
-  console.log(commentsData, "!!commentsData!!")
+  // console.log(commentsData, "!!commentsData!!")
 
   return (
     <Box
