@@ -160,12 +160,12 @@ export let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost, hand
       let findIdx = postData?.usersEngagged?.findIndex(item => Object.keys(item)[0] === appCtx.user._id.toString())
 
       // setCounts(prev => ({ ...prev, engaggedUser: postData?.usersEngagged[findIdx] ? Object.values(postData?.usersEngagged[findIdx])[0] : { Like: 0, Love: 0, Dislike: 0, Share: 0 } }))
-      setCounts(prev => ({ ...prev, engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0] }))
+      postData?.usersEngagged[findIdx] && setCounts(prev => ({ ...prev, engaggedUser: Object.values(postData?.usersEngagged[findIdx])[0] }))
       // console.log(postData, findIdx, "findIdx!!", Object.values(postData?.usersEngagged[findIdx])[0])
 
       // updating user count with previously found count from server to have a synchronize count
       // findIdx && postData?.usersEngagged[findIdx] && setOnlyUserCounts(Object.values(postData?.usersEngagged[findIdx])[0])
-      findIdx && setOnlyUserCounts(Object.values(postData?.usersEngagged[findIdx])[0])
+      findIdx && postData?.usersEngagged[findIdx] && setOnlyUserCounts(Object.values(postData?.usersEngagged[findIdx])[0])
     }
   }, [postData])
 

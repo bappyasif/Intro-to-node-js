@@ -1,17 +1,17 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FieldsetElement, FormElement, InputElement, LabelElement, LegendElement, SubmitButton } from '../FormElements'
 import { H1Element, WrapperDiv } from '../GeneralElements'
 import { sendDataToServer } from '../utils';
 import { AppContexts } from "../../App"
 import ShowErrors from '../ShowErrors';
-import { Box, Icon, IconButton, Paper, Stack, Typography } from '@mui/material';
-import { Facebook, GitHub, Google, LinkedIn, Twitter } from '@mui/icons-material';
+import { Box, Button, Icon, IconButton, Paper, Stack, Typography } from '@mui/material';
+import { AccountCircleTwoTone, Facebook, GitHub, Google, LinkedIn, Twitter } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
-function LoginForm({handleData}) {
+function LoginForm({ handleData }) {
     let [errors, setErrors] = useState([]);
     let [formData, setFormData] = useState({});
-    
+
     const navigate = useNavigate()
     const enpoint = useContext(AppContexts)
 
@@ -38,6 +38,7 @@ function LoginForm({handleData}) {
         <Box
             sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}
         >
+            <GuestUsers setFormData={setFormData} handleSubmit={handleSubmit} />
             <WrapperDiv className="login-form">
                 <H1Element value={"Login Form"} />
 
@@ -79,13 +80,13 @@ let RenderLoginOutlet = ({ item }) => {
 
     let handleClick = evt => {
         let url = ''
-        if(item.name === "Google") {
+        if (item.name === "Google") {
             url = `http://localhost:3000/auth/google`
-        } else if(item.name === "Facebook") {
+        } else if (item.name === "Facebook") {
             url = `http://localhost:3000/auth/facebook`
-        } else if(item.name === "Github") {
+        } else if (item.name === "Github") {
             url = `http://localhost:3000/auth/github`
-        } else if(item.name === "Twitter") {
+        } else if (item.name === "Twitter") {
             url = `http://localhost:3000/auth/twitter`
         }
         loginPrompt(url, navigate)
@@ -103,6 +104,39 @@ let RenderLoginOutlet = ({ item }) => {
             </IconButton>
             <Typography variant='h4' sx={{ textAlign: "center", ml: 4 }}>{item.name}</Typography>
         </Stack>
+    )
+}
+
+let GuestUsers = ({ handleSubmit, setFormData }) => {
+    let guestUsers = [{ name: "Guest Een" }, { name: "Guest Twee" }]
+    let renderUsers = () => guestUsers.map(user => <RenderGuestUser key={user.name} item={user} handleSubmit={handleSubmit} setFormData={setFormData} />)
+    return (
+        <Box>
+            {renderUsers()}
+        </Box>
+    )
+}
+
+let RenderGuestUser = ({ item, handleSubmit, setFormData }) => {
+    let [dataReady, setDataReady] = useState(false);
+
+    let handleClick = (e) => {
+        setFormData({ email: `guest@${item.name === "Guest Een" ? "een" : "twee"}.com`, password: `g${item.name === "Guest Een" ? "een" : "twee"}` })
+        setDataReady(e);
+    }
+    
+    useEffect(() => {
+        dataReady && handleSubmit(dataReady)
+    }, [dataReady])
+
+    return (
+        <IconButton onClick={handleClick}>
+            <Button>
+                <AccountCircleTwoTone />
+                <Typography>{item.name}</Typography>
+            </Button>
+            {/* <Typography>{item.name}</Typography> */}
+        </IconButton>
     )
 }
 

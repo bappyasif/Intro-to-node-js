@@ -56,7 +56,7 @@ function UserSpecificNewsFeeds() {
     useEffect(() => {
         // appCtx.user._id && getAllUserPosts()
         // appCtx.user._id && getAllAccessiblePosts()
-        location.pathname && appCtx.user._id && getAllAccessiblePosts()
+        location.pathname && appCtx?.user._id && getAllAccessiblePosts()
         location.pathname && console.log(location.pathname === "/", location.pathname)
     }, [appCtx.user?._id, location.pathname])
 
@@ -78,7 +78,7 @@ function UserSpecificNewsFeeds() {
         setShowPostsUntilIndex(prev => prev + 10 > appCtx.availablePostsFeeds.length ? appCtx.availablePostsFeeds.length : prev + 10)
     }
 
-    console.log(showPostsUntilIndex, "untilIndex")
+    console.log(showPostsUntilIndex, "untilIndex", appCtx.availablePostsFeeds.length)
 
     return (
         <Paper>
@@ -88,7 +88,7 @@ function UserSpecificNewsFeeds() {
             {/* <CreatePost setPostsDataset={setUserPostsDataset} /> */}
             {/* {renderUserPosts()} */}
             {/* {renderAllAccessiblePosts()} */}
-            {appCtx.availablePostsFeeds ? renderAllAccessiblePosts() : null}
+            {appCtx.availablePostsFeeds.length ? renderAllAccessiblePosts() : null}
 
             <TweetEmbed tweetsDataset={tweetPostsDataset} />
 
