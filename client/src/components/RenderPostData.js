@@ -1,14 +1,28 @@
 import { Typography } from '@mui/material'
 import moment from 'moment'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppContexts } from '../App'
 import { CardHeaderElement } from './MuiElements'
 import ShowUserPostMedias from './ShowUserPostMedias'
+import { readDataFromServer } from './utils'
 
 function RenderPostDataEssentials({ postData, shareMode }) {
     let { body, created, gif, poll, privacy, imageUrl, videoUrl, _id } = { ...postData }
 
+    let [userData, setUserData] = useState({})
+
     const appCtx = useContext(AppContexts)
+
+    let handleUserData = (result) => setUserData(result.data.data)
+
+    let getDataAboutThisPostUser = () => {
+        let url = `${appCtx.baseUrl}/users/${postData.userId}`
+        readDataFromServer(url, handleUserData)
+    }
+
+    useEffect(() => {
+        postData.userId && getDataAboutThisPostUser()
+    }, [])
 
     let preparingAdditionalsForRendering = {
         Id: _id,
@@ -22,10 +36,12 @@ function RenderPostDataEssentials({ postData, shareMode }) {
     return (
         <>
             <CardHeaderElement
-                avatarUrl={appCtx.user?.ppUrl || "https://random.imagecdn.app/500/150"}
+                avatarUrl={userData?.ppUrl || "https://random.imagecdn.app/500/150"}
                 altText={"fullname"}
-                title={appCtx.user?.fullName || "User Name"}
-                joined={appCtx.user?.created || Date.now()}
+                // title={appCtx.user?.fullName || "User Name"}
+                // joined={appCtx.user?.created || Date.now()}
+                title={userData?.fullName || "User Name"}
+                joined={userData?.created || Date.now()}
                 forPost={true}
             />
 

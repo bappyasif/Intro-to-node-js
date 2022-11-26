@@ -129,7 +129,7 @@ let RenderThisPostComments = (props) => {
     )
 }
 
-let ScrollToTop = (props) => {
+export let ScrollToTop = (props) => {
     const { children, window } = props;
 
     // const window = document.querySelector("#top-marker-container")
@@ -159,7 +159,7 @@ let ScrollToTop = (props) => {
                 sx={{
                     position: "fixed",
                     bottom: 29,
-                    right: "26%"
+                    right: 26
                 }}
             >
                 {children}

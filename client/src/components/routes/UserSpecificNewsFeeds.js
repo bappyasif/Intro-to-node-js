@@ -1,4 +1,5 @@
-import { Button, IconButton, Paper, Stack, Typography } from '@mui/material'
+import { KeyboardArrowUp } from '@mui/icons-material';
+import { Button, Fab, IconButton, Paper, Stack, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import { TwitterTimelineEmbed, TwitterShareButton, TwitterFollowButton, TwitterHashtagButton, TwitterMentionButton, TwitterTweetEmbed, TwitterMomentShare, TwitterDMButton, TwitterVideoEmbed, TwitterOnAirButton } from 'react-twitter-embed';
@@ -7,8 +8,9 @@ import CreatePost from '../CreatePost';
 import { RenderPost } from '../ShowPostsFromTwitter';
 import ShowUserCreatedPost from '../UserCreatedPost';
 import { readDataFromServer } from '../utils';
+import { ScrollToTop } from './PostCommentsThread';
 
-function UserSpecificNewsFeeds() {
+function UserSpecificNewsFeeds(props) {
     let [tweetPostsDataset, setTweetPostsDataset] = useState([]);
     // let [userPostsDataset, setUserPostsDataset] = useState([])
     let [showCreatePost, setShowCreatePost] = useState(true);
@@ -56,7 +58,7 @@ function UserSpecificNewsFeeds() {
     useEffect(() => {
         // appCtx.user._id && getAllUserPosts()
         // appCtx.user._id && getAllAccessiblePosts()
-        location.pathname && appCtx?.user._id && getAllAccessiblePosts()
+        location.pathname && appCtx?.user?._id && getAllAccessiblePosts()
         location.pathname && console.log(location.pathname === "/", location.pathname)
     }, [appCtx.user?._id, location.pathname])
 
@@ -82,7 +84,7 @@ function UserSpecificNewsFeeds() {
 
     return (
         <Paper>
-            <Typography variant='h1'>User Specific News Feeds</Typography>
+            <Typography variant='h1' id="top-marker">User Specific News Feeds</Typography>
 
             {showCreatePost ? <CreatePost /> : null}
             {/* <CreatePost setPostsDataset={setUserPostsDataset} /> */}
@@ -109,6 +111,11 @@ function UserSpecificNewsFeeds() {
                 Show More
             </Typography>
             {/* {renderTweetPosts()} */}
+            <ScrollToTop {...props}>
+                <Fab size="small" aria-label="scroll back to top">
+                    <KeyboardArrowUp />
+                </Fab>
+            </ScrollToTop>
         </Paper>
     )
 }

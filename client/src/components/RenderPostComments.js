@@ -41,7 +41,7 @@ function RenderPostComments({ postId, commentsData, setCommentsData }) {
 }
 
 export const RenderComment = ({ commentData }) => {
-    let { body, created, _id, likesCount, dislikesCount, loveCount } = { ...commentData }
+    let { body, created, _id, likesCount, dislikesCount, loveCount, userId } = { ...commentData }
 
     let [counts, setCounts] = useState({})
 
@@ -49,7 +49,20 @@ export const RenderComment = ({ commentData }) => {
 
     let [countsForCurrentUser, setCountsForCurrentUser] = useState({})
 
-    let appCtx = useContext(AppContexts);
+    let [userData, setUserData] = useState({})
+
+    const appCtx = useContext(AppContexts)
+
+    let handleUserData = (result) => setUserData(result.data.data)
+
+    let getDataAboutThisPostUser = () => {
+        let url = `${appCtx.baseUrl}/users/${userId}`
+        readDataFromServer(url, handleUserData)
+    }
+
+    useEffect(() => {
+        userId && getDataAboutThisPostUser()
+    }, [])
 
     let handleCounts = (elem, flag) => setCounts(prev => ({...prev, [elem]: (prev[elem] && !flag) ? prev[elem] + 1 : (prev[elem] && flag) ? prev[elem] - 1 : 1}))
     
@@ -96,7 +109,7 @@ export const RenderComment = ({ commentData }) => {
         let findIdx = commentData.engaggedUsers.findIndex(engaggedUser => engaggedUser && (appCtx.user._id === Object.keys(engaggedUser)[0]?.toString()))
         
         if(findIdx !== -1) {
-            console.log(findIdx, "findIDx", commentData.engaggedUsers[findIdx])
+            // console.log(findIdx, "findIDx", commentData.engaggedUsers[findIdx])
             setCountsForCurrentUser({
                 Like: Object.values(commentData.engaggedUsers[findIdx])[0].Like,
                 Love: Object.values(commentData.engaggedUsers[findIdx])[0].Love,
@@ -105,7 +118,7 @@ export const RenderComment = ({ commentData }) => {
         }
     }, [])
 
-    console.log(counts, "counts@!", countsForCurrentUser, commentData)
+    // console.log(counts, "counts@!", countsForCurrentUser, commentData)
 
     return (
         <Box
@@ -122,8 +135,10 @@ export const RenderComment = ({ commentData }) => {
             <CardHeaderElement
                 avatarUrl={appCtx.user?.ppUrl || "https://random.imagecdn.app/500/150"}
                 altText={"fullname"}
-                title={appCtx.user?.fullName || "User Name"}
-                joined={appCtx.user?.created || Date.now()}
+                // title={appCtx.user?.fullName || "User Name"}
+                // joined={appCtx.user?.created || Date.now()}
+                title={userData?.fullName || "User Name"}
+                joined={userData?.created || Date.now()}
                 forComment={true}
             />
             <Typography sx={{ color: "text.secondary", position: "absolute", top: 29, right: 20 }} variant="subtitle2">{`Live Since: ${moment(created).fromNow()}`}</Typography>
