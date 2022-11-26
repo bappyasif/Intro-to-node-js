@@ -12,6 +12,7 @@ function UserSpecificNewsFeeds() {
     let [tweetPostsDataset, setTweetPostsDataset] = useState([]);
     // let [userPostsDataset, setUserPostsDataset] = useState([])
     let [showCreatePost, setShowCreatePost] = useState(true);
+    let [showPostsUntilIndex, setShowPostsUntilIndex] = useState(11);
 
     let appCtx = useContext(AppContexts);
 
@@ -67,21 +68,46 @@ function UserSpecificNewsFeeds() {
 
     let renderTweetPosts = () => tweetPostsDataset?.map(dataset => <RenderPost key={dataset?.postData._id} item={dataset} baseUrl={appCtx.baseUrl} />)
 
-    let renderAllAccessiblePosts = () => appCtx.availablePostsFeeds?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={setShowCreatePost} />)
-    
+    // let renderAllAccessiblePosts = () => appCtx.availablePostsFeeds?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={setShowCreatePost} />)
+
+    let renderAllAccessiblePosts = () => appCtx.availablePostsFeeds?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < showPostsUntilIndex) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={setShowCreatePost} />)
+
     // let renderUserPosts = () => userPostsDataset?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map(dataset => <ShowUserCreatedPost key={dataset._id} postData={dataset} />)
+
+    let handleShowMore = () => {
+        setShowPostsUntilIndex(prev => prev + 10 > appCtx.availablePostsFeeds.length ? appCtx.availablePostsFeeds.length : prev + 10)
+    }
+
+    console.log(showPostsUntilIndex, "untilIndex")
 
     return (
         <Paper>
             <Typography variant='h1'>User Specific News Feeds</Typography>
 
-            { showCreatePost ? <CreatePost /> : null}
+            {showCreatePost ? <CreatePost /> : null}
             {/* <CreatePost setPostsDataset={setUserPostsDataset} /> */}
             {/* {renderUserPosts()} */}
             {/* {renderAllAccessiblePosts()} */}
             {appCtx.availablePostsFeeds ? renderAllAccessiblePosts() : null}
 
             <TweetEmbed tweetsDataset={tweetPostsDataset} />
+
+            <Typography
+                onClick={handleShowMore}
+                variant="h4"
+                sx={{
+                    backgroundColor: 'primary.main',
+                    color: "floralwhite",
+                    '&:hover': {
+                        backgroundColor: "lightsky",
+                        color: 'text.secondary',
+                        opacity: [0.9, 0.8, 0.7],
+                        cursor: "pointer"
+                    },
+                }}
+            >
+                Show More
+            </Typography>
             {/* {renderTweetPosts()} */}
         </Paper>
     )

@@ -64,36 +64,9 @@ function PostCommentsThread() {
 let RenderThisPostComments = (props) => {
     let [showFab, setShowFab] = useState(false);
 
-    // let [scroll, setScroll] = useState(0);
-
-    // let openShowFab = () => setShowFab(true)
-
-    // let closeShowFab = () => setShowFab(false);
-
     const container = document.querySelector("#top-marker-container")
 
     const topMarker = document.querySelector("#top-marker")
-
-    // let handleScroll = (evt) => {
-    //     // let show = container.scrollHeight >= 400
-    //     // console.log(container, "!!")
-    //     let show = window.scrollHeight >= 400
-    //     if(show) {
-    //         openShowFab()
-    //     } else {
-    //         closeShowFab()
-    //     }
-    //     // console.log(evt, "!!")
-    //     // setScroll(evt.clientY)
-    // }
-
-    // useEffect(() => {
-    //     // container?.addEventListener("scroll", handleScroll)
-    //     window.addEventListener("scroll", handleScroll)
-
-    //     return () => window.removeEventListener("scroll", handleScroll)
-    //     // return () => container?.removeEventListener("scroll", handleScroll)
-    // }, [scroll])
 
     let onClickHandler = () => {
         topMarker.scrollIntoView();
@@ -101,15 +74,13 @@ let RenderThisPostComments = (props) => {
     }
 
     // let handleScroll = evt => console.log(evt.target, evt.target.clientHeight)
-    let handleScroll = evt => console.log(evt.target.clientY, evt.target.clientHeight)
+    let handleScroll = evt => console.log(evt.target.clientY, evt.target.clientHeight, evt.clientY)
 
     // container.addEventListener("wheel", handleScroll)
     container?.addEventListener("scroll", handleScroll)
     // window.addEventListener("scroll", handleScroll)
 
     let renderComments = () => props.commentsData.sort((a, b) => a.created < b.created ? 1 : -1)?.map((commentData, idx) => <RenderComment key={commentData._id} commentData={commentData} />)
-
-    // console.log(scroll, "scroll!!")
 
     return (
         <Stack
@@ -130,28 +101,30 @@ let RenderThisPostComments = (props) => {
                 sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: .6, position: "relative" }}
             >
                 {props.commentsData ? renderComments() : null}
+                <Fab
+                    onClick={onClickHandler}
+                    sx={{ position: "absolute", right: 20, bottom: 20 }}
+                    size="small"
+                    aria-label="scroll back to top"
+                >
+                    <KeyboardArrowUp />
+                </Fab>
             </Container>
 
-            <Fab 
+            {/* <Fab 
                 onClick={onClickHandler}
                 sx={{position: "absolute", right: 20, bottom: 20}}
                 size="small" 
                 aria-label="scroll back to top"
             >
                 <KeyboardArrowUp />
-            </Fab>
+            </Fab> */}
 
             {/* <ScrollToTop {...props}>
                 <Fab size="small" aria-label="scroll back to top">
                     <KeyboardArrowUp />
                 </Fab>
             </ScrollToTop> */}
-
-            {/* {showFab ? <ScrollToTop {...props}>
-                <Fab size="small" aria-label="scroll back to top">
-                    <KeyboardArrowUp />
-                </Fab>
-            </ScrollToTop> : null} */}
         </Stack>
     )
 }
