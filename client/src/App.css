@@ -46,7 +46,7 @@ p {padding: 0; margin: 0;}
 
 .cards-wrapper .card-wrapper {
   width: 420px;
-  border-radius: 99px;
+  border-radius: 10px 70px;
   padding: 35px 38px 8px 35px;
 }
 
@@ -87,7 +87,7 @@ p {padding: 0; margin: 0;}
  } */
 
 .af-wrapper {
-  margin: 20px 0;
+  margin: 11px 0;
 }
 
 .af-wrapper .fc,
