@@ -110,21 +110,6 @@ let RenderThisPostComments = (props) => {
                     <KeyboardArrowUp />
                 </Fab>
             </Container>
-
-            {/* <Fab 
-                onClick={onClickHandler}
-                sx={{position: "absolute", right: 20, bottom: 20}}
-                size="small" 
-                aria-label="scroll back to top"
-            >
-                <KeyboardArrowUp />
-            </Fab> */}
-
-            {/* <ScrollToTop {...props}>
-                <Fab size="small" aria-label="scroll back to top">
-                    <KeyboardArrowUp />
-                </Fab>
-            </ScrollToTop> */}
         </Stack>
     )
 }

@@ -146,13 +146,13 @@ export let UserEngagementWithPost = ({ postData, appCtx, setShowCreatePost, hand
       Dislike: postData?.dislikesCount || 0,
       Share: postData?.shareCount || 0,
       Comment: postData?.commentsCount || 0,
-      // engaggedUser: {Like: 0, Love: 0, Dislike: 0, Share: 0}
-      engaggedUser: postData?.usersEngagged.length ? Object.values(postData?.usersEngagged[0])[0] : { Like: 0, Love: 0, Dislike: 0, Share: 0, Comment: 0 }
+      engaggedUser: {Like: 0, Love: 0, Dislike: 0, Share: 0}
+      // engaggedUser: postData?.usersEngagged.length ? Object.values(postData?.usersEngagged[0])[0] : { Like: 0, Love: 0, Dislike: 0, Share: 0, Comment: 0 }
     })
 
     // initializing user specific counts
     // console.log(postData, postData?.usersEngagged.length ? Object.values(postData?.usersEngagged[0])[0] : {Like: 0, Love: 0, Dislike: 0, Share: 0}, "<><>")
-    setOnlyUserCounts(postData?.usersEngagged.length ? Object.values(postData?.usersEngagged[0])[0] : { Like: 0, Love: 0, Dislike: 0, Share: 0 })
+    // setOnlyUserCounts(postData?.usersEngagged.length ? Object.values(postData?.usersEngagged[0])[0] : { Like: 0, Love: 0, Dislike: 0, Share: 0 })
   }, [])
 
   useEffect(() => {
