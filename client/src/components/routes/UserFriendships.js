@@ -3,7 +3,7 @@ import { Avatar, Box, CardHeader, Container, Divider, IconButton, List, ListItem
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { AppContexts } from '../../App'
-import { readDataFromServer, updateUserInDatabase } from '../utils';
+import { readDataFromServer, updateDataInDatabase, updateUserInDatabase } from '../utils';
 
 let UserFriendships = () => {
     return (
@@ -65,20 +65,15 @@ let RenderFriend = ({ friendID, handleAllFriendsData, baseUrl }) => {
         data?.fullName
             ?
             <Stack sx={{outline: showActionOptions ? "none" : "solid .6px darkred", borderRadius: 2}}>
-                {/* <Typography variant="h6">{data.fullName}</Typography> */}
                 <FriendCardHeader data={data} toggleShowActionOptions={toggleShowActionOptions} />
-                {/* <FriendCardHeader data={data} /> */}
                 {/* <Divider orientation="vertical" /> */}
-                {showActionOptions ? <ActionListOptions toggleShowActionOptions={toggleShowActionOptions} /> : null}
+                {showActionOptions ? <ActionListOptions toggleShowActionOptions={toggleShowActionOptions} baseUrl={baseUrl} friendId={data._id} /> : null}
             </Stack>
             : null
     )
 }
 
 let FriendCardHeader = ({ data, toggleShowActionOptions }) => {
-    // let [showActionOptions, setShowActionOptions] = useState(false);
-
-    // let toggleShowActionOptions = () => setShowActionOptions(!showActionOptions);
 
     let imgUrl = data.ppUrl || "https://random.imagecdn.app/76/56"
 
@@ -102,29 +97,23 @@ let FriendCardHeader = ({ data, toggleShowActionOptions }) => {
             title={data.fullName}
             subheader={"Friend Since!!"}
         >
-            {/* {showActionOptions ? <ActionListOptions toggleShowActionOptions={toggleShowActionOptions} /> : null} */}
-            {/* <ActionListOptions toggleShowActionOptions={toggleShowActionOptions} /> */}
         </CardHeader>
     )
 }
 
-let ActionListOptions = ({ toggleShowActionOptions }) => {
+let ActionListOptions = ({ toggleShowActionOptions, baseUrl, friendId }) => {
     let options = [{ name: "View Profile", icon: <AccountCircleTwoTone /> }, { name: "Remove From Friend List", icon: <PersonOffTwoTone /> }]
 
-    let renderOptions = () => options.map(item => <RenderActionListOption key={item.name} item={item} toggleShowActionOptions={toggleShowActionOptions} />)
+    let renderOptions = () => options.map(item => <RenderActionListOption key={item.name} item={item} toggleShowActionOptions={toggleShowActionOptions} baseUrl={baseUrl} friendId={friendId} />)
 
     return (
         <List
             sx={{
                 alignSelf: "flex-end",
-                // alignSelf: "center",
                 position: "absolute",
                 mt: 5.8,
                 outline: "solid .6px darkred",
-                // backgroundColor: 'lightskyblue',
-                // right: 2,
-                // top: 1.1,
-                // bottom: 0
+                borderRadius: 2
             }}
         >
             {renderOptions()}
@@ -132,9 +121,27 @@ let ActionListOptions = ({ toggleShowActionOptions }) => {
     )
 }
 
-let RenderActionListOption = ({ item, toggleShowActionOptions }) => {
+let RenderActionListOption = ({ item, toggleShowActionOptions, baseUrl, friendId }) => {
+    let appCtx = useContext(AppContexts)
+    let removeFromFriendList = () => {
+        //rmove from current user's friend list
+        // remove current user from !friend's profile
+        console.log("remove")
+        let url = `${baseUrl}/users/${appCtx.user._id}/remove`
+        updateDataInDatabase(url, {friendId: friendId})
+    }
+
+    let visitUserProfile = () => {
+        console.log("visit")
+    }
+    
     let handleClick = () => {
         toggleShowActionOptions()
+        if(item.name === "View Profile") {
+            visitUserProfile()
+        } else if(item.name.includes("Remove")) {
+            removeFromFriendList()
+        }
     }
 
     return (
@@ -143,15 +150,9 @@ let RenderActionListOption = ({ item, toggleShowActionOptions }) => {
                 mr: 4,
                 pr: 1.1,
                 backgroundColor: 'honeydew',
-                fontSize: "42px",
-                // outline: "solid .6px darkred",
                 '&:hover': {
                     color: "floralwhite",
-                    fontWeight: "bold",
-                    // fontSize: "29px",
-                    // backgroundColor: 'text.secondary',
                     backgroundColor: 'lightskyblue',
-                    // opacity: [0.9, 0.8, 0.7],
                 },
             }}
             onClick={handleClick}
@@ -162,15 +163,8 @@ let RenderActionListOption = ({ item, toggleShowActionOptions }) => {
                 </Avatar>
             </ListItemAvatar>
             <ListItemText
-                sx={{
-                    // fontSize: "36px"
-                    // '&:hover': {
-                    //     color: "floralwhite",
-                    //     fontSize: 4,
-                    // }
-                }}
-                primary={<Typography variant="h5">Friend</Typography>}
-                secondary={<Typography variant="subtitle2">{item.name}</Typography>}
+                // primary={<Typography variant="h5">Friend</Typography>}
+                secondary={<Typography variant="h6">{item.name}</Typography>}
             />
         </ListItem>
     )
@@ -209,13 +203,6 @@ let ShowFriendRequest = ({ friendId, baseUrl }) => {
     return (
         <Stack sx={{width: "100%", }}>
             <List sx={{ display: "flex", alignItems: "center",  }}>
-                {/* <Avatar
-                    alt='user pp'
-                    src={'https://random.imagecdn.app/76/56'}
-                    sx={{ width: 76, height: 56 }}
-                />
-
-                <Typography sx={{ ml: 2, mr: 2 }} variant="h4">{data.fullName}</Typography> */}
 
                 <ListItem
                     sx={{outline: "solid .6px red", borderRadius: 2, justifyContent: "space-around"}}

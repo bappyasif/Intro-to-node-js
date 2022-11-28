@@ -1,4 +1,5 @@
 const { body, validationResult } = require("express-validator");
+const async = require("async");
 const User = require("../models/user");
 
 const getAllUsers = (req, res, next) => {
@@ -68,9 +69,9 @@ const acceptUserFriendRequest = (req, res, next) => {
                 // currentUser.friends = currentUser.friends.push(friendId)
                 currentUser.friends.push(friendId)
 
-                User.findOne({_id: friendId})
+                User.findOne({ _id: friendId })
                     .then(friendUser => {
-                        if(friendUser) {
+                        if (friendUser) {
                             let filter = friendUser.frSent.filter(id => id !== userId)
                             friendUser.frSent = filter;
                             friendUser.friends.push(userId);
@@ -99,9 +100,9 @@ const rejectUserFriendRequest = (req, res, next) => {
                 let filter = currentUser.frRecieved.filter(id => id !== friendId)
                 currentUser.frRecieved = filter;
 
-                User.findOne({_id: friendId})
+                User.findOne({ _id: friendId })
                     .then(friendUser => {
-                        if(friendUser) {
+                        if (friendUser) {
                             let filter = friendUser.frSent.filter(id => id !== userId)
                             friendUser.frSent = filter;
 
@@ -120,7 +121,48 @@ const rejectUserFriendRequest = (req, res, next) => {
     // next()
 }
 
+let removeUserFromFriendList = (req, res, next) => {
+    let friendId = req.body.friendId
+    let userId = req.params.userId;
+
+    // console.log(userId, friendId)
+
+    async.parallel(
+        {
+            currentUser(cb) {
+                User.findOne({ _id: userId }).exec(cb)
+            },
+            friendUser(cb) {
+                User.findOne({ _id: friendId }).exec(cb)
+            }
+        },
+        (err, results) => {
+            if (err) return next(err);
+
+            // console.log(results, "!!results!!")
+            let filterCurrentUserFriendsArray = results.currentUser.friends.filter(val => val !== friendId);
+            results.currentUser.friends = filterCurrentUserFriendsArray;
+
+            let filterFriendUserFriendsArray = results.friendUser.friends.filter(val => val !== userId)
+            results.friendUser.friends = filterFriendUserFriendsArray;
+
+            console.log(results.currentUser.friends, "filteredFriendsArray", results.friendUser.friends)
+
+            User.findByIdAndUpdate(userId, results.currentUser, {})
+                .then(() => console.log("current user friends list is updated"))
+                .catch(err => next(err))
+
+            User.findByIdAndUpdate(friendId, results.friendUser, {})
+                .then(() => console.log("friend user friends list is updated"))
+                .catch(err => next(err))
+
+            res.status(200).json({ success: true, data: [] })
+        }
+    )
+}
+
 module.exports = {
+    removeUserFromFriendList,
     acceptUserFriendRequest,
     rejectUserFriendRequest,
     getAllUsers,
