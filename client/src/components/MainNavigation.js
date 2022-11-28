@@ -24,7 +24,8 @@ export let NavigationLinks = () => {
       <TabElement className={"nav-item"} labelText={"Register"} path={"register"} icon={<AppRegistrationTwoTone />} />
       <TabElement className={"nav-item"} labelText={"Connect"} path={"connect"} icon={<VerifiedUserSharp />} />
       <TabElement className={"nav-item"} labelText={"Feeds"} path={"news-feeds"} icon={<DynamicFeedSharp />} />
-      <TabElement className={"nav-item"} labelText={"Friends"} path={"friend-requests"} icon={<PeopleTwoTone />} />
+      {/* <TabElement className={"nav-item"} labelText={"Friends"} path={"friend-requests"} icon={<PeopleTwoTone />} /> */}
+      <TabElement className={"nav-item"} labelText={"Friends"} path={"user-friendships"} icon={<PeopleTwoTone />} />
     </NavElement>
   )
 }

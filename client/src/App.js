@@ -15,7 +15,7 @@ import TopicCategory from './components/routes/TopicCategory';
 import LoginSuccess from './components/routes/LoginSuccess';
 import { getAuthenticatedUserDataFromServer } from './components/utils';
 import UserSpecificNewsFeeds from './components/routes/UserSpecificNewsFeeds';
-import FriendsRequests from './components/routes/FriendsRequests';
+import UserFriendships from './components/routes/UserFriendships';
 import PostCommentsThread from './components/routes/PostCommentsThread';
 
 export const AppContexts = createContext()
@@ -101,7 +101,8 @@ function App() {
           <Route path='/login' element={<LoginForm handleData={handleData} />} />
           <Route path='/login/success' element={<LoginSuccess />} />
           <Route path='/register' element={<RegisterUser handleData={handleData} />} />
-          <Route path='/friend-requests' element={<FriendsRequests />} />
+          {/* <Route path='/friend-requests' element={<FriendsRequests />} /> */}
+          <Route path='/user-friendships' element={<UserFriendships />} />
           <Route path='/choose-topics' element={<ChooseTopics />} />
           <Route path='/choose-topics/:category' element={<TopicCategory />} errorElement={<ErrorPage />} />
           <Route path='/connect' element={<ConnectUsers />} />

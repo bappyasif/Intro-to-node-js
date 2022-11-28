@@ -1,9 +1,65 @@
 import { HowToRegRounded, PersonOffRounded } from '@mui/icons-material';
-import { Avatar, Box, IconButton, List, ListItem, ListItemIcon, ListItemText, Paper, Stack, Tooltip, Typography } from '@mui/material'
+import { Avatar, Box, Container, IconButton, List, ListItem, ListItemIcon, ListItemText, Paper, Stack, Tooltip, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { AppContexts } from '../../App'
 import { readDataFromServer, updateUserInDatabase } from '../utils';
+
+let UserFriendships = () => {
+    return (
+        <Container>
+            <Typography>User Friendships</Typography>
+            <Stack sx={{flexDirection: "row"}}>
+                <ExistingFriendList />
+                <FriendsRequests />
+            </Stack>
+        </Container>
+    )
+}
+
+let ExistingFriendList = () => {
+    let [friends, setFriends] = useState([])
+
+    let appCtx = useContext(AppContexts);
+
+    let handleAllFriendsData = (value) => setFriends(prev => [...prev, value])
+
+    let renderFriends = () => appCtx.user.friends.map(frnd => <RenderFriend key={frnd} friendID={frnd} handleAllFriendsData={handleAllFriendsData} baseUrl={appCtx.baseUrl} />)
+
+    return (
+        <Container>
+            <Typography variant="h4">Friend Listings:</Typography>
+            {renderFriends()}
+        </Container>
+    )
+}
+
+let RenderFriend = ({ friendID, handleAllFriendsData, baseUrl }) => {
+    let [data, setData] = useState();
+
+    let dataHandler = dataset => {
+        setData(dataset.data.data)
+        dataset.data.data && handleAllFriendsData(dataset.data.data)
+    }
+
+    let getFriendData = () => {
+        let url = `${baseUrl}/users/${friendID}`
+        readDataFromServer(url, dataHandler)
+    }
+
+    useEffect(() => {
+        friendID && getFriendData()
+    }, [])
+
+    return (
+        data?.fullName
+            ?
+            <>
+                <Typography>{data.fullName}</Typography>
+            </>
+            : null
+    )
+}
 
 function FriendsRequests() {
     let appCtx = useContext(AppContexts);
@@ -12,7 +68,7 @@ function FriendsRequests() {
 
     return (
         <Paper>
-            <Typography variant={'h1'}>Friend Requests</Typography>
+            <Typography variant={'h4'}>Friend Requests</Typography>
             <Box
                 sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
             >
@@ -45,7 +101,7 @@ let ShowFriendRequest = ({ friendId, baseUrl }) => {
                 />
 
                 <Typography sx={{ ml: 2, mr: 2 }} variant="h4">{data.fullName}</Typography>
-                
+
                 <ListItem>
                     {renderListAssets()}
                 </ListItem>
@@ -57,16 +113,16 @@ let ShowFriendRequest = ({ friendId, baseUrl }) => {
 let RenderListIconElement = ({ elem, friendId }) => {
     let appCtx = useContext(AppContexts);
     let navigate = useNavigate()
-    
+
     let handleClick = evt => {
         let url = `${appCtx.baseUrl}/users/${appCtx.user._id}`;
 
-        if(elem.tooltip === "Accept") {
-            let data = {accept: friendId}
+        if (elem.tooltip === "Accept") {
+            let data = { accept: friendId }
             updateUserInDatabase(`${url}/accept`, data, appCtx.acceptOrRejectFriendRequestUpdater, navigate)
 
-        } else if(elem.tooltip === "Reject") {
-            let data = {reject: friendId}
+        } else if (elem.tooltip === "Reject") {
+            let data = { reject: friendId }
             updateUserInDatabase(`${url}/reject`, data, appCtx.acceptOrRejectFriendRequestUpdater, navigate)
         }
     }
@@ -74,9 +130,9 @@ let RenderListIconElement = ({ elem, friendId }) => {
     return (
         <ListItemIcon>
             <Tooltip title={elem.tooltip} sx={{ p: 0 }} >
-                <IconButton 
+                <IconButton
                     onClick={handleClick}
-                    sx={{ backgroundColor: 'primary.dark'}}
+                    sx={{ backgroundColor: 'primary.dark' }}
                 >
                     {elem.icon}
                 </IconButton>
@@ -96,4 +152,4 @@ let listAssets = [
     }
 ]
 
-export default FriendsRequests
+export default UserFriendships
