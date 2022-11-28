@@ -34,10 +34,21 @@ let ExistingFriendList = () => {
     let renderFriends = () => appCtx.user.friends.map(frnd => <RenderFriend key={frnd} friendID={frnd} handleAllFriendsData={handleAllFriendsData} baseUrl={appCtx.baseUrl} />)
 
     return (
-        <Box>
+        <Paper sx={{backgroundColor: "lightsteelblue"}}>
             <Typography variant="h4">Friend Listings:</Typography>
             {renderFriends()}
-        </Box>
+            {
+                appCtx.user.friends.length === 0
+                    ?
+                    <Typography
+                        variant="h6"
+                        sx={{outline: "solid .6px darkred", borderRadius: 2, mt: 4, p: 1.1}}
+                    >
+                        Friends list is empty, add some :)
+                    </Typography>
+                    : null
+            }
+        </Paper>
     )
 }
 
@@ -64,7 +75,7 @@ let RenderFriend = ({ friendID, handleAllFriendsData, baseUrl }) => {
     return (
         data?.fullName
             ?
-            <Stack sx={{outline: showActionOptions ? "none" : "solid .6px darkred", borderRadius: 2}}>
+            <Stack sx={{ outline: showActionOptions ? "none" : "solid .6px darkred", borderRadius: 2 }}>
                 <FriendCardHeader data={data} toggleShowActionOptions={toggleShowActionOptions} />
                 {/* <Divider orientation="vertical" /> */}
                 {showActionOptions ? <ActionListOptions toggleShowActionOptions={toggleShowActionOptions} baseUrl={baseUrl} friendId={data._id} /> : null}
@@ -123,23 +134,24 @@ let ActionListOptions = ({ toggleShowActionOptions, baseUrl, friendId }) => {
 
 let RenderActionListOption = ({ item, toggleShowActionOptions, baseUrl, friendId }) => {
     let appCtx = useContext(AppContexts)
+    
+    let removeFromCurentUserStateVariable = () => appCtx.removeIdFromCurrentUserFriendsList(friendId)
+    
     let removeFromFriendList = () => {
-        //rmove from current user's friend list
-        // remove current user from !friend's profile
-        console.log("remove")
         let url = `${baseUrl}/users/${appCtx.user._id}/remove`
-        updateDataInDatabase(url, {friendId: friendId})
+
+        updateDataInDatabase(url, { friendId: friendId }, removeFromCurentUserStateVariable)
     }
 
     let visitUserProfile = () => {
         console.log("visit")
     }
-    
+
     let handleClick = () => {
         toggleShowActionOptions()
-        if(item.name === "View Profile") {
+        if (item.name === "View Profile") {
             visitUserProfile()
-        } else if(item.name.includes("Remove")) {
+        } else if (item.name.includes("Remove")) {
             removeFromFriendList()
         }
     }
@@ -176,7 +188,7 @@ function FriendsRequests() {
     let renderFriendRequests = () => appCtx?.user?.frRecieved?.map(friendId => <ShowFriendRequest key={friendId} friendId={friendId} baseUrl={appCtx.baseUrl} />)
 
     return (
-        <Paper sx={{width: "29vw"}}>
+        <Paper sx={{ width: "29vw", backgroundColor: "lightsteelblue" }}>
             <Typography variant={'h4'}>Friend Requests</Typography>
             <Box
                 sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}
@@ -201,11 +213,11 @@ let ShowFriendRequest = ({ friendId, baseUrl }) => {
     let renderListAssets = () => listAssets.map(elem => <RenderListIconElement key={elem.tooltip} elem={elem} friendId={friendId} />)
 
     return (
-        <Stack sx={{width: "100%", }}>
-            <List sx={{ display: "flex", alignItems: "center",  }}>
+        <Stack sx={{ width: "100%", }}>
+            <List sx={{ display: "flex", alignItems: "center", }}>
 
                 <ListItem
-                    sx={{outline: "solid .6px red", borderRadius: 2, justifyContent: "space-around"}}
+                    sx={{ outline: "solid .6px red", borderRadius: 2, justifyContent: "space-around" }}
                 >
                     <Avatar
                         alt='user pp'

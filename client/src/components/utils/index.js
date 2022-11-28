@@ -66,7 +66,10 @@ const updateDataInDatabase = (endpoint, dataObj, dataUpdater) => {
         body: JSON.stringify(dataObj)
     }).then(resp => resp.json())
     .catch(err => console.error(err, "request responded with error"))
-    .then(data => console.log(data))
+    .then(data => {
+        console.log(data);
+        dataUpdater && dataUpdater(data)
+    })
     .catch(err => console.error(err, "something's wrong!!"))
 }
 

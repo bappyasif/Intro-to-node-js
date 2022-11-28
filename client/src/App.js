@@ -57,6 +57,11 @@ function App() {
     })
   }
 
+  const removeUserIdFromCurrentUserFriendsList = (friendId) => {
+    let filteredFriendsList = user.friends.filter(val => val !== friendId)
+    setUser(prev => ({...prev, friends: filteredFriendsList}))
+  }
+
   // let handleAvailablePostsFeeds = dataset => setUserAccessiblePostsDataset(prev => [...prev, dataset])
   let handleAvailablePostsFeeds = dataset => setUserAccessiblePostsDataset(dataset)
   let updateAvailablePostsFeeds = dataset => setUserAccessiblePostsDataset(prev => [...prev, dataset])
@@ -70,7 +75,8 @@ function App() {
     acceptOrRejectFriendRequestUpdater: acceptOrRejectFriendRequestUpdater,
     handleAvailablePostsFeeds: handleAvailablePostsFeeds,
     availablePostsFeeds: userAccessiblePostsDataset,
-    updateAvailablePostsFeeds: updateAvailablePostsFeeds
+    updateAvailablePostsFeeds: updateAvailablePostsFeeds,
+    removeIdFromCurrentUserFriendsList: removeUserIdFromCurrentUserFriendsList
   }
 
   let getUser = () => {
