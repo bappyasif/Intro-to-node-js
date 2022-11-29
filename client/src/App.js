@@ -18,6 +18,9 @@ import UserSpecificNewsFeeds from './components/routes/UserSpecificNewsFeeds';
 import UserFriendships from './components/routes/UserFriendships';
 import PostCommentsThread from './components/routes/PostCommentsThread';
 import UserProfile from './components/routes/UserProfile';
+import Hoc from './misc/hoc';
+import LoggedIn from './misc/loggedIn';
+import { AbbreviateNumbers } from './misc';
 
 export const AppContexts = createContext()
 
@@ -103,6 +106,10 @@ function App() {
         <MainNavigation />
         {/* <TryoutContainer /> */}
         {/* <BasicsUsage /> */}
+        {/* <Hoc name="wat" /> */}
+        {/* <LoggedIn loggedIn={true} /> */}
+        {/* <LoggedIn loggedIn={false} /> */}
+        <AbbreviateNumbers />
         <Routes>
           <Route path='/' element={<UserSpecificNewsFeeds />} />
           <Route path='/login' element={<LoginForm handleData={handleData} />} />
