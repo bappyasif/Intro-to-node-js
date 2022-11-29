@@ -13,6 +13,47 @@ const getAllPosts = (req, res, next) => {
         }).catch(err => next(err))
 }
 
+getAllSpecificActionTypesPosts = (req, res, next) => {
+    let userId = req.params.userId;
+    let data = req.body;
+    let postType = req.params.type;
+
+    console.log(postType, "postType");
+
+    Post.find({ userId: userId })
+        .then(results => {
+
+            // // console.log(results, "!!<<results>>!!")
+            // let filteredPosts = results.map(item => {
+            //     // item.usersEngagged.forEach(item => console.log(Object.keys(item)[0], Object.keys(item)[0] === userId))
+            //     // console.log(Object.keys(item.usersEngagged)[0] === userId, Object.keys(item.usersEngagged)[0])
+            //     // return Object.keys(item.usersEngagged)[0] === userId ? item : false
+            //     return item.usersEngagged.filter(item => Object.keys(item)[0] === userId ? item : false).filter(item => item)
+            //     // return [...item.usersEngagged.filter(item => Object.keys(item)[0] === userId ? item : false).filter(item => item)]
+            // })
+            // // let filterPostByUserRequestedType = results.filter
+            // console.log(filteredPosts, "filtered posts!!")
+
+            let filteredPosts = [];
+            results.forEach(item => {
+
+                item.usersEngagged.forEach(vals => {
+                    // Object.keys(vals)[0] === userId ? filteredPosts.push(item) : null
+                    if(Object.keys(vals)[0] === userId) {
+                        // console.log(Object.values(vals)[0][postType], Object.values(vals)[0])
+                        // Object.values(vals)[0].postType ? filteredPosts.push(item) : null
+                        Object.values(vals)[0][postType] ? filteredPosts.push(item) : null
+                    }
+                })
+
+            })
+
+            // console.log(filteredPosts, "filtered posts!!")
+
+            res.status(200).json({ success: true, data: filteredPosts })
+        }).catch(err => next(err))
+}
+
 const getAllPostsWithPublicPrivacy = (req, res, next) => {
     async.parallel(
         {
@@ -116,15 +157,15 @@ const updateSoloPostWithSpecificData = (req, res, next) => {
     let dataBody = req.body;
     let postId = req.params.postId;
     console.log(dataBody, "dataBody!!")
-    Post.findOne({_id: postId})
+    Post.findOne({ _id: postId })
         .then(currentPost => {
             currentPost[dataBody.propKey] = dataBody.propValue
             Post.findByIdAndUpdate(currentPost._id, currentPost, {})
                 .then(updatedPost => {
                     console.log(updatedPost, "updatedPost!!", postId, dataBody.propValue, dataBody.propKey)
                     res.status(200).json({ success: true, posts: [] })
-                }).catch(err=>next(err))
-        }).catch(err=>next(err))
+                }).catch(err => next(err))
+        }).catch(err => next(err))
 }
 
 const updateSoloPostWithUserEngagements = (req, res, next) => {
@@ -134,7 +175,7 @@ const updateSoloPostWithUserEngagements = (req, res, next) => {
     Post.findOne({ _id: req.params.postId })
         .then(currentPost => {
             // updating post with data sent to server from client
-            
+
             currentPost.likesCount = data.Like;
 
             currentPost.dislikesCount = data.Dislike;
@@ -188,5 +229,6 @@ module.exports = {
     deleteSoloPost,
     updateSoloPostWithUserEngagements,
     getAllPostsWithPublicPrivacy,
-    updateSoloPostWithSpecificData
+    updateSoloPostWithSpecificData,
+    getAllSpecificActionTypesPosts
 }

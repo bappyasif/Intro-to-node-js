@@ -2,6 +2,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { AppBar, Box, Container, Paper, Tab, Tabs, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContexts } from '../../App';
+import useToFetchUserPostData from '../hooks/useToFetchData';
 import ShowUserCreatedPost from '../UserCreatedPost';
 import UserProfileInfoSection from '../UserProfileInfoSection'
 import { readDataFromServer } from '../utils';
@@ -22,15 +23,9 @@ let UserProfileTabs = ({ appCtx }) => {
     let [tabValue, setTabValue] = useState("1");
 
     let handleTabValueChange = (event, current) => {
-        console.log(current, "current!!")
+        // console.log(current, "current!!")
         setTabValue(current);
     }
-
-    // let tabsItems = [{ name: "All Posts", value: "1" }, { name: "Liked Posts", value: "2" }, { name: "Loved Posts", value: "3" }, { name: "Shared Posts", value: "4" }]
-
-    // let renderTabsItems = () => tabsItems.map(item => <RenderTab key={item.name} item={item} />)
-
-    // console.log(tabValue, "!!")
 
     return (
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -42,14 +37,12 @@ let UserProfileTabs = ({ appCtx }) => {
                         variant='fullWidth'
                         indicatorColor="secondary"
                     >
-                        {/* {renderTabsItems()} */}
                         <Tab label="All Posts" value="1" />
                         <Tab label="Liked Posts" value="2" />
                         <Tab label="Loved Posts" value="3" />
                         <Tab label="Shared Posts" value="4" />
                         <Tab label="Commented Posts" value="5" />
                         <Tab label="Disliked Posts" value="6" />
-                        {/* <RenderTab item={{name:"All Posts", value:"1"}} /> */}
                     </TabList>
                 </Box>
                 <TabPanel value="1"><RenderAllPostsTab appCtx={appCtx} /></TabPanel>
@@ -60,43 +53,6 @@ let UserProfileTabs = ({ appCtx }) => {
                 <TabPanel value="6"><RenderDislikedPostsTab appCtx={appCtx} /></TabPanel>
             </TabContext>
         </Box>
-        // <Box sx={{
-        //     bgcolor: 'background.paper', 
-        //     typography: "body1",
-        //     width: "max-content"
-        // }}
-        // >
-        //     <AppBar position='static'>
-        //         <TabContext
-        //             value={tabValue}
-        //         >
-        //             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        //                 <TabList
-        //                     // value={tabValue}
-        //                     onChange={handleTabValueChange}
-        //                     textColor="secondary"
-        //                     indicatorColor="secondary"
-        //                     // variant="fullWidth"
-        //                     aria-label="full width tabs in user profile"
-        //                 >
-        //                     {/* {renderTabsItems()} */}
-        //                     <Tab
-        //                         value={0}
-        //                         label={"0"}
-        //                         id={"0"}
-        //                         tabIndex={1}
-        //                     />
-        //                     <Tab
-        //                         value={1}
-        //                         label={"1"}
-        //                         id={"1"}
-        //                         tabIndex={1}
-        //                     />
-        //                 </TabList>
-        //             </Box>
-        //         </TabContext>
-        //     </AppBar>
-        // </Box>
     )
 }
 
@@ -104,7 +60,7 @@ let RenderAllPostsTab = ({ appCtx }) => {
     let [postsData, setPostsData] = useState([]);
 
     let handlePostsData = (result) => {
-        console.log(result.data.data, result, "!!")
+        // console.log(result.data.data, result, "!!")
         setPostsData(result.data.data)
     }
 
@@ -124,52 +80,94 @@ let RenderAllPostsTab = ({ appCtx }) => {
         <Paper>
             <Typography variant="h3">All Posts!!</Typography>
             <Container>
-                {renderAllPosts()}
+                {postsData?.length ? renderAllPosts() : null}
             </Container>
         </Paper>
     )
 }
 
 let RenderLikedPostsTab = ({ appCtx }) => {
+    let { postsData } = useToFetchUserPostData(appCtx, "Like")
+
+    console.log(postsData, "data!!")
+
+    let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
+
     return (
-        <Typography variant="h3">Liked Posts!!</Typography>
+        <Paper>
+            <Typography variant="h3">Liked Posts!!</Typography>
+            <Container>
+                {postsData?.length ? renderAllPosts() : null}
+            </Container>
+        </Paper>
     )
 }
 
 let RenderLovedPostsTab = ({ appCtx }) => {
+    let { postsData } = useToFetchUserPostData(appCtx, "Love")
+
+    console.log(postsData, "data!!")
+
+    let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
+
     return (
-        <Typography variant="h3">Loved Posts!!</Typography>
+        <Paper>
+            <Typography variant="h3">Loved Posts!!</Typography>
+            <Container>
+                {postsData?.length ? renderAllPosts() : null}
+            </Container>
+        </Paper>
     )
 }
 
 let RenderSharedPostsTab = ({ appCtx }) => {
+    let { postsData } = useToFetchUserPostData(appCtx, "Share")
+
+    console.log(postsData, "data!!")
+
+    let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
+
     return (
-        <Typography variant="h3">Shared Posts!!</Typography>
+        <Paper>
+            <Typography variant="h3">Shared Posts!!</Typography>
+            <Container>
+                {postsData?.length ? renderAllPosts() : null}
+            </Container>
+        </Paper>
     )
 }
 
 let RenderCommentedPostsTab = ({ appCtx }) => {
+    let { postsData } = useToFetchUserPostData(appCtx, "Comment")
+
+    console.log(postsData, "data!!")
+
+    let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
+
     return (
-        <Typography variant="h3">Commented Posts!!</Typography>
+        <Paper>
+            <Typography variant="h3">Commented Posts!!</Typography>
+            <Container>
+                {postsData?.length ? renderAllPosts() : null}
+            </Container>
+        </Paper>
     )
 }
 
 let RenderDislikedPostsTab = ({ appCtx }) => {
-    return (
-        <Typography variant="h3">Disliked Posts!!</Typography>
-    )
-}
+    let { postsData } = useToFetchUserPostData(appCtx, "Dislike")
 
-let RenderTab = ({ item }) => {
+    console.log(postsData, "data!!")
+
+    let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
+
     return (
-        <Tab label={item.name} value={item.value} />
-        // <Tab
-        //     value={item.value}
-        //     label={item.name}
-        //     id={item.name}
-        //     tabIndex={1}
-        // // `aria-controls={full-width-tabpanel-${item.name}}` 
-        // />
+        <Paper>
+            <Typography variant="h3">Disliked Posts!!</Typography>
+            <Container>
+                {postsData?.length ? renderAllPosts() : null}
+            </Container>
+        </Paper>
     )
 }
 
