@@ -17,6 +17,7 @@ import { getAuthenticatedUserDataFromServer } from './components/utils';
 import UserSpecificNewsFeeds from './components/routes/UserSpecificNewsFeeds';
 import UserFriendships from './components/routes/UserFriendships';
 import PostCommentsThread from './components/routes/PostCommentsThread';
+import UserProfile from './components/routes/UserProfile';
 
 export const AppContexts = createContext()
 
@@ -115,6 +116,7 @@ function App() {
           <Route path='/news-feeds' element={<NewsFeeds />} />
           <Route path='posts/:postId/comments' element={<PostCommentsThread />} />
           <Route path='/edit-user-profile' element={<EditUserProfile />} />
+          <Route path='/users/:userID/profile' element={<UserProfile />} />
           <Route path='*' element={<ErrorPage />} />
         </Routes>
       </div>

@@ -4,7 +4,7 @@ import CreatePost from '../CreatePost'
 import { WrapperDiv } from '../GeneralElements'
 import { BoxElement, CardContentElement, CardElement, CardHeaderElement, ContainerElement, DislikeIconElement, IconButtonElement, LikeIconElement, LoveIconElement, ShareIconElement, StackElement, TypographyElement } from '../MuiElements'
 import ShowPostsFromTwitter from '../ShowPostsFromTwitter'
-import UserProfile from '../UserProfile'
+import UserProfile from '../UserProfileInfoSection'
 import { readDataFromServer } from '../utils'
 
 function NewsFeeds() {

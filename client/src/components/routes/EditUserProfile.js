@@ -1,7 +1,7 @@
 import { Box, FormControl, Input, InputLabel, Stack, TextareaAutosize, Typography } from '@mui/material'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { CoverPhoto, fakeDataModel, ProfilePhoto } from '../UserProfile'
+import { CoverPhoto, fakeDataModel, ProfilePhoto } from '../UserProfileInfoSection'
 
 function EditUserProfile() {
     let [userData, setUserData] = useState({})

@@ -78,7 +78,7 @@ let RenderFriend = ({ friendID, handleAllFriendsData, baseUrl }) => {
             <Stack sx={{ outline: showActionOptions ? "none" : "solid .6px darkred", borderRadius: 2 }}>
                 <FriendCardHeader data={data} toggleShowActionOptions={toggleShowActionOptions} />
                 {/* <Divider orientation="vertical" /> */}
-                {showActionOptions ? <ActionListOptions toggleShowActionOptions={toggleShowActionOptions} baseUrl={baseUrl} friendId={data._id} /> : null}
+                {showActionOptions ? <ActionListOptions toggleShowActionOptions={toggleShowActionOptions} friendId={data._id} /> : null}
             </Stack>
             : null
     )
@@ -112,10 +112,10 @@ let FriendCardHeader = ({ data, toggleShowActionOptions }) => {
     )
 }
 
-let ActionListOptions = ({ toggleShowActionOptions, baseUrl, friendId }) => {
+let ActionListOptions = ({ toggleShowActionOptions, friendId }) => {
     let options = [{ name: "View Profile", icon: <AccountCircleTwoTone /> }, { name: "Remove From Friend List", icon: <PersonOffTwoTone /> }]
 
-    let renderOptions = () => options.map(item => <RenderActionListOption key={item.name} item={item} toggleShowActionOptions={toggleShowActionOptions} baseUrl={baseUrl} friendId={friendId} />)
+    let renderOptions = () => options.map(item => <RenderActionListOption key={item.name} item={item} toggleShowActionOptions={toggleShowActionOptions} friendId={friendId} />)
 
     return (
         <List
@@ -132,19 +132,22 @@ let ActionListOptions = ({ toggleShowActionOptions, baseUrl, friendId }) => {
     )
 }
 
-let RenderActionListOption = ({ item, toggleShowActionOptions, baseUrl, friendId }) => {
+let RenderActionListOption = ({ item, toggleShowActionOptions, friendId }) => {
     let appCtx = useContext(AppContexts)
+
+    let navigate = useNavigate()
     
     let removeFromCurentUserStateVariable = () => appCtx.removeIdFromCurrentUserFriendsList(friendId)
     
     let removeFromFriendList = () => {
-        let url = `${baseUrl}/users/${appCtx.user._id}/remove`
+        let url = `${appCtx.baseUrl}/users/${appCtx.user._id}/remove`
 
         updateDataInDatabase(url, { friendId: friendId }, removeFromCurentUserStateVariable)
     }
 
     let visitUserProfile = () => {
-        console.log("visit")
+        console.log("visit");
+        navigate(`/users/${appCtx.user._id}/profile`)
     }
 
     let handleClick = () => {
