@@ -1,7 +1,8 @@
-import { Box, FormControl, Input, InputLabel, Stack, TextareaAutosize, Typography } from '@mui/material'
+import { WallpaperRounded } from '@mui/icons-material'
+import { Box, FormControl, IconButton, ImageListItem, ImageListItemBar, Input, InputLabel, Stack, TextareaAutosize, Typography } from '@mui/material'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { CoverPhoto, fakeDataModel, ProfilePhoto } from '../UserProfileInfoSection'
+import { fakeDataModel } from '../UserProfileInfoSection'
 
 function EditUserProfile() {
     let [userData, setUserData] = useState({})
@@ -56,6 +57,46 @@ let RenderFormControlItem = ({ handleData, dataVal, elem }) => {
                     <Input type={elem === "email" ? "email" : "text"} defaultValue={dataVal} onChange={e => handleData(e, elem)} />
             }
         </FormControl>
+    )
+}
+
+export let CoverPhoto = ({userData}) => {
+    let {cpUrl} = {...userData}
+    return (
+        <Box sx={{ width: "100%" }}>
+            <ImageListItem cols={1}>
+                <img
+                    src={ cpUrl ? cpUrl : `${fakeDataModel[0].coverPhotoUrl}?w500&h299&fit=crop&auto=format`}
+                    srcSet={cpUrl ? cpUrl : `${fakeDataModel[0].coverPhotoUrl}?w500&h299&fit=crop&auto=format&dpr= 2 2x`}
+                    alt="user X profile cover"
+                    loading='lazy'
+                />
+                <ImageListItemBar
+                    // subtitle={"Cover Photo"}
+                    title={"Cover Photo"}
+                    actionIcon={
+                        <IconButton
+                            sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+                        >
+                            <WallpaperRounded />
+                        </IconButton>
+                    }
+                />
+            </ImageListItem>
+        </Box>
+    )
+}
+
+export let ProfilePhoto = ({ppUrl, fullName}) => {
+    return (
+        <img
+            width={'85px'}
+            height={'95px'}
+            src={`${ ppUrl ? ppUrl : fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`}
+            srcSet={`${ ppUrl ? ppUrl : fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format&dpr= 2 2x`}
+            alt={`user ${fullName ? fullName : "X"} profile display`}
+            loading='lazy'
+        />
     )
 }
 

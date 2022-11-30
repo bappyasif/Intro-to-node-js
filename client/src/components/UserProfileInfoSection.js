@@ -2,13 +2,14 @@ import { WallpaperRounded } from '@mui/icons-material'
 import { Box, Button, Container, IconButton, ImageList, ImageListItem, ImageListItemBar, Paper, Stack, TextField, Typography } from '@mui/material'
 import moment from 'moment'
 import React, { useContext, useState } from 'react'
-import {AppContexts} from "../App"
+import { AppContexts } from "../App"
 import { updateDataInDatabase } from './utils'
 
 function UserProfileInfoSection({ appCtx }) {
     return (
         <Box sx={{ mb: 2 }}>
-            <CoverPhoto userData={appCtx.user} />
+            {/* <CoverPhoto userData={appCtx.user} /> */}
+            <RenderUserProfilePhoto userData={appCtx.user} fromPP={false} />
             <Box
                 sx={{ width: "920px", margin: "auto", bgcolor: "gainsboro", pl: 2, pt: .4, pr: 2, pb: .1, borderRadius: 2 }}
             >
@@ -20,50 +21,69 @@ function UserProfileInfoSection({ appCtx }) {
     )
 }
 
-export let CoverPhoto = ({ userData }) => {
+let RenderUserProfilePhoto = ({userData, fromPP}) => {
+    let { ppUrl, cpUrl, fullName} = {...userData}
+
     let [showModal, setShowModal] = useState(false);
 
     let toggleShowModal = () => setShowModal(!showModal);
 
     let closeShowModal = () => setShowModal(false);
 
-    let { cpUrl } = { ...userData }
+    let decideImgResourceUrl = () => {
+        let src = "";
+
+        if(fromPP && ppUrl) {
+            src = `${ppUrl}?w85&h95&fit=crop&auto=format`
+        } else if (fromPP && !ppUrl) {
+            src = `${fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`
+        } else if (!fromPP && cpUrl) {
+            src = `${cpUrl}?w85&h95&fit=crop&auto=format`
+        }  else if (!fromPP && !cpUrl) {
+            src = `${fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`
+        }
+
+        return src;
+    }
 
     return (
-        <Box sx={{ width: "100%", justifyContent: "center" }}>
+        <Stack
+            sx={{
+                flexDirection: "column",
+                position: "relative",
+            }}
+        >
             <ImageListItem>
                 <img
-                    src={cpUrl ? cpUrl : `${fakeDataModel[0].coverPhotoUrl}?w500&h299&fit=crop&auto=format`}
-                    srcSet={cpUrl ? cpUrl : `${fakeDataModel[0].coverPhotoUrl}?w500&h299&fit=crop&auto=format&dpr= 2 2x`}
-                    alt={`user ${userData.fullName || "X"} profile cover`}
+                    // src={`${ppUrl ? ppUrl : fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`}
+                    // srcSet={`${ppUrl ? ppUrl : fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format&dpr= 2 2x`}
+                    src={decideImgResourceUrl()}
+                    srcSet={`${decideImgResourceUrl()}&dpr= 2 2x`}
+                    alt={`user ${fullName ? fullName : "X"} profile display`}
                     loading='lazy'
-                    height={"341px"}
                 />
                 <ImageListItemBar
-                    onClick={toggleShowModal}
                     sx={{
-                        // backgroundColor: 'black !important', 
-                        opacity: .6,
-                        // flexGrow: "0 !important", 
                         justifyContent: "center",
-                        position: "relative"
                     }}
-                    // subtitle={"Cover Photo"}
-                    title={<Typography variant="h6">Cover Photo</Typography>}
+                    
+                    title={<Typography variant="h6">{fromPP ? "Profile" : "Cover"} Photo</Typography>}
+
+                    onClick={toggleShowModal}
+                    
                     actionIcon={
                         <IconButton
-                        // sx={{ color: 'rgba(255, 255, 255, 0.54)', margin: "auto", flexGrow: 1 }}
                         >
                             <WallpaperRounded
-                            sx={{ backgroundColor: 'rgba(0, 101, 99, 0.54)' }}
+                            sx={{ color: "floralwhite" }}
                             />
                         </IconButton>
                     }
                 />
             </ImageListItem>
 
-            {showModal ? <ShowUrlGrabbingModal closeModal={closeShowModal} /> : null}
-        </Box>
+            {showModal ? <ShowUrlGrabbingModal closeModal={closeShowModal} fromPP={fromPP} /> : null}
+        </Stack>
     )
 }
 
@@ -80,7 +100,7 @@ let ShowUrlGrabbingModal = ({ closeModal, fromPP }) => {
     }
 
     let handlPhotoUrlUpload = () => {
-        let data = {[fromPP ? "ppUrl" : "cpUrl"] : urlText}
+        let data = { [fromPP ? "ppUrl" : "cpUrl"]: urlText }
         console.log(data, "data!!", url)
         updateDataInDatabase(url, data, afterUpdateIsSuccessfull)
         // updateDataInDatabase(url, data, closeModal)
@@ -89,7 +109,7 @@ let ShowUrlGrabbingModal = ({ closeModal, fromPP }) => {
     let handleClick = () => {
         console.log("Clicked!!")
         // closeModal();
-        if(urlText) {
+        if (urlText) {
             handlPhotoUrlUpload();
         } else {
             alert("Enter A Valid Url!!")
@@ -188,7 +208,8 @@ let UserNameAndInfo = ({ userData }) => {
         <Stack
             sx={{ flexDirection: "column", gap: .6, mt: .6 }}
         >
-            <ProfilePhoto ppUrl={ppUrl} fullName={fullName} />
+            {/* <ProfilePhoto ppUrl={ppUrl} fullName={fullName} /> */}
+            <RenderUserProfilePhoto userData={userData} fromPP={true} />
             <Stack
                 sx={{
                     flexDirection: "row",
@@ -200,15 +221,12 @@ let UserNameAndInfo = ({ userData }) => {
             >
                 <UserName fullName={fullName} />
                 <UserEmail email={email} />
-                {/* <Typography variant="h6">Bio: </Typography>
-                <Typography variant='h6' component={"h3"}>{fullName ? fullName : fakeDataModel[0].fullName}</Typography>
-                <Typography>{email ? email : fakeDataModel[0].email}</Typography> */}
             </Stack>
         </Stack>
     )
 }
 
-let UserEmail = ({email}) => {
+let UserEmail = ({ email }) => {
     return (
         <Stack
             sx={{
@@ -225,7 +243,7 @@ let UserEmail = ({email}) => {
     )
 }
 
-let UserName = ({fullName}) => {
+let UserName = ({ fullName }) => {
     return (
         <Stack
             sx={{
@@ -239,59 +257,6 @@ let UserName = ({fullName}) => {
             <Typography variant="h6">FullName: </Typography>
             <Typography variant='h4' component={"h4"}>{fullName ? fullName : fakeDataModel[0].fullName}</Typography>
         </Stack>
-    )
-}
-
-export let ProfilePhoto = ({ ppUrl, fullName }) => {
-    let [showModal, setShowModal] = useState(false);
-
-    let toggleShowModal = () => setShowModal(!showModal);
-
-    let closeShowModal = () => setShowModal(false);
-
-    return (
-        <Stack
-            sx={{        
-                flexDirection: "column",
-                position: "relative",
-            }}
-        >
-            <ImageListItem>
-                <img
-                    width={'85px'}
-                    height={'95px'}
-                    src={`${ppUrl ? ppUrl : fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`}
-                    srcSet={`${ppUrl ? ppUrl : fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format&dpr= 2 2x`}
-                    alt={`user ${fullName ? fullName : "X"} profile display`}
-                    loading='lazy'
-                />
-                <ImageListItemBar
-                    sx={{
-                        justifyContent: "center",
-                    }}
-                    onClick={toggleShowModal}
-                    actionIcon={
-                        <IconButton
-                        // sx={{ color: 'rgba(255, 255, 255, 0.54)', margin: "auto", flexGrow: 1 }}
-                        >
-                            <WallpaperRounded
-                                sx={{ backgroundColor: 'rgba(0, 101, 99, 0.54)' }}
-                            />
-                        </IconButton>
-                    }
-                />
-            </ImageListItem>
-
-            {showModal ? <ShowUrlGrabbingModal closeModal={closeShowModal} fromPP={true} /> : null}
-        </Stack>
-        // <img
-        //     width={'85px'}
-        //     height={'95px'}
-        //     src={`${ppUrl ? ppUrl : fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`}
-        //     srcSet={`${ppUrl ? ppUrl : fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format&dpr= 2 2x`}
-        //     alt={`user ${fullName ? fullName : "X"} profile display`}
-        //     loading='lazy'
-        // />
     )
 }
 
