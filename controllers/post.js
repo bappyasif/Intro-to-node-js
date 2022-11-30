@@ -22,34 +22,18 @@ getAllSpecificActionTypesPosts = (req, res, next) => {
 
     Post.find({ userId: userId })
         .then(results => {
-
-            // // console.log(results, "!!<<results>>!!")
-            // let filteredPosts = results.map(item => {
-            //     // item.usersEngagged.forEach(item => console.log(Object.keys(item)[0], Object.keys(item)[0] === userId))
-            //     // console.log(Object.keys(item.usersEngagged)[0] === userId, Object.keys(item.usersEngagged)[0])
-            //     // return Object.keys(item.usersEngagged)[0] === userId ? item : false
-            //     return item.usersEngagged.filter(item => Object.keys(item)[0] === userId ? item : false).filter(item => item)
-            //     // return [...item.usersEngagged.filter(item => Object.keys(item)[0] === userId ? item : false).filter(item => item)]
-            // })
-            // // let filterPostByUserRequestedType = results.filter
-            // console.log(filteredPosts, "filtered posts!!")
-
             let filteredPosts = [];
-            results.forEach(item => {
 
+            results.forEach(item => {
                 item.usersEngagged.forEach(vals => {
-                    // Object.keys(vals)[0] === userId ? filteredPosts.push(item) : null
                     if(Object.keys(vals)[0] === userId) {
-                        // console.log(Object.values(vals)[0][postType], Object.values(vals)[0])
-                        // Object.values(vals)[0].postType ? filteredPosts.push(item) : null
                         Object.values(vals)[0][postType] ? filteredPosts.push(item) : null
                     }
                 })
 
             })
-
+            
             // console.log(filteredPosts, "filtered posts!!")
-
             res.status(200).json({ success: true, data: filteredPosts })
         }).catch(err => next(err))
 }

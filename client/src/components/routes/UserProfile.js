@@ -46,11 +46,6 @@ let UserProfileTabs = ({ appCtx }) => {
                     </TabList>
                 </Box>
                 <TabPanel value="1"><RenderAllPostsTab appCtx={appCtx} /></TabPanel>
-                {/* <TabPanel value="2"><RenderLikedPostsTab appCtx={appCtx} /></TabPanel> */}
-                {/* <TabPanel value="3"><RenderLovedPostsTab appCtx={appCtx} /></TabPanel>
-                <TabPanel value="4"><RenderSharedPostsTab appCtx={appCtx} /></TabPanel>
-                <TabPanel value="5"><RenderCommentedPostsTab appCtx={appCtx} /></TabPanel>
-                <TabPanel value="6"><RenderDislikedPostsTab appCtx={appCtx} /></TabPanel> */}
                 <TabPanel value="2"><RenderActionSpecificPosts appCtx={appCtx} actionType={"Like"} /></TabPanel>
                 <TabPanel value="3"><RenderActionSpecificPosts appCtx={appCtx} actionType={"Love"} /></TabPanel>
                 <TabPanel value="4"><RenderActionSpecificPosts appCtx={appCtx} actionType={"Share"} /></TabPanel>
@@ -107,90 +102,5 @@ let RenderActionSpecificPosts = ({actionType, appCtx}) => {
         </Paper>
     )
 }
-
-// let RenderLikedPostsTab = ({ appCtx }) => {
-//     let { postsData } = useToFetchUserPostData(appCtx, "Like")
-
-//     console.log(postsData, "data!!")
-
-//     let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
-
-//     return (
-//         <Paper>
-//             <Typography variant="h3">Liked Posts!!</Typography>
-//             <Container>
-//                 {postsData?.length ? renderAllPosts() : null}
-//             </Container>
-//         </Paper>
-//     )
-// }
-
-// let RenderLovedPostsTab = ({ appCtx }) => {
-//     let { postsData } = useToFetchUserPostData(appCtx, "Love")
-
-//     console.log(postsData, "data!!")
-
-//     let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
-
-//     return (
-//         <Paper>
-//             <Typography variant="h3">Loved Posts!!</Typography>
-//             <Container>
-//                 {postsData?.length ? renderAllPosts() : null}
-//             </Container>
-//         </Paper>
-//     )
-// }
-
-// let RenderSharedPostsTab = ({ appCtx }) => {
-//     let { postsData } = useToFetchUserPostData(appCtx, "Share")
-
-//     console.log(postsData, "data!!")
-
-//     let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
-
-//     return (
-//         <Paper>
-//             <Typography variant="h3">Shared Posts!!</Typography>
-//             <Container>
-//                 {postsData?.length ? renderAllPosts() : null}
-//             </Container>
-//         </Paper>
-//     )
-// }
-
-// let RenderCommentedPostsTab = ({ appCtx }) => {
-//     let { postsData } = useToFetchUserPostData(appCtx, "Comment")
-
-//     console.log(postsData, "data!!")
-
-//     let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
-
-//     return (
-//         <Paper>
-//             <Typography variant="h3">Commented Posts!!</Typography>
-//             <Container>
-//                 {postsData?.length ? renderAllPosts() : null}
-//             </Container>
-//         </Paper>
-//     )
-// }
-
-// let RenderDislikedPostsTab = ({ appCtx }) => {
-//     let { postsData } = useToFetchUserPostData(appCtx, "Dislike")
-
-//     console.log(postsData, "data!!")
-
-//     let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
-
-//     return (
-//         <Paper>
-//             <Typography variant="h3">Disliked Posts!!</Typography>
-//             <Container>
-//                 {postsData?.length ? renderAllPosts() : null}
-//             </Container>
-//         </Paper>
-//     )
-// }
 
 export default UserProfile

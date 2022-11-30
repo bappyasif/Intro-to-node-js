@@ -61,6 +61,10 @@ function App() {
     })
   }
 
+  const updateUserProfileDataInApp = (propName, propValue) => {
+    setUser(prev => ({...prev, [propName]: propValue}))
+  }
+
   const removeUserIdFromCurrentUserFriendsList = (friendId) => {
     let filteredFriendsList = user.friends.filter(val => val !== friendId)
     setUser(prev => ({...prev, friends: filteredFriendsList}))
@@ -80,7 +84,8 @@ function App() {
     handleAvailablePostsFeeds: handleAvailablePostsFeeds,
     availablePostsFeeds: userAccessiblePostsDataset,
     updateAvailablePostsFeeds: updateAvailablePostsFeeds,
-    removeIdFromCurrentUserFriendsList: removeUserIdFromCurrentUserFriendsList
+    removeIdFromCurrentUserFriendsList: removeUserIdFromCurrentUserFriendsList,
+    updateUserProfileDataInApp: updateUserProfileDataInApp
   }
 
   let getUser = () => {

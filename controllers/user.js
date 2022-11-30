@@ -1,6 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const async = require("async");
 const User = require("../models/user");
+const user = require("../models/user");
 
 const getAllUsers = (req, res, next) => {
     User.find({})
@@ -13,6 +14,34 @@ const getAnUser = (req, res, next) => {
     User.findById({ _id: req.params.userId })
         .then(result => {
             res.status(200).json({ success: true, data: result })
+        }).catch(err => next(err))
+}
+
+const updateUserProfileInfo = (req, res, next) => {
+    let userId = req.params.userId;
+    let data = req.body;
+    
+    console.log(data, userId, "wat wat!!")
+
+    User.findOne({ _id: userId })
+        .then(currentUser => {
+            if(data.ppUrl) {
+                currentUser.ppUrl = data.ppUrl;
+            }
+
+            if(data.cpUrl) {
+                currentUser.cpUrl = data.cpUrl;
+            }
+
+            // console.log(currentUser, "currentuser!!")
+
+            User.findByIdAndUpdate(currentUser._id, currentUser, {})
+                .then(() => {
+                    console.log("user profile data updated....");
+                    res.status(200).json({success: true, user: currentUser})
+                })
+                .catch(err => next(err))
+
         }).catch(err => next(err))
 }
 
@@ -162,6 +191,7 @@ let removeUserFromFriendList = (req, res, next) => {
 }
 
 module.exports = {
+    updateUserProfileInfo,
     removeUserFromFriendList,
     acceptUserFriendRequest,
     rejectUserFriendRequest,

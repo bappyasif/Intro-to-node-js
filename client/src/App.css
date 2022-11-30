@@ -24,13 +24,27 @@
   row-gap: 29px;
 } */
 
-p {padding: 0; margin: 0;}
+p {
+  padding: 0;
+  margin: 0;
+}
+
+.css-l086p4-MuiImageListItem-root .MuiImageListItem-img {
+  height: 341px !important;
+}
+
+.css-14q7c0c-MuiImageListItemBar-titleWrap {
+  -webkit-flex-grow: 0 !important;
+  flex-grow: 0 !important;
+}
 
 .MuiCardHeader-content.css-1qbkelo-MuiCardHeader-content {
   margin-left: 17px !important;
 }
 
-.css-1rplq84 {margin-bottom: 6px !important;}
+.css-1rplq84 {
+  margin-bottom: 6px !important;
+}
 
 .cards-wrapper {
   width: 92vw;
