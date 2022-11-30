@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { readDataFromServer } from '../utils';
 
-function useToFetchUserPostData(appCtx, type) {
+function useToFetchUserActionSpecificPostData(appCtx, type) {
     let [postsData, setPostsData] = useState([]);
 
     let handlePostsData = (result) => {
@@ -23,4 +23,4 @@ function useToFetchUserPostData(appCtx, type) {
     return {postsData}
 }
 
-export default useToFetchUserPostData
+export default useToFetchUserActionSpecificPostData

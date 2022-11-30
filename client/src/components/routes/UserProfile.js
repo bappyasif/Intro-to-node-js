@@ -2,7 +2,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { AppBar, Box, Container, Paper, Tab, Tabs, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContexts } from '../../App';
-import useToFetchUserPostData from '../hooks/useToFetchData';
+import useToFetchUserActionSpecificPostData from '../hooks/useToFetchData';
 import ShowUserCreatedPost from '../UserCreatedPost';
 import UserProfileInfoSection from '../UserProfileInfoSection'
 import { readDataFromServer } from '../utils';
@@ -46,11 +46,16 @@ let UserProfileTabs = ({ appCtx }) => {
                     </TabList>
                 </Box>
                 <TabPanel value="1"><RenderAllPostsTab appCtx={appCtx} /></TabPanel>
-                <TabPanel value="2"><RenderLikedPostsTab appCtx={appCtx} /></TabPanel>
-                <TabPanel value="3"><RenderLovedPostsTab appCtx={appCtx} /></TabPanel>
+                {/* <TabPanel value="2"><RenderLikedPostsTab appCtx={appCtx} /></TabPanel> */}
+                {/* <TabPanel value="3"><RenderLovedPostsTab appCtx={appCtx} /></TabPanel>
                 <TabPanel value="4"><RenderSharedPostsTab appCtx={appCtx} /></TabPanel>
                 <TabPanel value="5"><RenderCommentedPostsTab appCtx={appCtx} /></TabPanel>
-                <TabPanel value="6"><RenderDislikedPostsTab appCtx={appCtx} /></TabPanel>
+                <TabPanel value="6"><RenderDislikedPostsTab appCtx={appCtx} /></TabPanel> */}
+                <TabPanel value="2"><RenderActionSpecificPosts appCtx={appCtx} actionType={"Like"} /></TabPanel>
+                <TabPanel value="3"><RenderActionSpecificPosts appCtx={appCtx} actionType={"Love"} /></TabPanel>
+                <TabPanel value="4"><RenderActionSpecificPosts appCtx={appCtx} actionType={"Share"} /></TabPanel>
+                <TabPanel value="5"><RenderActionSpecificPosts appCtx={appCtx} actionType={"Comment"} /></TabPanel>
+                <TabPanel value="6"><RenderActionSpecificPosts appCtx={appCtx} actionType={"Dislike"} /></TabPanel>
             </TabContext>
         </Box>
     )
@@ -86,8 +91,8 @@ let RenderAllPostsTab = ({ appCtx }) => {
     )
 }
 
-let RenderLikedPostsTab = ({ appCtx }) => {
-    let { postsData } = useToFetchUserPostData(appCtx, "Like")
+let RenderActionSpecificPosts = ({actionType, appCtx}) => {
+    let { postsData } = useToFetchUserActionSpecificPostData(appCtx, actionType)
 
     console.log(postsData, "data!!")
 
@@ -95,7 +100,7 @@ let RenderLikedPostsTab = ({ appCtx }) => {
 
     return (
         <Paper>
-            <Typography variant="h3">Liked Posts!!</Typography>
+            <Typography variant="h3">{actionType}d Posts!!</Typography>
             <Container>
                 {postsData?.length ? renderAllPosts() : null}
             </Container>
@@ -103,72 +108,89 @@ let RenderLikedPostsTab = ({ appCtx }) => {
     )
 }
 
-let RenderLovedPostsTab = ({ appCtx }) => {
-    let { postsData } = useToFetchUserPostData(appCtx, "Love")
+// let RenderLikedPostsTab = ({ appCtx }) => {
+//     let { postsData } = useToFetchUserPostData(appCtx, "Like")
 
-    console.log(postsData, "data!!")
+//     console.log(postsData, "data!!")
 
-    let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
+//     let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
 
-    return (
-        <Paper>
-            <Typography variant="h3">Loved Posts!!</Typography>
-            <Container>
-                {postsData?.length ? renderAllPosts() : null}
-            </Container>
-        </Paper>
-    )
-}
+//     return (
+//         <Paper>
+//             <Typography variant="h3">Liked Posts!!</Typography>
+//             <Container>
+//                 {postsData?.length ? renderAllPosts() : null}
+//             </Container>
+//         </Paper>
+//     )
+// }
 
-let RenderSharedPostsTab = ({ appCtx }) => {
-    let { postsData } = useToFetchUserPostData(appCtx, "Share")
+// let RenderLovedPostsTab = ({ appCtx }) => {
+//     let { postsData } = useToFetchUserPostData(appCtx, "Love")
 
-    console.log(postsData, "data!!")
+//     console.log(postsData, "data!!")
 
-    let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
+//     let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
 
-    return (
-        <Paper>
-            <Typography variant="h3">Shared Posts!!</Typography>
-            <Container>
-                {postsData?.length ? renderAllPosts() : null}
-            </Container>
-        </Paper>
-    )
-}
+//     return (
+//         <Paper>
+//             <Typography variant="h3">Loved Posts!!</Typography>
+//             <Container>
+//                 {postsData?.length ? renderAllPosts() : null}
+//             </Container>
+//         </Paper>
+//     )
+// }
 
-let RenderCommentedPostsTab = ({ appCtx }) => {
-    let { postsData } = useToFetchUserPostData(appCtx, "Comment")
+// let RenderSharedPostsTab = ({ appCtx }) => {
+//     let { postsData } = useToFetchUserPostData(appCtx, "Share")
 
-    console.log(postsData, "data!!")
+//     console.log(postsData, "data!!")
 
-    let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
+//     let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
 
-    return (
-        <Paper>
-            <Typography variant="h3">Commented Posts!!</Typography>
-            <Container>
-                {postsData?.length ? renderAllPosts() : null}
-            </Container>
-        </Paper>
-    )
-}
+//     return (
+//         <Paper>
+//             <Typography variant="h3">Shared Posts!!</Typography>
+//             <Container>
+//                 {postsData?.length ? renderAllPosts() : null}
+//             </Container>
+//         </Paper>
+//     )
+// }
 
-let RenderDislikedPostsTab = ({ appCtx }) => {
-    let { postsData } = useToFetchUserPostData(appCtx, "Dislike")
+// let RenderCommentedPostsTab = ({ appCtx }) => {
+//     let { postsData } = useToFetchUserPostData(appCtx, "Comment")
 
-    console.log(postsData, "data!!")
+//     console.log(postsData, "data!!")
 
-    let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
+//     let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
 
-    return (
-        <Paper>
-            <Typography variant="h3">Disliked Posts!!</Typography>
-            <Container>
-                {postsData?.length ? renderAllPosts() : null}
-            </Container>
-        </Paper>
-    )
-}
+//     return (
+//         <Paper>
+//             <Typography variant="h3">Commented Posts!!</Typography>
+//             <Container>
+//                 {postsData?.length ? renderAllPosts() : null}
+//             </Container>
+//         </Paper>
+//     )
+// }
+
+// let RenderDislikedPostsTab = ({ appCtx }) => {
+//     let { postsData } = useToFetchUserPostData(appCtx, "Dislike")
+
+//     console.log(postsData, "data!!")
+
+//     let renderAllPosts = () => postsData?.sort((a, b) => new Date(a.created) < new Date(b.created) ? 1 : -1).map((dataset, idx) => (idx < 11) && <ShowUserCreatedPost key={dataset._id} postData={dataset} setShowCreatePost={() => null} />)
+
+//     return (
+//         <Paper>
+//             <Typography variant="h3">Disliked Posts!!</Typography>
+//             <Container>
+//                 {postsData?.length ? renderAllPosts() : null}
+//             </Container>
+//         </Paper>
+//     )
+// }
 
 export default UserProfile
