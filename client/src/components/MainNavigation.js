@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { LoginTwoTone, AppRegistrationTwoTone, TimelineTwoTone, VerifiedUserSharp, DynamicFeedSharp, PeopleTwoTone } from "@mui/icons-material";
+import React, { useContext, useEffect, useState } from 'react'
+import { LoginTwoTone, AppRegistrationTwoTone, TimelineTwoTone, VerifiedUserSharp, DynamicFeedSharp, PeopleTwoTone, PersonTwoTone } from "@mui/icons-material";
 import { H1Element, H4Element, NavElement, WrapperDiv } from './GeneralElements'
 import { MuiButtonElement, MuiInputElement, TabElement } from './MuiElements';
 import { FormElement, FormElementForwardedRef } from './FormElements';
@@ -18,6 +18,8 @@ function MainNavigation() {
 }
 
 export let NavigationLinks = () => {
+  let appCtx = useContext(AppContexts);
+
   return (
     <NavElement className="main-nav">
       <TabElement className={"nav-item"} labelText={"Login"} path={"login"} icon={<LoginTwoTone />} />
@@ -26,6 +28,7 @@ export let NavigationLinks = () => {
       <TabElement className={"nav-item"} labelText={"Feeds"} path={"news-feeds"} icon={<DynamicFeedSharp />} />
       {/* <TabElement className={"nav-item"} labelText={"Friends"} path={"friend-requests"} icon={<PeopleTwoTone />} /> */}
       <TabElement className={"nav-item"} labelText={"Friends"} path={"user-friendships"} icon={<PeopleTwoTone />} />
+      <TabElement className={"nav-item"} labelText={"Profile"} path={`users/${appCtx.user?._id}/profile`} icon={<PersonTwoTone />} />
     </NavElement>
   )
 }

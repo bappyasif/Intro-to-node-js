@@ -1,7 +1,8 @@
-import { WallpaperRounded } from '@mui/icons-material'
-import { Box, Button, Container, IconButton, ImageList, ImageListItem, ImageListItemBar, Paper, Stack, TextField, Typography } from '@mui/material'
+import { Edit, Navigation, WallpaperRounded } from '@mui/icons-material'
+import { Box, Button, Container, Divider, Fab, IconButton, ImageList, ImageListItem, ImageListItemBar, Paper, Stack, TextField, Typography } from '@mui/material'
 import moment from 'moment'
 import React, { useContext, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { AppContexts } from "../App"
 import { updateDataInDatabase } from './utils'
 
@@ -14,6 +15,7 @@ function UserProfileInfoSection({ appCtx }) {
                 sx={{ width: "920px", margin: "auto", bgcolor: "gainsboro", pl: 2, pt: .4, pr: 2, pb: .1, borderRadius: 2 }}
             >
                 <UserNameAndInfo userData={appCtx.user} />
+                <Divider variant="fullWidth" sx={{mt: 1.1}} />
                 <SomeUserSpecificInfo userData={appCtx.user} />
                 <UserFriendsAndInfo userData={appCtx.user} />
             </Box>
@@ -21,8 +23,8 @@ function UserProfileInfoSection({ appCtx }) {
     )
 }
 
-let RenderUserProfilePhoto = ({userData, fromPP}) => {
-    let { ppUrl, cpUrl, fullName} = {...userData}
+let RenderUserProfilePhoto = ({ userData, fromPP }) => {
+    let { ppUrl, cpUrl, fullName } = { ...userData }
 
     let [showModal, setShowModal] = useState(false);
 
@@ -33,13 +35,13 @@ let RenderUserProfilePhoto = ({userData, fromPP}) => {
     let decideImgResourceUrl = () => {
         let src = "";
 
-        if(fromPP && ppUrl) {
+        if (fromPP && ppUrl) {
             src = `${ppUrl}?w85&h95&fit=crop&auto=format`
         } else if (fromPP && !ppUrl) {
             src = `${fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`
         } else if (!fromPP && cpUrl) {
             src = `${cpUrl}?w85&h95&fit=crop&auto=format`
-        }  else if (!fromPP && !cpUrl) {
+        } else if (!fromPP && !cpUrl) {
             src = `${fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`
         }
 
@@ -66,16 +68,16 @@ let RenderUserProfilePhoto = ({userData, fromPP}) => {
                     sx={{
                         justifyContent: "center",
                     }}
-                    
+
                     title={<Typography variant="h6">{fromPP ? "Profile" : "Cover"} Photo</Typography>}
 
                     onClick={toggleShowModal}
-                    
+
                     actionIcon={
                         <IconButton
                         >
                             <WallpaperRounded
-                            sx={{ color: "floralwhite" }}
+                                sx={{ color: "floralwhite" }}
                             />
                         </IconButton>
                     }
@@ -159,21 +161,21 @@ let SomeUserSpecificInfo = ({ userData }) => {
     let { bio, created, webLink } = { ...userData }
 
     let innerStackStyles = { flexDirection: "row", gap: "35px", alignItems: "baseline" }
+
+    let items = [{ name: "Bio", value: bio || fakeDataModel[0].bio }]
+
+    let renderBio = () => items.map(item => <RenderUserProfileData key={item.name} item={item} styles={innerStackStyles} />)
+
+    let otherItems = [{ name: "Joined", value: moment(created ? created : fakeDataModel[0].created).format("MM-DD-YYYY") }, { name: "Website", value: webLink ? webLink : fakeDataModel[0].weblink }]
+
+    let renderOtherItems = () => otherItems.map(item => <RenderUserProfileData key={item.name} item={item} styles={innerStackStyles} />)
+
     return (
         <Stack sx={{ textAlign: "justify", mt: 2 }}>
-            <Stack sx={innerStackStyles}>
-                <Typography variant="h6">Bio: </Typography>
-                <Typography variant="h6" component={"p"}>{bio ? bio : fakeDataModel[0].bio}</Typography>
-            </Stack>
+            {renderBio()}
+
             <Stack sx={{ flexDirection: "row", justifyContent: "space-between", mt: 2 }}>
-                <Stack sx={innerStackStyles}>
-                    <Typography variant="h6">Joined: </Typography>
-                    <Typography variant="h6" component={"p"}>{moment(created ? created : fakeDataModel[0].created).format("MM-DD-YYYY")}</Typography>
-                </Stack>
-                <Stack sx={innerStackStyles}>
-                    <Typography variant="h6">Website: </Typography>
-                    <Typography variant="h6" component={"p"}>{webLink ? webLink : fakeDataModel[0].weblink}</Typography>
-                </Stack>
+                {renderOtherItems()}
             </Stack>
         </Stack>
     )
@@ -184,26 +186,38 @@ let UserFriendsAndInfo = ({ userData }) => {
 
     let innerStackStyles = { flexDirection: "row", gap: "35px", alignItems: "baseline" }
 
+    let items = [{ name: "Friends count", value: friends.length || fakeDataModel[0].friends }, { name: "Friend Requests Recieved", value: frRecieved.length || fakeDataModel[0].frRcvd }, { name: "Friend Requests Sent", value: frSent.length || fakeDataModel[0].frSent }]
+
+    let renderItems = () => items.map(item => <RenderUserProfileData key={item.name} item={item} styles={innerStackStyles} />)
+
     return (
         <Stack sx={{ flexDirection: "row", justifyContent: "space-between", mt: 2, mb: 2 }}>
-            <Stack sx={innerStackStyles}>
-                <Typography variant="h6">Friends count: </Typography>
-                <Typography variant="h6" component={"p"}>{friends.length ? friends.length : fakeDataModel[0].friends}</Typography>
-            </Stack>
-            <Stack sx={innerStackStyles}>
-                <Typography variant="h6">Friend Requests Recieved: </Typography>
-                <Typography variant="h6" component={"p"}>{frRecieved.length ? frRecieved.length : fakeDataModel[0].frRcvd}</Typography>
-            </Stack>
-            <Stack sx={innerStackStyles}>
-                <Typography variant="h6">Friend Requests Sent: </Typography>
-                <Typography variant="h6">{frSent.length ? frSent.length : fakeDataModel[0].frSent}</Typography>
-            </Stack>
+            {renderItems()}
         </Stack>
     )
 }
 
 let UserNameAndInfo = ({ userData }) => {
     let { ppUrl, fullName, email } = { ...userData }
+
+    let navigate = useNavigate();
+
+    let styles = {
+        flexDirection: "row",
+        gap: 2,
+        mt: .6,
+        alignItems: "baseline",
+        justifyContent: "space-between"
+    }
+
+    let items = [{ name: "FullName", value: fullName || fakeDataModel[0].fullName }, { name: "Email", value: email || fakeDataModel[0].email }]
+
+    let renderItems = () => items.map(item => <RenderUserProfileData key={item.name} item={item} styles={styles} />)
+
+    let handleClick = () => {
+        navigate("/edit-user-profile")
+    }
+
     return (
         <Stack
             sx={{ flexDirection: "column", gap: .6, mt: .6 }}
@@ -216,46 +230,30 @@ let UserNameAndInfo = ({ userData }) => {
                     gap: 6,
                     mt: .6,
                     alignItems: "baseline",
-                    justifyContent: "space-evenly"
+                    justifyContent: "space-around"
                 }}
             >
-                <UserName fullName={fullName} />
-                <UserEmail email={email} />
+                {renderItems()}
+                <Fab onClick={handleClick} variant="extended" color="primary" aria-label="add">
+                    <Edit sx={{ mr: 1 }} />
+                    Edit Info
+                </Fab>
             </Stack>
         </Stack>
     )
 }
 
-let UserEmail = ({ email }) => {
+let RenderUserProfileData = ({ item, styles }) => {
+    let assignNameVariant = () => (item.name === "Email" || item.name === "FullName") ? "h5" : "h6"
+    
+    let assignValueVariant = () => (item.name === "Email" || item.name === "FullName") ? "h4" : "h6"
+    
     return (
         <Stack
-            sx={{
-                flexDirection: "row",
-                gap: 2,
-                mt: .6,
-                alignItems: "baseline",
-                justifyContent: "space-between"
-            }}
+            sx={styles}
         >
-            <Typography variant="h6">Email: </Typography>
-            <Typography variant='h6'>{email ? email : fakeDataModel[0].email}</Typography>
-        </Stack>
-    )
-}
-
-let UserName = ({ fullName }) => {
-    return (
-        <Stack
-            sx={{
-                flexDirection: "row",
-                gap: 4,
-                mt: .6,
-                alignItems: "baseline",
-                justifyContent: "space-between"
-            }}
-        >
-            <Typography variant="h6">FullName: </Typography>
-            <Typography variant='h4' component={"h4"}>{fullName ? fullName : fakeDataModel[0].fullName}</Typography>
+            <Typography variant={assignNameVariant()}>{item.name}: </Typography>
+            <Typography variant={assignValueVariant()}>{item.value}</Typography>
         </Stack>
     )
 }
