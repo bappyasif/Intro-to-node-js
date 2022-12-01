@@ -33,7 +33,15 @@ const updateUserProfileInfo = (req, res, next) => {
                 currentUser.cpUrl = data.cpUrl;
             }
 
-            // console.log(currentUser, "currentuser!!")
+            if(data.topics) {
+                currentUser.topics = data.topics;
+            }
+
+            if(data.fullName) {
+                currentUser.fullName = data.fullName;
+            }
+
+            console.log(currentUser, "currentuser!!")
 
             User.findByIdAndUpdate(currentUser._id, currentUser, {})
                 .then(() => {
