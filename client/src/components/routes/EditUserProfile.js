@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AppContexts } from '../../App'
 import { fakeDataModel } from '../UserProfileInfoSection'
 import { updateDataInDatabase } from '../utils'
+import ChooseTopics from './ChooseTopics'
 
 function EditUserProfile() {
     let [userData, setUserData] = useState({})
@@ -43,6 +44,7 @@ let RenderFormActionButtons = ({ userData, appCtx }) => {
     return (
         <Stack sx={{ flexDirection: "row", gap: 8, justifyContent: "center" }}>
             {renderButtons()}
+            {/* <OpenTopicsChooserModal /> */}
         </Stack>
     )
 }
@@ -60,9 +62,9 @@ let RenderActionButton = ({ item, userData, appCtx }) => {
 
     let updateDataInServer = () => {
         let url = `${appCtx.baseUrl}/users/${appCtx.user._id}/profile`;
-        
-        let data = {"fullName": fullName, "topics": topics, "cpUrl": cpUrl, "ppUrl": ppUrl}
-        
+
+        let data = { "fullName": fullName, "topics": topics, "cpUrl": cpUrl, "ppUrl": ppUrl }
+
         updateDataInDatabase(url, data, updateDataInApp)
     }
 
@@ -117,6 +119,9 @@ let RenderFormWithData = ({ handleData, data }) => {
 }
 
 let RenderFormControlItem = ({ handleData, dataVal, elem }) => {
+    let [showModal, setShowModal] = useState(false)
+    
+    let appCtx = useContext(AppContexts);
 
     let check = ["frSent", "frRcvd", "frRecieved", "friends", "created", "email", "password"].includes(elem)
 
@@ -140,7 +145,7 @@ let RenderFormControlItem = ({ handleData, dataVal, elem }) => {
         if (elem === "fullName") {
             label = "This how it will show up in your profile, can not be left empty"
         } else if (elem === "topics") {
-            label = "Make sure to use comma when adding new entries, should not be left empty"
+            label = "Make sure to use comma when adding new entries, should not be left empty or "
         } else if (elem === "ppUrl" || elem === "cpUrl") {
             label = "Make sure to use comma when adding new entries, should not be left empty"
         } else {
@@ -148,6 +153,20 @@ let RenderFormControlItem = ({ handleData, dataVal, elem }) => {
         }
 
         return label
+    }
+
+    let toggleShowModal = () => setShowModal(!showModal);
+
+    let closeModal = () => setShowModal(false);
+
+    let showClickableIframeLink = () => {
+        let btn = null;
+        if (elem === "topics") {
+            btn = <Button onClick={toggleShowModal}>
+                <Typography variant="subtitle1">Open Choose Topics</Typography>
+            </Button>
+        }
+        return btn;
     }
 
     return (
@@ -160,10 +179,52 @@ let RenderFormControlItem = ({ handleData, dataVal, elem }) => {
                     :
                     <Input required={true} sx={{ fontSize: 29, pl: 2 }} type={elem === "email" ? "email" : "text"} defaultValue={dataVal} onChange={e => handleData(e, elem)} />
             }
-            <Typography variant="subtitle1" sx={{ color: "darkgrey", textAlign: "left", pl: 2 }}>{showHelperText()}</Typography>
+            <Typography variant="subtitle1" sx={{ color: "darkgrey", textAlign: "left", pl: 2, position: "relative" }}>{showHelperText()} {showClickableIframeLink()}</Typography>
+            {showModal ? <OpenTopicsChooserModal appCtx={appCtx} /> : null}
         </FormControl>
     )
 }
+
+let OpenTopicsChooserModal = ({appCtx}) => {
+    let url = "/choose-topics"
+
+    return (
+        <Paper
+            style={{
+                position: "absolute",
+                top: "29%",
+                bottom: 0,
+                width: "74vw",
+                height: "76vh",
+                zIndex: 9,
+                transform: 'translate(-60%, -50%)',
+                overflow: "scroll"
+            }}
+        >
+            <ChooseTopics />
+        </Paper>
+    )
+}
+
+// let OpenTopicsChooserModal = ({appCtx}) => {
+//     let url = "/choose-topics"
+
+//     return (
+//         <iframe
+//             style={{
+//                 position: "absolute",
+//                 top: "29%",
+//                 bottom: 0,
+//                 width: "65vw",
+//                 height: "76vh",
+//                 zIndex: 9,
+//                 transform: 'translate(-50%, -50%)',
+//             }}
+//             src={url}
+//             appCtx = {appCtx}
+//         />
+//     )
+// }
 
 export let RenderPhoto = ({ ppUrl, cpUrl, fullName }) => {
     let decideImgResourceUrl = () => {

@@ -17,7 +17,13 @@ function ChooseTopics() {
         updateUserInDatabase(url, {topics: selectedTopics}, appCtx.updateData, navigate)
     }
 
-    console.log(selectedTopics, "selecrted topi ")
+    useEffect(() => {
+        if(appCtx.user?.topics) {
+            setSelectedTopics(appCtx.user.topics)
+        }
+    }, [])
+
+    console.log(selectedTopics, "selected topics")
 
     return (
         <Paper sx={{ color: "blueviolet" }}>
@@ -58,6 +64,7 @@ let ShowTopics = ({ list, setSelectedTopics }) => {
 
 let ShowCategoryTopics = ({ category, list, setSelectedTopics }) => {
     let renderCategoryTopics = () => Object.values(category).map(name => <RenderTopics key={name} topics={name} categoryName={Object.keys(category)} list={list} setSelectedTopics={setSelectedTopics} />)
+    // console.log(list, "list!!")
     return (
         <>
             <Link to={`/choose-topics/${Object.keys(category)[0]}`}>
@@ -81,6 +88,8 @@ let ShowCategoryTopics = ({ category, list, setSelectedTopics }) => {
 let RenderTopics = ({ topics, categoryName, list, setSelectedTopics }) => {
     let [scrollInfo, setScrollInfo] = useState({});
     let [currentScroll, setCurrentScroll] = useState(0);
+
+    console.log(list, "!!")
 
     let renderTopics = () => topics.map(topic => <RenderTopic key={topic} topic={topic} list={list} setSelectedTopics={setSelectedTopics} />)
 
@@ -203,8 +212,40 @@ export let RenderTopic = ({ topic, list, setSelectedTopics }) => {
             setSelectedTopics(prev => prev.filter(item => item !== topic))
         }
     }
+    
+    useEffect(() => {
+        setClicked(false)
+    }, [topic])
 
-    useEffect(() => setClicked(false), [topic])
+    useEffect(() => {
+        const idx = list?.findIndex(elem => elem === topic);
+        // console.log(list, topic, "outside", idx)
+        if(idx !== -1 && !clicked) {
+            setClicked(true)
+            console.log("here here", topic, "inside", list)
+        } 
+    }, [list])
+
+    // useEffect(() => {
+    //     // setClicked(false)
+    //     const idx = list?.findIndex(elem => elem === topic);
+    //     console.log(list, topic, "outside", idx)
+    //     if(idx !== -1 && !clicked) {
+    //         setClicked(!clicked)
+    //         console.log("here here", topic, "inside", list)
+    //     } else {
+    //         setClicked(false)
+    //     }
+    // }, [topic, list])
+
+    // useEffect(() => {
+    //     const idx = list?.findIndex(elem => elem === topic);
+    //     console.log(list, topic, "outside")
+    //     if(idx !== -1) {
+    //         setClicked(!clicked)
+    //         console.log("here here", topic, "inside")
+    //     }
+    // }, [])
 
     return (
         <Stack
