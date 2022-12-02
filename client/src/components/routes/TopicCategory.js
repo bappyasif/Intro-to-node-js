@@ -1,11 +1,18 @@
-import { Stack, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { useParams } from "react-router-dom"
+import { Button, Stack, Typography } from '@mui/material'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate, useParams } from "react-router-dom"
+import { AppContexts } from '../../App'
+import { updateUserInDatabase } from '../utils'
 import { RenderTopic, topicCategories } from './ChooseTopics'
 
 function TopicCategory() {
     let [topics, setTopics] = useState([])
+    
+    let [selectedTopics, setSelectedTopics] = useState([])
+    
     let { category } = useParams()
+    
+    let appCtx = useContext(AppContexts);
 
     let handleTopics = () => {
         topicCategories.forEach(item => {
@@ -13,12 +20,27 @@ function TopicCategory() {
         })
     }
 
-    let renderTopics = () => topics[0]?.map(name => <RenderTopic key={name} topic={name} />)
+    let navigate = useNavigate();
+
+    let updateDataInApp = () => appCtx.updateUserProfileDataInApp("topics", selectedTopics)
+
+    let handleClickAndSave = () => {
+        let url = `${appCtx.baseUrl}/users/${appCtx.user._id}`
+        // updateUserInDatabase(url, {topics: selectedTopics}, appCtx.updateData, navigate)
+        updateUserInDatabase(url, {topics: selectedTopics}, updateDataInApp, navigate, "edit-user-profile")
+    }
+
+    let renderTopics = () => topics[0]?.map(name => <RenderTopic key={name} topic={name} setSelectedTopics={setSelectedTopics} list={selectedTopics} />)
 
     useEffect(() => handleTopics, [category])
 
-    // console.log(category, "!!", topicCategories[0].category, topics)
+    useEffect(() => {
+        if(appCtx.user?.topics) {
+            setSelectedTopics(appCtx.user.topics)
+        }
+    }, [])
 
+    console.log(category, "check!!", topicCategories[0].category, topics, selectedTopics)
 
     return (
         <>
@@ -36,6 +58,9 @@ function TopicCategory() {
             >
                 {renderTopics()}
             </Stack>
+            <Button onClick={handleClickAndSave}>
+                <Typography variant="h6">Save</Typography>
+            </Button>
         </>
     )
 }

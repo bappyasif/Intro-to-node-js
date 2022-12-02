@@ -28,7 +28,7 @@ const sendDataToServer = (endpoint, dataObj, errorHandler, handleData) => {
     }).catch(err => console.error('post request is failed', err))
 }
 
-const updateUserInDatabase = (endpoint, dataObj, dataUpdater, navigate) => {
+const updateUserInDatabase = (endpoint, dataObj, dataUpdater, navigate, navigateTo) => {
     fetch(endpoint, {
         method: "put",
         headers: {
@@ -45,7 +45,7 @@ const updateUserInDatabase = (endpoint, dataObj, dataUpdater, navigate) => {
                 let key = Object.keys(dataObj)[0]
                 let value = Object.values(dataObj)[0]
                 dataUpdater(key, value)
-                navigate("/")
+                navigateTo ? navigate(`/${navigateTo}`) : navigate("/")
             }).catch(err=>console.log(err))
         }
     }).catch(err=>console.log(err));

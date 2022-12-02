@@ -44,7 +44,7 @@ function ChooseTopics({closeTopicChooserModal}) {
         <Paper sx={{ color: "blueviolet" }}>
             <Typography variant='h1'>{selectedTopics.length === 0 ? `Atleast choose 4 topics` : selectedTopics.length > 4 ? `${selectedTopics.length} topics are selected` : `${selectedTopics.length} out of 4 topics`}</Typography>
             <ButtonIconElement list={selectedTopics} handleClick={handleClickAndSave} />
-            <ShowTopics list={selectedTopics} setSelectedTopics={setSelectedTopics} />
+            <ShowTopics list={selectedTopics} setSelectedTopics={setSelectedTopics} closeTopicChooserModal={closeTopicChooserModal} />
             <ButtonIconElement list={selectedTopics} handleClick={handleClickAndSave} />
         </Paper>
     )
@@ -66,9 +66,9 @@ let ButtonIconElement = ({ list, handleClick }) => {
     )
 }
 
-let ShowTopics = ({ list, setSelectedTopics }) => {
+let ShowTopics = ({ list, setSelectedTopics, closeTopicChooserModal }) => {
 
-    let renderCategories = () => topicCategories.map((category, key) => <ShowCategoryTopics key={key} category={category} list={list} setSelectedTopics={setSelectedTopics} />)
+    let renderCategories = () => topicCategories.map((category, key) => <ShowCategoryTopics key={key} category={category} list={list} setSelectedTopics={setSelectedTopics} closeTopicChooserModal={closeTopicChooserModal} />)
 
     return (
         <Box sx={{ width: "68.1vw", margin: "auto" }}>
@@ -77,12 +77,15 @@ let ShowTopics = ({ list, setSelectedTopics }) => {
     )
 }
 
-let ShowCategoryTopics = ({ category, list, setSelectedTopics }) => {
+let ShowCategoryTopics = ({ category, list, setSelectedTopics, closeTopicChooserModal }) => {
     let renderCategoryTopics = () => Object.values(category).map(name => <RenderTopics key={name} topics={name} categoryName={Object.keys(category)} list={list} setSelectedTopics={setSelectedTopics} />)
     // console.log(list, "list!!")
     return (
         <>
-            <Link to={`/choose-topics/${Object.keys(category)[0]}`}>
+            <Link 
+                style={{textDecoration: "none", cursor: closeTopicChooserModal ? "auto" : "pointer"}}
+                to={closeTopicChooserModal ? null : `/choose-topics/${Object.keys(category)[0]}`}
+            >
                 <Typography
                     sx={{
                         textAlign: "justify",
