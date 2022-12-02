@@ -2,6 +2,7 @@ import { NotInterestedTwoTone, SaveAltTwoTone, WallpaperRounded } from '@mui/ico
 import { TextField, Box, Button, FormControl, IconButton, ImageListItem, ImageListItemBar, Input, InputLabel, Paper, Stack, TextareaAutosize, Typography } from '@mui/material'
 import moment from 'moment'
 import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AppContexts } from '../../App'
 import { fakeDataModel } from '../UserProfileInfoSection'
 import { updateDataInDatabase } from '../utils'
@@ -10,7 +11,18 @@ import ChooseTopics from './ChooseTopics'
 function EditUserProfile() {
     let [userData, setUserData] = useState({})
 
+    let [reloadDataFlag, setReloadDataFlag] = useState(false);
+
     let appCtx = useContext(AppContexts);
+
+    let updateUserEditTopicsDataFromChooser = (updatedTopicsList) => {
+        // setUserData(appCtx.user || fakeDataModel[0]);
+        // setUserData(prev => ({...prev, topics: appCtx.user.topics}));
+        // setUserData(prev => ({...prev, topics: updatedTopicsList, newTopics: updatedTopicsList}));
+        setUserData({})
+        console.log(appCtx.user, "checkit", userData, updatedTopicsList)
+        setReloadDataFlag(true);
+    }
 
     let handleData = (evt, elem) => {
         if (elem === "topics") {
@@ -24,13 +36,20 @@ function EditUserProfile() {
 
     useEffect(() => setUserData(appCtx.user || fakeDataModel[0]), [])
 
-    // console.log(userData, "!!")
+    useEffect(() => {
+        if (reloadDataFlag) {
+            setUserData(appCtx.user)
+            setReloadDataFlag(false)
+        }
+    }, [reloadDataFlag])
+
+    console.log(userData, "!!")
 
     return (
         <Box>
             <Typography variant='h1'>Edit User Profile</Typography>
             {userData.created ? <RenderPhoto cpUrl={userData.cpUrl} fullName={userData.fullName} /> : null}
-            {userData.created ? <RenderFormWithData handleData={handleData} data={userData} /> : null}
+            {userData.created ? <RenderFormWithData handleData={handleData} data={userData} updateTopicsDataFromChooser={updateUserEditTopicsDataFromChooser} /> : null}
             {userData.created ? <RenderFormActionButtons userData={userData} appCtx={appCtx} /> : null}
         </Box>
     )
@@ -86,7 +105,7 @@ let RenderActionButton = ({ item, userData, appCtx }) => {
     )
 }
 
-let RenderFormWithData = ({ handleData, data }) => {
+let RenderFormWithData = ({ handleData, data, updateTopicsDataFromChooser }) => {
     let renderData = []
 
     for (let key in data) {
@@ -100,9 +119,12 @@ let RenderFormWithData = ({ handleData, data }) => {
 
             } else if (elem === "created") {
                 initialValue = moment(data[key]).format("DD-MM-YYYY")
+            } else if (elem === "topics") {
+                console.log(key, data[key], "checkcheck!!")
+                initialValue = data[key]
             }
 
-            renderData.push(<RenderFormControlItem key={key} handleData={handleData} dataVal={initialValue} elem={key} />)
+            renderData.push(<RenderFormControlItem key={key} handleData={handleData} dataVal={initialValue} elem={key} updateTopicsDataFromChooser={updateTopicsDataFromChooser} />)
         }
     }
 
@@ -118,10 +140,12 @@ let RenderFormWithData = ({ handleData, data }) => {
     )
 }
 
-let RenderFormControlItem = ({ handleData, dataVal, elem }) => {
+let RenderFormControlItem = ({ handleData, dataVal, elem, updateTopicsDataFromChooser }) => {
     let [showModal, setShowModal] = useState(false)
     
-    let appCtx = useContext(AppContexts);
+    // let appCtx = useContext(AppContexts);
+
+    let navigate = useNavigate()
 
     let check = ["frSent", "frRcvd", "frRecieved", "friends", "created", "email", "password"].includes(elem)
 
@@ -157,7 +181,13 @@ let RenderFormControlItem = ({ handleData, dataVal, elem }) => {
 
     let toggleShowModal = () => setShowModal(!showModal);
 
-    let closeModal = () => setShowModal(false);
+    let closeModal = (result) => {
+        setShowModal(false);
+        // so that topics data gets updated, which were chosen from topics chooser modal
+        // updateTopicsDataFromChooser(result);
+        updateTopicsDataFromChooser();
+        navigate("/edit-user-profile")
+    }
 
     let showClickableIframeLink = () => {
         let btn = null;
@@ -168,6 +198,8 @@ let RenderFormControlItem = ({ handleData, dataVal, elem }) => {
         }
         return btn;
     }
+
+    elem === "topics" && console.log(dataVal, "checkcheckchekc")
 
     return (
         <FormControl sx={{ m: 2 }} disabled={check} value>
@@ -180,12 +212,12 @@ let RenderFormControlItem = ({ handleData, dataVal, elem }) => {
                     <Input required={true} sx={{ fontSize: 29, pl: 2 }} type={elem === "email" ? "email" : "text"} defaultValue={dataVal} onChange={e => handleData(e, elem)} />
             }
             <Typography variant="subtitle1" sx={{ color: "darkgrey", textAlign: "left", pl: 2, position: "relative" }}>{showHelperText()} {showClickableIframeLink()}</Typography>
-            {showModal ? <OpenTopicsChooserModal appCtx={appCtx} /> : null}
+            {showModal ? <OpenTopicsChooserModal closeModal={closeModal} /> : null}
         </FormControl>
     )
 }
 
-let OpenTopicsChooserModal = ({appCtx}) => {
+let OpenTopicsChooserModal = ({closeModal}) => {
     let url = "/choose-topics"
 
     return (
@@ -201,7 +233,7 @@ let OpenTopicsChooserModal = ({appCtx}) => {
                 overflow: "scroll"
             }}
         >
-            <ChooseTopics />
+            <ChooseTopics closeTopicChooserModal={closeModal} />
         </Paper>
     )
 }
