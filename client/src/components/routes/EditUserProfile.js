@@ -261,14 +261,25 @@ let OpenTopicsChooserModal = ({closeModal}) => {
 //     )
 // }
 
+export let checkIfItHasJpgExtension = (resUrl) => {
+    let allTokens = resUrl.split(".");
+    let getExtension = allTokens[allTokens.length - 1]
+    let check = ["jpg", "jpeg"].includes(getExtension)
+    console.log(check, "chk extebnsion!!")
+    return check;
+}
+
 export let RenderPhoto = ({ ppUrl, cpUrl, fullName }) => {
     let decideImgResourceUrl = () => {
         let src = "";
 
         if (ppUrl && !cpUrl) {
-            src = `${ppUrl}?w85&h95&fit=crop&auto=format`
+            checkIfItHasJpgExtension(ppUrl)
+            // src = `${ppUrl}?w85&h95&fit=crop&auto=format`
+            src = checkIfItHasJpgExtension(ppUrl) ? ppUrl : `${ppUrl}?w85&h95&fit=crop&auto=format`
         } else if (cpUrl) {
-            src = `${cpUrl}?w500&h150&fit=crop&auto=format`
+            // src = `${cpUrl}?w500&h150&fit=crop&auto=format`
+            src = checkIfItHasJpgExtension(cpUrl) ? cpUrl : `${cpUrl}?w500&h150&fit=crop&auto=format`
         }
 
         return src;

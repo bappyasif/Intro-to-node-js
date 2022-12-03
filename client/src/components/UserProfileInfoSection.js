@@ -4,6 +4,7 @@ import moment from 'moment'
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { AppContexts } from "../App"
+import { checkIfItHasJpgExtension } from './routes/EditUserProfile'
 import { updateDataInDatabase } from './utils'
 
 function UserProfileInfoSection({ appCtx }) {
@@ -36,11 +37,11 @@ let RenderUserProfilePhoto = ({ userData, fromPP }) => {
         let src = "";
 
         if (fromPP && ppUrl) {
-            src = `${ppUrl}?w85&h95&fit=crop&auto=format`
+            src = checkIfItHasJpgExtension(ppUrl) ? ppUrl : `${ppUrl}?w85&h95&fit=crop&auto=format`
         } else if (fromPP && !ppUrl) {
             src = `${fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`
         } else if (!fromPP && cpUrl) {
-            src = `${cpUrl}?w85&h95&fit=crop&auto=format`
+            src = checkIfItHasJpgExtension(cpUrl) ? cpUrl : `${cpUrl}?w85&h95&fit=crop&auto=format`
         } else if (!fromPP && !cpUrl) {
             src = `${fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`
         }

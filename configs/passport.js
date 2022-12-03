@@ -20,6 +20,10 @@ let findOrCreateuser = (profileName, profileId, userData, done) => {
                 done(null, currentUser)
             } else {
                 // its safe to user into our db
+
+                // as new user is getting created, adding created date timestamp, just for one time only
+                userData.created = new Date().toISOString();
+
                 new User(userData).save().then(newUser => {
                     console.log("new user is created", newUser)
                     done(null, newUser)
@@ -39,6 +43,27 @@ passport.deserializeUser((id, done) => {
     })
 })
 
+// =============================FOR ALL STRATEGIES USER DATA GENERATIONS================================ //
+
+let strategyUserDataGenerations = (profileData, whichStrategy) => {
+    let uId = profileData.id;
+    let name = profileData.displayName || `${profileData.name.givenName} ${profileData.name.familyName}`;
+    let email = profileData.emails ? profileData?.emails[0]?.value : "not@found.com"
+    let profilePicture = profileData.photos ? profileData.photos[0]?.value : null
+    // console.log(profileData, "profileData!!")
+
+    let userData = {
+        fullName: name,
+        [whichStrategy]: uId,
+        email: email,
+        password: "test",
+        ppUrl: profilePicture,
+        // created: new Date().toISOString()
+    }
+
+    return userData;
+}
+
 // =============================GOOGLE STRATEGY================================ //
 
 let strategyOptions = {
@@ -53,23 +78,8 @@ let strategyOptions = {
 }
 
 let strategyCallback = (accessToken, refreshToken, profileData, done) => {
-    // callback function
-    // console.log("google strategy callback function", accessToken, refreshToken, profileData)
-    // lets create a new user and save it into our database, so that user can be verifed if registered before
-    let uId = profileData.id;
-    let name = profileData.displayName;
-    let email = profileData.emails[0].value
-    let profilePicture = profileData.photos[0]?.value
-    console.log(profileData, "profileData!!")
-
-    let userData = {
-        fullName: name,
-        profileID: uId,
-        email: email,
-        password: "test",
-        ppUrl: profilePicture,
-        created: new Date().toISOString()
-    }
+    let uId = profileData.id
+    let userData = strategyUserDataGenerations(profileData, "profileID")
 
     findOrCreateuser("profileID", uId, userData, done)
 }
@@ -85,21 +95,8 @@ let fbStrategyOptions = {
 }
 
 let fbStrategyCallback = (accessToken, refreshToken, profileData, done) => {
-    // console.log(profileData, "<fb>")
-    let uId = profileData.id;
-    let name = profileData.displayName || `${profileData.name.givenName} ${profileData.name.familyName}`;
-    let email = profileData.emails[0].value || `f@b.com`;
-    let profilePicture = profileData.photos ? profileData.photos[0]?.value : null;
-    console.log(profileData, "profileData!!")
-
-    let userData = {
-        fullName: name,
-        facebookID: uId,
-        email: email,
-        password: "test",
-        ppUrl: profilePicture,
-        created: new Date().toISOString()
-    }
+    let uId = profileData.id
+    let userData = strategyUserDataGenerations(profileData, "facebookID")
 
     findOrCreateuser("facebookID", uId, userData, done)
 }
@@ -116,21 +113,8 @@ let githubStrategyOptions = {
 }
 
 let githubStrategyCallback = (accessToken, refreshToken, profileData, done) => {
-    // console.log(profileData, "<github>")
-    let uId = profileData.id;
-    let name = profileData.displayName || `${profileData.name.givenName} ${profileData.name.familyName}`;
-    let email = profileData?.emails?.emails[0]?.value
-    let profilePicture = profileData.photos[0]?.value
-    console.log(profileData, "profileData!!")
-
-    let userData = {
-        fullName: name,
-        githubID: uId,
-        email: email,
-        password: "test",
-        ppUrl: profilePicture,
-        created: new Date().toISOString()
-    }
+    let uId = profileData.id
+    let userData = strategyUserDataGenerations(profileData, "githubID")
 
     findOrCreateuser("githubID", uId, userData, done)
 }
@@ -148,21 +132,8 @@ let twitterStrategyOptions = {
 }
 
 let twitterStrategyCallback = (accessToken, refreshToken, profileData, done) => {
-    // console.log(profileData, "<twitter>")
-    let uId = profileData.id;
-    let name = profileData.displayName || `${profileData.name.givenName} ${profileData.name.familyName}`;
-    let email = profileData?.emails?.emails[0]?.value
-    let profilePicture = profileData.photos[0]?.value
-    console.log(profileData, "profileData!!")
-
-    let userData = {
-        fullName: name,
-        twitterID: uId,
-        email: email,
-        password: "test",
-        ppUrl: profilePicture,
-        created: new Date().toISOString()
-    }
+    let uId = profileData.id
+    let userData = strategyUserDataGenerations(profileData, "twitterID")
 
     findOrCreateuser("twitterID", uId, userData, done)
 }
