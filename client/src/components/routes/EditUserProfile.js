@@ -48,7 +48,7 @@ function EditUserProfile() {
     return (
         <Box>
             <Typography variant='h1'>Edit User Profile</Typography>
-            {userData.created ? <RenderPhoto cpUrl={userData.cpUrl} fullName={userData.fullName} /> : null}
+            {userData.created ? <RenderPhoto cpUrl={userData.cpUrl || fakeDataModel[0].coverPhotoUrl} fullName={userData.fullName} /> : null}
             {userData.created ? <RenderFormWithData handleData={handleData} data={userData} updateTopicsDataFromChooser={updateUserEditTopicsDataFromChooser} /> : null}
             {userData.created ? <RenderFormActionButtons userData={userData} appCtx={appCtx} /> : null}
         </Box>
@@ -133,7 +133,7 @@ let RenderFormWithData = ({ handleData, data, updateTopicsDataFromChooser }) => 
     return (
         <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 11 }}>
             <Stack>
-                <RenderPhoto ppUrl={data.ppUrl} fullName={data.fullName} />
+                <RenderPhoto ppUrl={data.ppUrl || fakeDataModel[0].profilePhotoUrl} fullName={data.fullName} />
             </Stack>
             <Stack sx={{ width: "45%" }}>
                 {renderData}
@@ -149,7 +149,7 @@ let RenderFormControlItem = ({ handleData, dataVal, elem, updateTopicsDataFromCh
 
     let navigate = useNavigate()
 
-    let check = ["frSent", "frRcvd", "frRecieved", "friends", "created", "email", "password"].includes(elem)
+    let check = ["frSent", "profileID", "facebookID", "twitterID", "githubID", "frRcvd", "frRecieved", "friends", "created", "email", "password"].includes(elem)
 
     let formatElemLabel = () => {
         let label = ""

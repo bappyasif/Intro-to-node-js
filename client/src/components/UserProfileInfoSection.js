@@ -12,7 +12,7 @@ function UserProfileInfoSection({ appCtx }) {
             {/* <CoverPhoto userData={appCtx.user} /> */}
             <RenderUserProfilePhoto userData={appCtx.user} fromPP={false} />
             <Box
-                sx={{ width: "920px", margin: "auto", bgcolor: "gainsboro", pl: 2, pt: .4, pr: 2, pb: .1, borderRadius: 2 }}
+                sx={{ minWidth: "920px", maxWidth: "fit-content", margin: "auto", bgcolor: "gainsboro", pl: 2, pt: .4, pr: 2, pb: .1, borderRadius: 2 }}
             >
                 <UserNameAndInfo userData={appCtx.user} />
                 <Divider variant="fullWidth" sx={{mt: 1.1}} />

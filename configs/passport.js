@@ -59,12 +59,16 @@ let strategyCallback = (accessToken, refreshToken, profileData, done) => {
     let uId = profileData.id;
     let name = profileData.displayName;
     let email = profileData.emails[0].value
+    let profilePicture = profileData.photos[0]?.value
+    console.log(profileData, "profileData!!")
 
     let userData = {
         fullName: name,
         profileID: uId,
         email: email,
-        password: "test"
+        password: "test",
+        ppUrl: profilePicture,
+        created: new Date().toISOString()
     }
 
     findOrCreateuser("profileID", uId, userData, done)
@@ -84,13 +88,17 @@ let fbStrategyCallback = (accessToken, refreshToken, profileData, done) => {
     // console.log(profileData, "<fb>")
     let uId = profileData.id;
     let name = profileData.displayName || `${profileData.name.givenName} ${profileData.name.familyName}`;
-    let email = profileData?.emails[0]?.value || `f@b.com`
+    let email = profileData.emails[0].value || `f@b.com`;
+    let profilePicture = profileData.photos ? profileData.photos[0]?.value : null;
+    console.log(profileData, "profileData!!")
 
     let userData = {
         fullName: name,
         facebookID: uId,
         email: email,
-        password: "test"
+        password: "test",
+        ppUrl: profilePicture,
+        created: new Date().toISOString()
     }
 
     findOrCreateuser("facebookID", uId, userData, done)
@@ -112,12 +120,16 @@ let githubStrategyCallback = (accessToken, refreshToken, profileData, done) => {
     let uId = profileData.id;
     let name = profileData.displayName || `${profileData.name.givenName} ${profileData.name.familyName}`;
     let email = profileData?.emails?.emails[0]?.value
+    let profilePicture = profileData.photos[0]?.value
+    console.log(profileData, "profileData!!")
 
     let userData = {
         fullName: name,
         githubID: uId,
         email: email,
-        password: "test"
+        password: "test",
+        ppUrl: profilePicture,
+        created: new Date().toISOString()
     }
 
     findOrCreateuser("githubID", uId, userData, done)
@@ -140,12 +152,16 @@ let twitterStrategyCallback = (accessToken, refreshToken, profileData, done) => 
     let uId = profileData.id;
     let name = profileData.displayName || `${profileData.name.givenName} ${profileData.name.familyName}`;
     let email = profileData?.emails?.emails[0]?.value
+    let profilePicture = profileData.photos[0]?.value
+    console.log(profileData, "profileData!!")
 
     let userData = {
         fullName: name,
         twitterID: uId,
         email: email,
-        password: "test"
+        password: "test",
+        ppUrl: profilePicture,
+        created: new Date().toISOString()
     }
 
     findOrCreateuser("twitterID", uId, userData, done)
