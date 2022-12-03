@@ -50,7 +50,7 @@ function ChooseTopics({closeTopicChooserModal}) {
     )
 }
 
-let ButtonIconElement = ({ list, handleClick }) => {
+export let ButtonIconElement = ({ list, handleClick }) => {
     return (
         <Button
             onClick={handleClick}

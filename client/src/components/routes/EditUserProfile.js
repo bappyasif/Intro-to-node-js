@@ -61,7 +61,7 @@ let RenderFormActionButtons = ({ userData, appCtx }) => {
     let renderButtons = () => buttons.map(item => <RenderActionButton key={item.name} item={item} userData={userData} appCtx={appCtx} />)
 
     return (
-        <Stack sx={{ flexDirection: "row", gap: 8, justifyContent: "center" }}>
+        <Stack sx={{ flexDirection: "row", gap: 4, justifyContent: "center" }}>
             {renderButtons()}
             {/* <OpenTopicsChooserModal /> */}
         </Stack>
@@ -69,9 +69,10 @@ let RenderFormActionButtons = ({ userData, appCtx }) => {
 }
 
 let RenderActionButton = ({ item, userData, appCtx }) => {
-    let { fullName, topics, cpUrl, ppUrl } = userData
+    let { fullName, topics, cpUrl, ppUrl, _id } = userData
 
-    // let changeableData = [{fullName: userData.fullName}]
+    let navigate = useNavigate();
+
     let updateDataInApp = () => {
         appCtx.updateUserProfileDataInApp("fullName", fullName)
         appCtx.updateUserProfileDataInApp("topics", topics)
@@ -94,12 +95,13 @@ let RenderActionButton = ({ item, userData, appCtx }) => {
             } else {
                 updateDataInServer();
             }
-        } else {
-            alert("goto profile!!")
         }
+
+        navigate(`/users/${_id}/profile/`)
     }
+
     return (
-        <Button onClick={handleClick} size='large' startIcon={item.icon} variant="outlined" sx={{ verticalAlign: "middle" }}>
+        <Button fullWidth={true} onClick={handleClick} size='large' startIcon={item.icon} variant="outlined" sx={{ verticalAlign: "middle" }}>
             <Typography variant='h6' fontWeight={"bold"}>{item.name}</Typography>
         </Button>
     )
@@ -224,13 +226,14 @@ let OpenTopicsChooserModal = ({closeModal}) => {
         <Paper
             style={{
                 position: "absolute",
-                top: "29%",
-                bottom: 0,
+                border: "solid 6px darkred",
+                borderRadius: "20px 8px 8px 20px",
+                bottom: "29%",
+                right: "31%",
                 width: "74vw",
                 height: "76vh",
                 zIndex: 9,
-                transform: 'translate(-60%, -50%)',
-                overflow: "scroll"
+                overflowY: "scroll"
             }}
         >
             <ChooseTopics closeTopicChooserModal={closeModal} />
@@ -272,7 +275,7 @@ export let RenderPhoto = ({ ppUrl, cpUrl, fullName }) => {
     }
 
     return (
-        <ImageListItem sx={{ width: ppUrl && "560px" }}>
+        <ImageListItem sx={{ width: ppUrl && "650px" }}>
             <img
                 // src={`${ppUrl ? ppUrl : fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format`}
                 // srcSet={`${ppUrl ? ppUrl : fakeDataModel[0].coverPhotoUrl}?w85&h95&fit=crop&auto=format&dpr= 2 2x`}

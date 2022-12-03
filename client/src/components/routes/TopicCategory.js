@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from "react-router-dom"
 import { AppContexts } from '../../App'
 import { updateUserInDatabase } from '../utils'
-import { RenderTopic, topicCategories } from './ChooseTopics'
+import { ButtonIconElement, RenderTopic, topicCategories } from './ChooseTopics'
 
 function TopicCategory() {
     let [topics, setTopics] = useState([])
@@ -45,6 +45,7 @@ function TopicCategory() {
     return (
         <>
             <Typography variant='h1' component={"p"} sx={{ pl: 1 }}>{category}</Typography>
+            <Typography variant='h2'>{selectedTopics.length === 0 ? `Atleast choose 4 topics` : selectedTopics.length > 4 ? `${selectedTopics.length} topics are selected` : `${selectedTopics.length} out of 4 topics`}</Typography>
             <Stack
                 sx={{
                     flexDirection: "row",
@@ -58,9 +59,10 @@ function TopicCategory() {
             >
                 {renderTopics()}
             </Stack>
-            <Button onClick={handleClickAndSave}>
+            {/* <Button onClick={handleClickAndSave}>
                 <Typography variant="h6">Save</Typography>
-            </Button>
+            </Button> */}
+            <ButtonIconElement list={selectedTopics} handleClick={handleClickAndSave} />
         </>
     )
 }
