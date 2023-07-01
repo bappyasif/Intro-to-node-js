@@ -1,17 +1,14 @@
 const express = require("express");
-const userRoute = require("./user");
-const postRoute = require("./post");
-const commentRoute = require("./comment");
-const authRoutes = require("./auth");
-const twitterRoutes = require("./twitter");
+const authRoutes = require("./authenticate");
+const studentRoutes = require("./students");
+
 const routes = express();
 
-routes.get("/", (req, res) => res.send("hoi hoi!! server leven!!"));
+routes.get("/", (req, res) => res.status(200).json({msg: "server alive"}))
 
-routes.use(authRoutes)
-routes.use("/users", userRoute)
-routes.use("/posts", postRoute)
-routes.use("/comments", commentRoute);
-routes.use("/twitter", twitterRoutes);
+// routes.use(authRoutes)
+routes.use("/auth", authRoutes)
 
-module.exports = routes;
+routes.use("/student", studentRoutes)
+
+module.exports = routes
