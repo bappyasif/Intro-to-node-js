@@ -1,8 +1,8 @@
 const dean = require("../models/dean")
 const session = require("../models/session")
 
+// do we use "type for token exits check?"
 const getAllDeansFreeSlots = (req, res) => {
-
     checkIfTokenExistsInSessions(req)
         .then(found => {
             if (found) {
@@ -27,16 +27,21 @@ const getAllDeansFreeSlots = (req, res) => {
 const getSpecificDeanFreeSlots = (req, res) => {
     // checkIfDeanExists(res, "bees")
     // res.status(200).json({msg: "free slots from dean"})
-    const {deanId} = req.params;
-    
+    const { deanId } = req.params;
+    console.log(deanId, "deanID")
+
     checkIfTokenExistsInSessions(req)
         .then(found => {
             if (found) {
-                dean.find({id: deanId}).then((data) => {
-                    const freeSlotsFound = data.map(dean => dean.slots.filter(item => item.free))[0]
+                dean.findOne({ id: deanId }).then((data) => {
+                    if (data?.length) {
+                        const freeSlotsFound = data.map(dean => dean.slots.filter(item => item.free))[0]
 
-                    // console.log(freeSlotsFound)
-                    sendingResponseAfterChecks(freeSlotsFound, res)
+                        // console.log(freeSlotsFound)
+                        sendingResponseAfterChecks(freeSlotsFound, res)
+                    } else {
+                        return res.status(400).json({ msg: "invalid slots" })
+                    }
                 })
             } else {
                 return res.status(400).json({ msg: "Invalid Token" })
@@ -56,7 +61,7 @@ const getSpecificDeanFreeSlots = (req, res) => {
 // }
 
 const sendingResponseAfterChecks = (freeSlotsFound, res) => {
-    
+
     if (freeSlotsFound.length) {
         return res.status(200).json({ msg: "all found free slots", freeSlots: freeSlotsFound })
     } else {
@@ -73,10 +78,14 @@ const extractToken = (req) => {
 const checkIfTokenExistsInSessions = (req) => {
     // const bearerToken = req.headers["authorization"];
     // const token = bearerToken.split(" ")[1]
-    token = extractToken(req)
-    console.log(token, "token!!")
+    const { userId } = req.body;
 
-    return session.findOne({ token: token })
+    token = extractToken(req)
+    // console.log(token, "token!!")
+
+    // error while s2 dean and s2 student is found in session model
+
+    return session.findOne({ token: token, userId: userId })
         .then(foundSession => {
             if (foundSession) {
                 console.log("found")

@@ -1,10 +1,11 @@
 const express = require("express");
 const { authenticateStudent, authenticateDean } = require("../controllers/authentications");
+const { authValidation, throwErrorWhenValidationHasFailed } = require("../middlewares");
 const authRoutes = express();
 
-authRoutes.get("/student", authenticateStudent)
+authRoutes.post("/student", authValidation, throwErrorWhenValidationHasFailed, authenticateStudent)
 
-authRoutes.get("/dean", authenticateDean)
+authRoutes.post("/dean", authValidation, throwErrorWhenValidationHasFailed, authenticateDean)
 
 // authRoutes.get("/user", authenticateUser)
 

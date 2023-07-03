@@ -11,10 +11,26 @@ const authenticateStudent = (req, res) => {
         password: password
     })
 
-    newStudent.save().then(() => {
-        console.log("new student is saved")
-        commonAuthFunctionality(req, res, "student")
-    }).catch(err => console.log("student save encountered error", err.message))
+    session.findOne({ userId: id, type: "student" })
+        .then(foundStudent => {
+            if (foundStudent?._id) {
+                console.log("returning student", id);
+                getTokenAndReturn(foundStudent.token, res)
+            } else {
+                newStudent.save().then(() => {
+                    console.log("new student is saved")
+                    commonAuthFunctionality(req, res, "student")
+                }).catch(err => console.log("student save encountered error", err.message))
+            }
+        })
+}
+
+const getTokenAndReturn = (token, res) => {
+    if (token) {
+        return res.status(200).json({ msg: "user is authenticated successfully", token: token })
+    } else {
+        return res.status(402).json({ msg: "token is not found!!" })
+    }
 }
 
 const authenticateDean = (req, res) => {
@@ -24,15 +40,22 @@ const authenticateDean = (req, res) => {
     const newDean = new dean({
         id: id,
         password: password,
-        slots: [{ free: true, day: "thursday", slot: "10am - 11am" }, { free: true, day: "friday", slot: "10am - 11am" }]
+        slots: [ { free: true, day: "thursday", slot: "10am - 11am" }, { free: true, day: "friday", slot: "10am - 11am" } ]
     })
 
-    newDean.save().then(() => {
-        console.log("new dean is saved")
-        commonAuthFunctionality(req, res, "dean")
-    }).catch(err => {
-        console.log("dean save encountered error", err.message)
-        res.status(400).json({ msg: "save failed", error: err.message })
+    session.findOne({ userId: id, type: "dean" }).then(foundDean => {
+        if (foundDean?._id) {
+            console.log("returning dean", id);
+                getTokenAndReturn(foundDean.token, res)
+        } else {
+            newDean.save().then(() => {
+                console.log("new dean is saved")
+                commonAuthFunctionality(req, res, "dean")
+            }).catch(err => {
+                console.log("dean save encountered error", err.message)
+                res.status(400).json({ msg: "save failed", error: err.message })
+            })
+        }
     })
 }
 

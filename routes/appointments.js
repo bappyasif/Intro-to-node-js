@@ -4,7 +4,7 @@ const { studentBookingAnAppointmentWithDean, deanCheckingSlotsBookedByStudents }
 
 const appointmentRoutes = express();
 
-appointmentRoutes.post("/bookSlot", studentBookingAnAppointmentWithDean);
+appointmentRoutes.put("/bookSlot", studentBookingAnAppointmentWithDean);
 
 appointmentRoutes.get("/whoBooked", deanCheckingSlotsBookedByStudents);
 
