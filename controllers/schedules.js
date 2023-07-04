@@ -1,64 +1,33 @@
 const dean = require("../models/dean")
 const session = require("../models/session")
 
-// do we use "type for token exits check?"
 const getAllDeansFreeSlots = (req, res) => {
-    checkIfTokenExistsInSessions(req)
-        .then(found => {
-            if (found) {
-                dean.find({}).then((data) => {
-                    const freeSlotsFound = data.map(dean => {
-                        const slots = dean.slots.filter(item => item.free);
-                        return { id: dean.id, slots: [...slots] }
-                    })
-
-                    // console.log(freeSlotsFound)
-                    sendingResponseAfterChecks(freeSlotsFound, res)
-                })
-            } else {
-                return res.status(400).json({ msg: "Invalid Token" })
-            }
+    dean.find({}).then((data) => {
+        const freeSlotsFound = data.map(dean => {
+            const slots = dean.slots.filter(item => item.free);
+            return { id: dean.id, slots: [...slots] }
         })
-        .catch(err => console.log("somethign went terribly wrong....", err.message))
 
-    // res.status(200).json({msg: "free slots from dean"})
+        // console.log(freeSlotsFound)
+        sendingResponseAfterChecks(freeSlotsFound, res)
+    })
 }
 
 const getSpecificDeanFreeSlots = (req, res) => {
-    // checkIfDeanExists(res, "bees")
-    // res.status(200).json({msg: "free slots from dean"})
     const { deanId } = req.params;
     console.log(deanId, "deanID")
 
-    checkIfTokenExistsInSessions(req)
-        .then(found => {
-            if (found) {
-                dean.findOne({ id: deanId }).then((data) => {
-                    if (data?.length) {
-                        const freeSlotsFound = data.map(dean => dean.slots.filter(item => item.free))[0]
+    dean.find({ id: deanId }).then((data) => {
+        if (data?.length) {
+            const freeSlotsFound = data.map(dean => dean.slots.filter(item => item.free))[0]
 
-                        // console.log(freeSlotsFound)
-                        sendingResponseAfterChecks(freeSlotsFound, res)
-                    } else {
-                        return res.status(400).json({ msg: "invalid slots" })
-                    }
-                })
-            } else {
-                return res.status(400).json({ msg: "Invalid Token" })
-            }
-        })
-        .catch(err => console.log("somethign went terribly wrong....", err.message))
+            // console.log(freeSlotsFound)
+            sendingResponseAfterChecks(freeSlotsFound, res)
+        } else {
+            return res.status(400).json({ msg: "invalid slots" })
+        }
+    })
 }
-
-// const checkIfDeanExists = (res) => {
-//     dean.find({}).then((data) => {
-//         if (data.length) {
-//             return res.status(200).json({ msg: "all free slots from every dean" })
-//         } else {
-//             return res.status(200).json({ msg: "No free slots found" })
-//         }
-//     })
-// }
 
 const sendingResponseAfterChecks = (freeSlotsFound, res) => {
 
@@ -76,14 +45,9 @@ const extractToken = (req) => {
 }
 
 const checkIfTokenExistsInSessions = (req) => {
-    // const bearerToken = req.headers["authorization"];
-    // const token = bearerToken.split(" ")[1]
     const { userId } = req.body;
 
     token = extractToken(req)
-    // console.log(token, "token!!")
-
-    // error while s2 dean and s2 student is found in session model
 
     return session.findOne({ token: token, userId: userId })
         .then(foundSession => {

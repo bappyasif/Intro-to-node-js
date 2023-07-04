@@ -40,13 +40,13 @@ const authenticateDean = (req, res) => {
     const newDean = new dean({
         id: id,
         password: password,
-        slots: [ { free: true, day: "thursday", slot: "10am - 11am" }, { free: true, day: "friday", slot: "10am - 11am" } ]
+        slots: [{ free: true, day: "thursday", slot: "10am - 11am" }, { free: true, day: "friday", slot: "10am - 11am" }]
     })
 
     session.findOne({ userId: id, type: "dean" }).then(foundDean => {
         if (foundDean?._id) {
             console.log("returning dean", id);
-                getTokenAndReturn(foundDean.token, res)
+            getTokenAndReturn(foundDean.token, res)
         } else {
             newDean.save().then(() => {
                 console.log("new dean is saved")

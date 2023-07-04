@@ -1,9 +1,12 @@
 const { check, validationResult } = require('express-validator');
+const session = require('../models/session');
 
 // validation rules
 const authValidation = [
-    check("id", "user name must be of 2 characters long").isLength({ min: 2 }).trim().escape(),
-    check("password", "user password must be of 2 characters long").isLength({ min: 2 }).trim().escape(),
+    check("id", "user name must be of 2 characters long")
+    .isLength({ min: 2 }).trim().escape(),
+    check("password", "user password must be of 2 characters long")
+    .isLength({ min: 2 }).trim().escape(),
 ]
 
 const throwErrorWhenValidationHasFailed = (req, res, next) => {
@@ -16,8 +19,35 @@ const throwErrorWhenValidationHasFailed = (req, res, next) => {
     }
 }
 
+const extractToken = (req) => {
+    const bearerToken = req.headers["authorization"];
+    const token = bearerToken.split(" ")[1]
+    return token
+}
+
+const checkToken = (req, res, next) => {
+    const { userId } = req.body;
+
+    token = extractToken(req)
+
+    return session.findOne({ token: token, userId: userId })
+        .then(foundSession => {
+            if (foundSession) {
+                console.log("found")
+                next()
+            } else {
+                return res.status(400).json({ msg: "Invalid Token" })
+            }
+        }).catch((err => {
+            console.log("error occured", err.message)
+            return res.status(501).json({ msg: "Invalid Token", error: err.message })
+        }))
+}
+
 module.exports = {
     authValidation,
-    throwErrorWhenValidationHasFailed
+    throwErrorWhenValidationHasFailed,
+    checkToken,
+    extractToken
 }
 

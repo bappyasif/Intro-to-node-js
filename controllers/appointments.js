@@ -1,40 +1,39 @@
+const { extractToken } = require("../middlewares")
 const dean = require("../models/dean")
 const schedule = require("../models/schedule")
 const session = require("../models/session")
-const { checkIfTokenExistsInSessions, extractToken } = require("./schedules")
 
 const studentBookingAnAppointmentWithDean = (req, res) => {
     const { deanId, day, userId } = req.body
 
-    // do we use type in here fro clarity, to see if its from student or dean
-    checkIfTokenExistsInSessions(req)
-        .then(found => {
-            if (found) {
-                schedule.findOne({ deanId, studentId: userId })
-                    .then(foundAppointment => {
-                        // already booked
-                        if (foundAppointment?._id) {
-                            return res.status(200).json({ msg: "booked appointnent", studentId: userId, deanId, slot: foundAppointment.slot })
-                        } else {
-                            // new appointment
-                            getStudentIdFromSession(req, res).then(userId => {
-                                console.log(userId);
-
-                                const slot = [{ day: day, time: "10am - 11am" }]
-
-                                createScedule(userId, deanId, slot)
-
-                                updateDeanFreeSlots(deanId, day)
-
-                                return res.status(200).json({ msg: "booked appointnent", studentId: userId, deanId, slot })
-                            })
-                        }
-                    }).catch(err => console.log("schedule fetching has failed....", err.message))
+    schedule.findOne({ deanId, studentId: userId })
+        .then(foundAppointment => {
+            // already booked
+            if (foundAppointment?._id) {
+                return res.status(200).json({ msg: "booked appointnent", studentId: userId, deanId, slot: foundAppointment.slot })
             } else {
-                return res.status(400).json({ msg: "Invalid Token" })
+                // new appointment
+                getStudentIdFromSession(req, res).then(userId => {
+                    // console.log(userId);
+
+                    const slot = [{ day: day, time: "10am - 11am" }]
+
+                    // checking if this slot is already booked by other student or not
+                    dean.findOne({ id: deanId }).then(data => {
+                        const checkIfSlotFree = data?.slots.find(item => item.day === day).free
+                        if (checkIfSlotFree) {
+                            createScedule(userId, deanId, slot)
+
+                            updateDeanFreeSlots(deanId, day)
+
+                            return res.status(200).json({ msg: "booked appointnent", studentId: userId, deanId, slot })
+                        } else {
+                            return res.status(503).json({msg: "slot is booked already, try other slot, thanks :)"})
+                        }
+                    })
+                })
             }
-        })
-        .catch(err => console.log("something went terribly wrong....", err.message))
+        }).catch(err => console.log("schedule fetching has failed....", err.message))
 }
 
 const updateDeanFreeSlots = (deanId, day) => {
@@ -78,45 +77,17 @@ const getStudentIdFromSession = (req, res) => {
 const deanCheckingSlotsBookedByStudents = (req, res) => {
     const { userId } = req.body;
 
-    checkIfTokenExistsInSessions(req).then(found => {
-        if (found) {
-            schedule.find({ deanId: userId })
-                .then(data => {
-                    console.log(data, userId, "!!")
-                    if (data?.length) {
-                        const appointments = data.map(item => ({ studentId: item.studentId, slot: item.slot }))
-                        return res.status(200).json({ msg: "Detail About Booked Slots", appointments: appointments })
-                    } else {
-                        return res.status(400).json({ msg: "Schedule Data Not Found!!" })
-                    }
-                })
-        } else {
-            return res.status(400).json({ msg: "Invalid Token" })
-        }
-    })
-        .catch(err => console.log("something went terribly wrong....", err.message))
+    schedule.find({ deanId: userId })
+        .then(data => {
+            // console.log(data, userId, "!!")
+            if (data?.length) {
+                const appointments = data.map(item => ({ studentId: item.studentId, slot: item.slot }))
+                return res.status(200).json({ msg: "Detail About Booked Slots", appointments: appointments })
+            } else {
+                return res.status(400).json({ msg: "Schedule Data Not Found!!" })
+            }
+        })
 }
-
-// const deanCheckingSlotsBookedByStudents = (req, res) => {
-//     const { id } = req.body;
-
-//     checkIfTokenExistsInSessions(req).then(found => {
-//         if (found) {
-//             schedule.findOne({ deanId: id })
-//                 .then(data => {
-//                     console.log(data, id, "!!")
-//                     if (data) {
-//                         return res.status(200).json({ msg: "Detail About Booked Slot", appointment: { studentId: data.studentId, slot: data.slot } })
-//                     } else {
-//                         return res.status(400).json({ msg: "No Schedule Is Found!!" })
-//                     }
-//                 })
-//         } else {
-//             return res.status(400).json({ msg: "Invalid Token" })
-//         }
-//     })
-//         .catch(err => console.log("something went terribly wrong....", err.message))
-// }
 
 module.exports = {
     studentBookingAnAppointmentWithDean,
