@@ -1,5 +1,6 @@
 const { check, validationResult } = require('express-validator');
 const session = require('../models/session');
+const user = require('../models/user');
 
 // validation rules
 const authValidation = [
@@ -30,10 +31,10 @@ const checkToken = (req, res, next) => {
 
     token = extractToken(req)
 
-    return session.findOne({ token: token, userId: userId })
-        .then(foundSession => {
-            if (foundSession) {
-                console.log("found")
+    return user.findOne({ token: token, id: userId })
+        .then(foundUser => {
+            if (foundUser) {
+                console.log("found user")
                 next()
             } else {
                 return res.status(400).json({ msg: "Invalid Token" })

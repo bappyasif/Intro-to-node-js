@@ -2,27 +2,33 @@ const { v4: uuidv4 } = require('uuid');
 const session = require('../models/session');
 const student = require('../models/student');
 const dean = require('../models/dean');
+const user = require('../models/user');
 
 const authenticateStudent = (req, res) => {
     const { id, password } = req.body
 
-    const newStudent = new student({
+    const newStudent = new user({
         id: id,
-        password: password
+        password: password,
+        isDean: false
     })
 
-    session.findOne({ userId: id, type: "student" })
-        .then(foundStudent => {
-            if (foundStudent?._id) {
-                console.log("returning student", id);
-                getTokenAndReturn(foundStudent.token, res)
+    extractOrCreateUser(id, password, false, newStudent, res)
+}
+
+const extractOrCreateUser = (id, password, isDean, data, res) => {
+    user
+        .findOne({ id: id, password: password, isDean: isDean })
+        .then(foundUser => {
+            if (foundUser?._id) {
+                console.log("returning user!!", id, foundUser.token);
+                getTokenAndReturn(foundUser.token, res)
             } else {
-                newStudent.save().then(() => {
-                    console.log("new student is saved")
-                    commonAuthFunctionality(req, res, "student")
-                }).catch(err => console.log("student save encountered error", err.message))
+                data.token = uuidv4();
+
+                saveDataAndReturnUserToken(data, res)
             }
-        })
+        }).catch(err => console.log("something's wrong!!", err.message))
 }
 
 const getTokenAndReturn = (token, res) => {
@@ -34,48 +40,23 @@ const getTokenAndReturn = (token, res) => {
 }
 
 const authenticateDean = (req, res) => {
-    // res.status(200).json({ msg: "authenticate dean" })
     const { id, password } = req.body;
 
-    const newDean = new dean({
+    const newDean = new user({
         id: id,
         password: password,
+        isDean: true,
         slots: [{ free: true, day: "thursday", slot: "10am - 11am" }, { free: true, day: "friday", slot: "10am - 11am" }]
     })
 
-    session.findOne({ userId: id, type: "dean" }).then(foundDean => {
-        if (foundDean?._id) {
-            console.log("returning dean", id);
-            getTokenAndReturn(foundDean.token, res)
-        } else {
-            newDean.save().then(() => {
-                console.log("new dean is saved")
-                commonAuthFunctionality(req, res, "dean")
-            }).catch(err => {
-                console.log("dean save encountered error", err.message)
-                res.status(400).json({ msg: "save failed", error: err.message })
-            })
-        }
-    })
+    extractOrCreateUser(id, password, true, newDean, res)
 }
 
-// const authenticateUser = (req, res) => {
-//     const { id, password } = req.body
-//     console.log(req.body, id, password, uuidv4())
-
-//     const newSession = new session({
-//         token: uuidv4(),
-//         userId: id
-//     })
-
-//     saveDataIntoSessionAndReturnUserToken(newSession)
-// }
-
-const saveDataIntoSessionAndReturnUserToken = (newSession, res) => {
-    newSession
+const saveDataAndReturnUserToken = (newUser, res) => {
+    newUser
         .save()
         .then((data) => {
-            console.log("session saved in db")
+            console.log("new user is saved in db")
             return res.status(200).json({ msg: "user is authenticated successfully", token: data.token })
         }).catch(err => {
             console.log("error occured while saving", err?.message)
@@ -83,21 +64,7 @@ const saveDataIntoSessionAndReturnUserToken = (newSession, res) => {
         })
 }
 
-const commonAuthFunctionality = (req, res, type) => {
-    const { id } = req.body
-    console.log(req.body, id, uuidv4())
-
-    const newSession = new session({
-        token: uuidv4(),
-        userId: id,
-        type: type
-    })
-
-    saveDataIntoSessionAndReturnUserToken(newSession, res)
-}
-
 module.exports = {
     authenticateDean,
     authenticateStudent,
-    // authenticateUser
 }

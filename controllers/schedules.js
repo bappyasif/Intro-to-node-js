@@ -1,27 +1,27 @@
 const dean = require("../models/dean")
 const session = require("../models/session")
+const user = require("../models/user")
 
 const getAllDeansFreeSlots = (req, res) => {
-    dean.find({}).then((data) => {
+    user.find({isDean: true}).then((data) => {
         const freeSlotsFound = data.map(dean => {
             const slots = dean.slots.filter(item => item.free);
             return { id: dean.id, slots: [...slots] }
         })
 
-        // console.log(freeSlotsFound)
         sendingResponseAfterChecks(freeSlotsFound, res)
     })
 }
 
 const getSpecificDeanFreeSlots = (req, res) => {
     const { deanId } = req.params;
-    console.log(deanId, "deanID")
+    console.log(deanId, "deanID``")
 
-    dean.find({ id: deanId }).then((data) => {
-        if (data?.length) {
-            const freeSlotsFound = data.map(dean => dean.slots.filter(item => item.free))[0]
+    user.findOne({ id: deanId, isDean: true })
+    .then((data) => {
+        if (data.slots?.length) {
+            const freeSlotsFound = data.slots.map((item => item.free ? item : null))
 
-            // console.log(freeSlotsFound)
             sendingResponseAfterChecks(freeSlotsFound, res)
         } else {
             return res.status(400).json({ msg: "invalid slots" })
