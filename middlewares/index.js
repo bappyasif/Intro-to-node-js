@@ -34,7 +34,7 @@ const checkToken = (req, res, next) => {
     return user.findOne({ token: token, id: userId })
         .then(foundUser => {
             if (foundUser) {
-                console.log("found user")
+                console.log("found user, valid token")
                 next()
             } else {
                 return res.status(400).json({ msg: "Invalid Token" })
