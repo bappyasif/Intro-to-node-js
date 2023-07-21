@@ -1,5 +1,4 @@
 const { check, validationResult } = require('express-validator');
-const session = require('../models/session');
 const user = require('../models/user');
 
 // validation rules

@@ -1,7 +1,4 @@
 const { v4: uuidv4 } = require('uuid');
-const session = require('../models/session');
-const student = require('../models/student');
-const dean = require('../models/dean');
 const user = require('../models/user');
 
 const authenticateStudent = (req, res) => {

@@ -1,5 +1,3 @@
-const dean = require("../models/dean")
-const session = require("../models/session")
 const user = require("../models/user")
 
 const getAllDeansFreeSlots = (req, res) => {
@@ -44,28 +42,27 @@ const extractToken = (req) => {
     return token
 }
 
-const checkIfTokenExistsInSessions = (req) => {
-    const { userId } = req.body;
+// const checkIfTokenExistsInSessions = (req) => {
+//     const { userId } = req.body;
 
-    token = extractToken(req)
+//     token = extractToken(req)
 
-    return session.findOne({ token: token, userId: userId })
-        .then(foundSession => {
-            if (foundSession) {
-                console.log("found")
-                return true
-            } else {
-                console.log("not found")
-                return false
-            }
-        }).catch((err => {
-            console.log("error occured", err.message)
-        }))
-}
+//     return session.findOne({ token: token, userId: userId })
+//         .then(foundSession => {
+//             if (foundSession) {
+//                 console.log("found")
+//                 return true
+//             } else {
+//                 console.log("not found")
+//                 return false
+//             }
+//         }).catch((err => {
+//             console.log("error occured", err.message)
+//         }))
+// }
 
 module.exports = {
     getAllDeansFreeSlots,
     getSpecificDeanFreeSlots,
-    checkIfTokenExistsInSessions,
     extractToken
 }
