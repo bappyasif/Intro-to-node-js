@@ -7,6 +7,4 @@ authRoutes.post("/student", authValidation, throwErrorWhenValidationHasFailed, a
 
 authRoutes.post("/dean", authValidation, throwErrorWhenValidationHasFailed, authenticateDean)
 
-// authRoutes.get("/user", authenticateUser)
-
 module.exports = authRoutes

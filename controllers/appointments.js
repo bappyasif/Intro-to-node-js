@@ -1,71 +1,64 @@
-const schedule = require("../models/schedule")
-const user = require("../models/user")
+const dean = require("../models/dean")
 
 const studentBookingAnAppointmentWithDean = (req, res) => {
     const { deanId, day, userId } = req.body
 
-    schedule.find()
+    dean.findOne({ id: deanId })
+        .then(foundDean => {
+            const slots = foundDean.slots;
 
-    schedule.findOne({ deanId, studentId: userId, day: day })
-        .then(foundAppointment => {            
-            if (foundAppointment?._id) {
-                return res.status(200).json({ msg: "booked appointnent", studentId: userId, deanId, slot: foundAppointment.slot })
-            } else {
-                // new appointment
-                const slot = [{ day: day, time: "10am - 11am" }]
+            // when requesting student already booked this slot
+            const thisStudentAlreadyBookedThisSlot = slots.findIndex(item => item?.studentId === userId && item.day === day)
 
-                // checking if this slot is already booked by other student or not
-                user.findOne({ id: deanId, isDean: true }).then(data => {
-                    const checkIfSlotFree = data?.slots.find(item => item.day === day).free
-                    if (checkIfSlotFree) {
-                        createScedule(userId, deanId, slot, day)
-
-                        updateDeanFreeSlots(deanId, day)
-
-                        return res.status(200).json({ msg: "booked appointnent", studentId: userId, deanId, slot })
-                    } else {
-                        return res.status(503).json({ msg: "slot is booked already, try other slot, thanks :)" })
-                    }
-                })
+            if (thisStudentAlreadyBookedThisSlot !== -1) {
+                return res.status(200).json({ msg: "your booked appointnent info", deanId, slot: slots[thisStudentAlreadyBookedThisSlot] })
             }
-        }).catch(err => console.log("schedule fetching has failed....", err.message))
-}
 
-const updateDeanFreeSlots = (deanId, day) => {
-    user.findOne({ id: deanId, isDean: true })
-        .then(data => {
-            const updatedSlots = data.slots.map(item => item.day === day ? { ...item, free: false } : item)
-            // console.log(updatedSlots);
-            data.slots = updatedSlots;
+            // when another student trying to book a slot which is already booked by another student
+            const isSlotBooked = slots.findIndex(item => item.day === day && !item.free)
+            if (isSlotBooked !== -1) {
+                return res.status(503).json({ msg: "slot is booked already, try other slot, thanks :)" })
+            }
 
-            user.findByIdAndUpdate(data._id, data, {}).then(() => console.log("update completed....")).catch(err => console.log("update operation has failed", err.message))
-        }).catch(err => console.log("error occured in update", err.message))
-}
+            // student booking a new appontment slot which is available
 
-const createScedule = (studentId, deanId, slot, day) => {
-    const newSchedule = new schedule({
-        deanId,
-        studentId,
-        slot,
-        day
-    })
+            // updating dean slots information for student appointment
+            const updatedSlots = slots.map(item => {
+                if (item.day === day && item.free) {
+                    item.free = false
+                    item.studentId = userId
+                }
+                return item
+            })
 
-    newSchedule.save().then(data => {
-        console.log("schedule saved", data._id)
-    }).catch(err => console.log("schedule saved has failed", err.message))
+            // now we will be updating dean data with updated slots information
+            foundDean.slots = updatedSlots
+
+            dean.findByIdAndUpdate(foundDean._id, foundDean, {})
+                .then(() => {
+                    console.log("dean data is updated, new appointment is booked")
+                    return res.status(200).json({ msg: "booked appointnent", studentId: userId, deanId, slot: foundDean.slots.find(item => item?.studentId === userId ? item : null) })
+                })
+        })
+        .catch(err => console.log("schedule fetching has failed....", err.message))
 }
 
 const deanCheckingSlotsBookedByStudents = (req, res) => {
     const { userId } = req.body;
 
-    schedule.find({ deanId: userId })
+    dean.findOne({ id: userId })
         .then(data => {
             // console.log(data, userId, "!!")
-            if (data?.length) {
-                const appointments = data.map(item => ({ studentId: item.studentId, slot: item.slot }))
-                return res.status(200).json({ msg: "Detail About Booked Slots", appointments: appointments })
+            // if there is no booked slots
+            const isFreeSlotsAvailable = data.slots.filter(item => !item.free)
+
+            if (isFreeSlotsAvailable?.length === 0) {
+                return res.status(400).json({ msg: "Schedule Data Not Found!! No appointments has been booked yet", bookedSlots: isFreeSlotsAvailable.length })
             } else {
-                return res.status(400).json({ msg: "Schedule Data Not Found!! No appointments has been booked yet" })
+                // there are slots been booked by students, and we will be sending those slots back to requested dean
+                const appointments = data.slots.filter(item => !item.free && ({ studentId: item.studentId, slots: item.slots }))
+                
+                return res.status(200).json({ msg: "Detail About Booked Slots", appointments: appointments })
             }
         })
 }

@@ -1,5 +1,6 @@
 const { check, validationResult } = require('express-validator');
-const user = require('../models/user');
+const student = require('../models/student');
+const dean = require('../models/dean');
 
 // validation rules
 const authValidation = [
@@ -25,12 +26,22 @@ const extractToken = (req) => {
     return token
 }
 
-const checkToken = (req, res, next) => {
+const checkIfTokenValidForStudent = (req, res, next) => {
+    happensForBothStudentAndUser("student", req, res, next)
+}
+
+const checkIfTokenValidForDean = (req, res, next) => {
+    happensForBothStudentAndUser("dean", req, res, next)
+}
+
+const happensForBothStudentAndUser = (userType, req, res, next) => {
     const { userId } = req.body;
 
     token = extractToken(req)
 
-    return user.findOne({ token: token, id: userId })
+    const collection = userType === "student" ? student : dean
+
+    collection.findOne({ token: token, id: userId })
         .then(foundUser => {
             if (foundUser) {
                 console.log("found user, valid token")
@@ -47,7 +58,8 @@ const checkToken = (req, res, next) => {
 module.exports = {
     authValidation,
     throwErrorWhenValidationHasFailed,
-    checkToken,
-    extractToken
+    extractToken,
+    checkIfTokenValidForStudent,
+    checkIfTokenValidForDean
 }
 

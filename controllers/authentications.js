@@ -1,21 +1,23 @@
 const { v4: uuidv4 } = require('uuid');
-const user = require('../models/user');
+const student = require('../models/student');
+const dean = require('../models/dean');
 
 const authenticateStudent = (req, res) => {
     const { id, password } = req.body
 
-    const newStudent = new user({
+    const newStudent = new student({
         id: id,
-        password: password,
-        isDean: false
+        password: password
     })
 
     extractOrCreateUser(id, password, false, newStudent, res)
 }
 
 const extractOrCreateUser = (id, password, isDean, data, res) => {
-    user
-        .findOne({ id: id, password: password, isDean: isDean })
+    const collection = isDean ? dean : student
+    
+    collection
+        .findOne({ id: id, password: password })
         .then(foundUser => {
             if (foundUser?._id) {
                 console.log("returning user!!", id, foundUser.token);
@@ -39,10 +41,9 @@ const getTokenAndReturn = (token, res) => {
 const authenticateDean = (req, res) => {
     const { id, password } = req.body;
 
-    const newDean = new user({
+    const newDean = new dean({
         id: id,
         password: password,
-        isDean: true,
         slots: [{ free: true, day: "thursday", slot: "10am - 11am" }, { free: true, day: "friday", slot: "10am - 11am" }]
     })
 
